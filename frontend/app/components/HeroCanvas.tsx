@@ -202,8 +202,8 @@ export default function HeroCanvas() {
     loop();
 
     const handleClick = (e: MouseEvent) => {
-      // Check if we are on the project details page or contact page
-      if (window.location.pathname.includes('/projects/') || window.location.pathname === '/contact') return;
+      // Check if we are on the project details page, contact page, or admin panel
+      if (window.location.pathname.includes('/projects/') || window.location.pathname === '/contact' || window.location.pathname.startsWith('/admin')) return;
       
       const rip = document.createElement('div');
       rip.className = 'ripple';

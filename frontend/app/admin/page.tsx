@@ -59,16 +59,12 @@ export default function AdminPanel() {
                         <MessageSquare size={18} />
                         Messages
                     </button>
-                    <button className="nav-item" onClick={fetchContacts}>
-                        <RefreshCw size={18} />
-                        Refresh Data
-                    </button>
                 </nav>
                 <div className="sidebar-footer">
-                    <div className="user-info">
-                        <div className="user-avatar">JP</div>
-                        <span>Jithin P Joji</span>
-                    </div>
+                    <button className="logout-btn" onClick={() => window.location.href = '/'}>
+                        <Shield size={18} />
+                        Logout
+                    </button>
                 </div>
             </aside>
 
