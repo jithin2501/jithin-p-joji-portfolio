@@ -48,19 +48,32 @@ export default function AdminPanel() {
     };
 
     return (
-        <div className="admin-container">
-            <header className="admin-header">
-                <div className="header-left">
-                    <Shield size={24} className="shield-icon" />
-                    <h1>Admin Dashboard</h1>
+        <div className="admin-layout">
+            <aside className="admin-sidebar">
+                <div className="sidebar-brand">
+                    <Shield size={20} />
+                    <span>Admin Panel</span>
                 </div>
-                <button className="refresh-btn" onClick={fetchContacts}>
-                    <RefreshCw size={18} /> Refresh
-                </button>
-            </header>
+                <nav className="sidebar-nav">
+                    <button className="nav-item active">
+                        <MessageSquare size={18} />
+                        Messages
+                    </button>
+                    <button className="nav-item" onClick={fetchContacts}>
+                        <RefreshCw size={18} />
+                        Refresh Data
+                    </button>
+                </nav>
+                <div className="sidebar-footer">
+                    <div className="user-info">
+                        <div className="user-avatar">JP</div>
+                        <span>Jithin P Joji</span>
+                    </div>
+                </div>
+            </aside>
 
-            <main className="admin-main">
-                <div className="section-title">
+            <main className="admin-content">
+                <div className="content-header">
                     <h2>Client Messages</h2>
                     <span className="msg-count">{contacts.length} total</span>
                 </div>
@@ -70,7 +83,7 @@ export default function AdminPanel() {
                 {loading && contacts.length === 0 ? (
                     <div className="admin-loading">Fetching data...</div>
                 ) : (
-                    <div className="messages-list">
+                    <div className="messages-grid">
                         {contacts.length === 0 && !error ? (
                             <div className="no-messages">No messages yet.</div>
                         ) : (
@@ -85,12 +98,12 @@ export default function AdminPanel() {
                                             </div>
                                         </div>
                                         <button className="del-btn" onClick={() => deleteContact(contact.id)}>
-                                            <Trash2 size={18} />
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                     <div className="card-body">
-                                        <h4>{contact.subject}</h4>
-                                        <p>{contact.message}</p>
+                                        <div className="msg-subject">{contact.subject}</div>
+                                        <p className="msg-text">{contact.message}</p>
                                     </div>
                                     <div className="card-footer">
                                         <Calendar size={14} />

@@ -1,74 +1,119 @@
-/* Static Admin UI - No Animations */
-.admin-container {
-    background: #050510;
+/* Static Admin UI - Sidebar Layout - No Animations */
+.admin-layout {
+    display: flex;
     min-height: 100vh;
+    background: #050510;
     color: #fff;
     font-family: 'Inter', sans-serif;
-    padding: 40px;
 }
 
-.admin-header {
+/* Sidebar */
+.admin-sidebar {
+    width: 280px;
+    background: #0e0e28;
+    border-right: 1px solid rgba(124, 92, 255, 0.1);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    padding: 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar-brand {
+    display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 20px;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #7c5cff;
     margin-bottom: 40px;
 }
 
-.header-left {
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.nav-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    color: #7070a0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    transition: none; /* Explicitly no transition */
 }
 
-.shield-icon {
-    color: #7c5cff;
+.nav-item:hover, .nav-item.active {
+    background: rgba(124, 92, 255, 0.1);
+    color: #fff;
 }
 
-.admin-header h1 {
-    font-size: 24px;
+.sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background: #7c5cff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
     font-weight: 700;
 }
 
-.refresh-btn {
-    background: #7c5cff;
-    border: none;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.admin-main {
-    max-width: 1000px;
+/* Main Content */
+.admin-content {
+    flex: 1;
+    padding: 40px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.section-title {
+.content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+}
+
+.content-header h2 {
+    font-size: 24px;
+    font-weight: 700;
 }
 
 .msg-count {
     background: rgba(124, 92, 255, 0.1);
     color: #7c5cff;
-    padding: 4px 12px;
+    padding: 6px 16px;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }
 
-.messages-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.messages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
 }
 
 .message-card {
@@ -76,7 +121,8 @@
     border: 1px solid rgba(124, 92, 255, 0.1);
     border-radius: 12px;
     padding: 24px;
-    /* Explicitly no transitions/animations */
+    display: flex;
+    flex-direction: column;
 }
 
 .card-header {
@@ -93,20 +139,19 @@
 }
 
 .sender-avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     background: #7c5cff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 18px;
 }
 
 .sender-info h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .sender-info p {
@@ -123,32 +168,39 @@
     border: none;
     color: #ff4e4e;
     cursor: pointer;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 .del-btn:hover {
     opacity: 1;
 }
 
-.card-body h4 {
+.card-body {
+    flex: 1;
+}
+
+.msg-subject {
     color: #7c5cff;
-    margin-bottom: 10px;
+    font-weight: 600;
+    margin-bottom: 12px;
     font-size: 15px;
 }
 
-.card-body p {
+.msg-text {
     color: #e8e6ff;
     font-size: 14px;
     line-height: 1.6;
 }
 
 .card-footer {
-    margin-top: 20px;
+    margin-top: 24px;
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 12px;
     color: #7070a0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .admin-error {
@@ -156,13 +208,13 @@
     color: #ff4e4e;
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .admin-loading, .no-messages {
     text-align: center;
-    padding: 60px;
+    padding: 100px;
     color: #7070a0;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+    background: #0e0e28;
     border-radius: 12px;
 }
