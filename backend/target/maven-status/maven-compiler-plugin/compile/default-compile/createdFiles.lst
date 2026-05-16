@@ -1,0 +1,4 @@
+com\jithin\portfolio\PortfolioApplication.class
+com\jithin\portfolio\controller\ContactController.class
+com\jithin\portfolio\model\Contact.class
+com\jithin\portfolio\repository\ContactRepository.class
