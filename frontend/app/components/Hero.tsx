@@ -1,0 +1,167 @@
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+
+import '../style/Hero.css';
+
+export default function Hero() {
+  const [typewriterText, setTypewriterText] = useState('');
+  const heroInnerRef = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const sentences = [
+      "Building modern and responsive web experiences.",
+      "Turning ideas into interactive websites.",
+      "Crafting clean code and beautiful UI.",
+      "Full Stack Web Developer passionate about design & performance.",
+      "Creating fast, scalable, and user-friendly websites.",
+      "Bringing digital ideas to life."
+    ];
+    
+    let sentenceIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typingSpeed = 100;
+
+    const type = () => {
+      const currentSentence = sentences[sentenceIndex];
+      
+      if (isDeleting) {
+        setTypewriterText(currentSentence.substring(0, charIndex - 1));
+        charIndex--;
+        typingSpeed = 50;
+      } else {
+        setTypewriterText(currentSentence.substring(0, charIndex + 1));
+        charIndex++;
+        typingSpeed = 100;
+      }
+
+      if (!isDeleting && charIndex === currentSentence.length) {
+        isDeleting = true;
+        typingSpeed = 2000; // Pause at the end
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        sentenceIndex = (sentenceIndex + 1) % sentences.length;
+        typingSpeed = 500; // Pause before next sentence
+      }
+
+      setTimeout(type, typingSpeed);
+    };
+
+    const initialTimeout = setTimeout(type, typingSpeed);
+    return () => clearTimeout(initialTimeout);
+  }, []);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      const { clientX: mx, clientY: my } = e;
+      if (heroInnerRef.current) {
+        heroInnerRef.current.style.transform = `perspective(1000px) rotateX(${(my / window.innerHeight - 0.5) * -20}deg) rotateY(${(mx / window.innerWidth - 0.5) * 20}deg)`;
+      }
+      if (spotlightRef.current) {
+        spotlightRef.current.style.setProperty('--x', mx + 'px');
+        spotlightRef.current.style.setProperty('--y', my + 'px');
+      }
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    return () => document.removeEventListener('mousemove', onMouseMove);
+  }, []);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const rip = document.createElement('div');
+      rip.style.cssText = `
+        position:fixed; border:2px solid var(--accent); border-radius:50%;
+        pointer-events:none; transform:translate(-50%,-50%);
+        animation:rippleAnim 1s ease-out forwards; z-index:9998;
+        left:${e.clientX}px; top:${e.clientY}px;
+      `;
+      document.body.appendChild(rip);
+      setTimeout(() => rip.remove(), 1000);
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
+  return (
+    <>
+      <div className="noise-overlay" />
+      <div className="vignette-overlay" />
+      <div ref={spotlightRef} className="spotlight" />
+
+      <div className="hero-wrapper">
+        <section id="home" className="hero-section">
+          <div ref={heroInnerRef} className="hero-inner">
+            <p className="hero-tag">
+              <span className="hero-tag-line" />
+              Full Stack Developer & Web Designer
+              <span className="hero-tag-line" />
+            </p>
+            <h1 className="hero-title">
+              <span className="hero-name-gradient">Jithin</span>{' '}
+              <span className="hero-name-gradient">P</span>{' '}
+              <span className="hero-text">Joji.</span>
+            </h1>
+            <p className="typewriter-text">
+              {typewriterText}
+              <span className="typewriter-cursor" />
+            </p>
+            <p className="hero-desc">
+              Crafting high-performance web applications and stunning user interfaces. Turning complex problems into elegant, scalable solutions — one pixel and commit at a time.
+            </p>
+            <div className="hero-btns">
+              <Link href="/projects" className="btn-primary" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                View Projects
+              </Link>
+              <Link href="/contact" className="btn-secondary" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                Hire Me
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Right Stats Panel */}
+        <div className="hero-stats-panel">
+          {[
+            { num: '15+', label: 'Projects', color: 'var(--accent)' },
+            { num: '1yr', label: 'Experience', color: 'var(--accent2)' },
+            { num: '2K+', label: 'GitHub commits', color: 'var(--accent3)' },
+            { num: '99%', label: 'Client satisfaction', color: 'var(--green)' },
+          ].map(s => (
+            <div key={s.label} className="hero-stat-card">
+              <div className="stat-num" style={{ color: s.color }}>{s.num}</div>
+              <div className="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Social Sidebar */}
+        <div className="hero-social-sidebar">
+          {[
+            { icon: 'fab fa-github', href: 'https://github.com/jithin2501', label: '' },
+            { icon: 'fab fa-linkedin-in', href: 'https://www.linkedin.com/in/jithin05/', label: '' },
+            { icon: 'far fa-envelope', href: 'mailto:jithinpjoji@gmail.com', label: 'jithinpjoji@gmail.com' },
+            { icon: 'fas fa-phone', href: 'tel:+919061058123', label: '+91 9061058123' },
+            { icon: 'fas fa-location-dot', href: '#', label: 'Bengaluru, Kerala, India' },
+          ].map((s, i) => (
+            <a
+              key={i}
+              href={s.href}
+              target={s.href.startsWith('http') ? '_blank' : undefined}
+              rel="noreferrer"
+              className="social-link"
+            >
+              <i className={s.icon} />
+              {s.label && (
+                <span className="social-tooltip">
+                  {s.label}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}

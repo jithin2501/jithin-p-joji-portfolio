@@ -1,0 +1,165 @@
+.download-btn-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.download-label {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1.2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    width: 250px;
+    height: 60px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 6px;
+    position: relative;
+    user-select: none;
+    overflow: hidden;
+    gap: 15px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.download-label:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 25px rgba(124, 92, 255, 0.4);
+}
+
+.download-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    white-space: nowrap;
+    flex-grow: 1;
+    text-align: left;
+    padding-right: 10px;
+    pointer-events: none;
+}
+
+.download-right-content {
+    position: absolute;
+    left: 75px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 85px);
+    pointer-events: none;
+}
+
+.download-counter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    position: absolute;
+    transform: translateY(100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+.download-status-text {
+    font-size: 18px;
+    font-weight: 700;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.download-circle {
+    height: 44px;
+    width: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 5;
+}
+
+.download-icon {
+    color: #fff;
+    width: 20px;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-ring__circle {
+    stroke: #fff;
+    stroke-width: 4;
+    fill: transparent;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.1s linear;
+}
+
+/* Loading Phase */
+.download-label.loading {
+    width: 210px;
+}
+
+.download-label.loading .download-title {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.download-label.loading .download-counter-wrapper {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Finished Phase */
+.download-label.done {
+    width: 140px;
+    border-color: var(--accent);
+    background-color: var(--accent);
+    box-shadow: 0 0 25px rgba(124, 92, 255, 0.4);
+}
+
+.download-label.done .download-title {
+    opacity: 0;
+    display: none;
+}
+
+.download-label.done .download-circle {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.download-label.done .download-counter-wrapper {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.download-label.done .download-status-text {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%);
+}
