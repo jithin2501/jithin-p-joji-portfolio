@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Full Stack Developer Portfolio",
 };
 
+import MainLayout from "./components/MainLayout";
+
 export default function RootLayout({
   children,
 }: {
@@ -28,9 +30,9 @@ export default function RootLayout({
       </head>
       <body style={{ background: 'transparent', color: 'var(--text)' }}>
         <HeroCanvas />
-        <Navbar />
-        {children}
-        <Footer />
+        <MainLayout>
+          {children}
+        </MainLayout>
       </body>
     </html>
   );
