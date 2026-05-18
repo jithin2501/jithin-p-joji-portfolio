@@ -136,7 +136,7 @@ export default function AboutImagePanel() {
     return (
         <div className="settings-form">
             <div className="content-header" style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '24px' }}>
-                <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#fff', margin: 0 }}>About Image Settings</h2>
+                <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>About Image Settings</h2>
             </div>
 
             {successMessage && <div className="admin-success-toast" style={{ width: '100%' }}>{successMessage}</div>}

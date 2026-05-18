@@ -66,7 +66,7 @@ export default function AdminPanel() {
                 ) : activeTab === 'resumes' ? (
                     <>
                         <div className="content-header" style={{ marginBottom: '24px' }}>
-                            <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#fff', margin: 0 }}>Resume Manager</h2>
+                            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Resume Manager</h2>
                         </div>
                         <ResumesPanel />
                     </>
