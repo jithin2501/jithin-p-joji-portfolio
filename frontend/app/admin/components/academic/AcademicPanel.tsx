@@ -46,7 +46,7 @@ export default function AcademicPanel() {
     const [iconType, setIconType] = useState('graduation');
     const [saving, setSaving] = useState(false);
 
-    // Left Column Settings state
+    // Settings state
     const [settingsLoading, setSettingsLoading] = useState(true);
     const [description, setDescription] = useState('');
     const [highlight1, setHighlight1] = useState('');
@@ -62,9 +62,14 @@ export default function AcademicPanel() {
     const [stat3Label, setStat3Label] = useState('');
     const [stat3Value, setStat3Value] = useState('');
     
-    const [savingSettings, setSavingSettings] = useState(false);
-    const [settingsSuccess, setSettingsSuccess] = useState<string | null>(null);
-    const [settingsError, setSettingsError] = useState<string | null>(null);
+    // Split saving states
+    const [savingSummary, setSavingSummary] = useState(false);
+    const [summarySuccess, setSummarySuccess] = useState<string | null>(null);
+    const [summaryError, setSummaryError] = useState<string | null>(null);
+
+    const [savingStats, setSavingStats] = useState(false);
+    const [statsSuccess, setStatsSuccess] = useState<string | null>(null);
+    const [statsError, setStatsError] = useState<string | null>(null);
 
     // Fetch Academic Timeline entries
     const fetchAcademics = async () => {
@@ -101,7 +106,7 @@ export default function AcademicPanel() {
             setStat3Value(data.stat3_value);
         } catch (err) {
             console.error(err);
-            setSettingsError('Could not retrieve general academic path configurations.');
+            setSummaryError('Could not retrieve general academic path configurations.');
         } finally {
             setSettingsLoading(false);
         }
@@ -203,12 +208,12 @@ export default function AcademicPanel() {
         setIconType('graduation');
     };
 
-    // Handle Left Column Settings Submit
-    const handleSaveSettings = async (e: React.FormEvent) => {
+    // Handle Left Column Summary & Highlights Save
+    const handleSaveSummary = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSavingSettings(true);
-        setSettingsSuccess(null);
-        setSettingsError(null);
+        setSavingSummary(true);
+        setSummarySuccess(null);
+        setSummaryError(null);
 
         const payload = {
             description: description.trim(),
@@ -235,13 +240,55 @@ export default function AcademicPanel() {
             });
 
             if (!res.ok) throw new Error('Failed to save settings');
-            setSettingsSuccess('Academic description and highlights updated successfully!');
-            setTimeout(() => setSettingsSuccess(null), 3000);
+            setSummarySuccess('Academic summary and highlights updated successfully!');
+            setTimeout(() => setSummarySuccess(null), 3000);
         } catch (err) {
             console.error(err);
-            setSettingsError('Failed to save academic path configurations.');
+            setSummaryError('Failed to save academic summary.');
         } finally {
-            setSavingSettings(false);
+            setSavingSummary(false);
+        }
+    };
+
+    // Handle Right Column Stats Grid Save
+    const handleSaveStats = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSavingStats(true);
+        setStatsSuccess(null);
+        setStatsError(null);
+
+        const payload = {
+            description: description.trim(),
+            highlights: [
+                highlight1.trim(),
+                highlight2.trim(),
+                highlight3.trim(),
+                highlight4.trim(),
+                highlight5.trim()
+            ].filter(h => h.length > 0),
+            stat1_label: stat1Label.trim(),
+            stat1_value: stat1Value.trim(),
+            stat2_label: stat2Label.trim(),
+            stat2_value: stat2Value.trim(),
+            stat3_label: stat3Label.trim(),
+            stat3_value: stat3Value.trim()
+        };
+
+        try {
+            const res = await fetch('http://localhost:8080/api/academics/settings', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error('Failed to save settings');
+            setStatsSuccess('Academic stats display cards updated successfully!');
+            setTimeout(() => setStatsSuccess(null), 3000);
+        } catch (err) {
+            console.error(err);
+            setStatsError('Failed to save academic stats.');
+        } finally {
+            setSavingStats(false);
         }
     };
 
@@ -260,11 +307,10 @@ export default function AcademicPanel() {
     }
 
     return (
-        <div className="experience-manager-grid">
-            {/* Left Side: Create/Edit and Settings Form */}
-            <div className="experience-manager-left">
-                {/* Milestone Form */}
-                <form onSubmit={handleSubmit} className="settings-card experience-form-card">
+        <div className="experience-manager-grid" style={{ alignItems: 'stretch' }}>
+            {/* Box 1 (Row 1 Left): Add/Edit Milestone Form */}
+            <form onSubmit={handleSubmit} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+                <div>
                     <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
                         <GraduationCap size={18} className="card-header-icon" />
                         <h3 style={{ margin: 0, fontSize: '16px' }}>
@@ -362,186 +408,53 @@ export default function AcademicPanel() {
                             </select>
                         </div>
                     </div>
+                </div>
 
-                    <div className="form-actions-row">
-                        {editingId && (
-                            <button 
-                                type="button" 
-                                className="remove-action-btn"
-                                onClick={resetForm}
-                                style={{ margin: 0, padding: '10px 18px', width: 'auto' }}
-                            >
-                                Cancel Edit
-                            </button>
-                        )}
+                <div className="form-actions-row" style={{ marginTop: '20px' }}>
+                    {editingId && (
                         <button 
-                            type="submit" 
-                            className="save-settings-btn" 
-                            disabled={saving}
-                            style={{ flex: 1, justifyContent: 'center' }}
+                            type="button" 
+                            className="remove-action-btn"
+                            onClick={resetForm}
+                            style={{ margin: 0, padding: '10px 18px', width: 'auto' }}
                         >
-                            {saving ? (
-                                <>
-                                    <RefreshCw size={16} className="spin-icon" /> Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <Save size={16} /> {editingId ? 'Update Milestone' : 'Add Milestone'}
-                                </>
-                            )}
+                            Cancel Edit
                         </button>
-                    </div>
-                </form>
-
-                {/* Left Side Description & Highlights Form */}
-                <form onSubmit={handleSaveSettings} className="settings-card experience-form-card" style={{ marginTop: '24px' }}>
-                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
-                        <Sliders size={18} className="card-header-icon" />
-                        <h3 style={{ margin: 0, fontSize: '16px' }}>Academic Summary & Highlights</h3>
-                    </div>
-
-                    {settingsSuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{settingsSuccess}</div>}
-                    {settingsError && <div className="admin-error" style={{ marginBottom: '16px' }}>{settingsError}</div>}
-
-                    <div className="form-group">
-                        <label htmlFor="acad-desc-text">Left-side Description Text</label>
-                        <textarea
-                            id="acad-desc-text"
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            placeholder="Describe your academic foundation mindset..."
-                            rows={3}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Academic Highlights (5 list points)</label>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <input
-                                type="text"
-                                value={highlight1}
-                                onChange={e => setHighlight1(e.target.value)}
-                                placeholder="Highlight 1 (e.g. Consistent Academic Excellence)"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={highlight2}
-                                onChange={e => setHighlight2(e.target.value)}
-                                placeholder="Highlight 2 (e.g. Major Focus in Software Engineering)"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={highlight3}
-                                onChange={e => setHighlight3(e.target.value)}
-                                placeholder="Highlight 3 (e.g. 10+ Technical Semester Projects)"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={highlight4}
-                                onChange={e => setHighlight4(e.target.value)}
-                                placeholder="Highlight 4 (e.g. Consistent Dean's List Awardee)"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={highlight5}
-                                onChange={e => setHighlight5(e.target.value)}
-                                placeholder="Highlight 5 (e.g. Specialized in Full-Stack Dev)"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Academic Stats Grid (3 display cards)</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '8px' }}>
-                            <input
-                                type="text"
-                                value={stat1Label}
-                                onChange={e => setStat1Label(e.target.value)}
-                                placeholder="Stat 1 Label (e.g. B.Tech)"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={stat1Value}
-                                onChange={e => setStat1Value(e.target.value)}
-                                placeholder="Stat 1 Value (e.g. 8.5)"
-                                required
-                            />
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '8px' }}>
-                            <input
-                                type="text"
-                                value={stat2Label}
-                                onChange={e => setStat2Label(e.target.value)}
-                                placeholder="Stat 2 Label (e.g. 12th (PCMB))"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={stat2Value}
-                                onChange={e => setStat2Value(e.target.value)}
-                                placeholder="Stat 2 Value (e.g. 91%)"
-                                required
-                            />
-                        </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                            <input
-                                type="text"
-                                value={stat3Label}
-                                onChange={e => setStat3Label(e.target.value)}
-                                placeholder="Stat 3 Label (e.g. 10th)"
-                                required
-                            />
-                            <input
-                                type="text"
-                                value={stat3Value}
-                                onChange={e => setStat3Value(e.target.value)}
-                                placeholder="Stat 3 Value (e.g. 80%)"
-                                required
-                            />
-                        </div>
-                    </div>
-
+                    )}
                     <button 
                         type="submit" 
                         className="save-settings-btn" 
-                        disabled={savingSettings}
-                        style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}
+                        disabled={saving}
+                        style={{ flex: 1, justifyContent: 'center' }}
                     >
-                        {savingSettings ? (
+                        {saving ? (
                             <>
-                                <RefreshCw size={16} className="spin-icon" /> Saving Summary...
+                                <RefreshCw size={16} className="spin-icon" /> Saving...
                             </>
                         ) : (
                             <>
-                                <Save size={16} /> Save Academic Summary
+                                <Save size={16} /> {editingId ? 'Update Milestone' : 'Add Milestone'}
                             </>
                         )}
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
 
-            {/* Right Side: Interactive Stored Entries Timeline */}
-            <div className="experience-manager-right">
-                <div className="settings-card-header" style={{ marginBottom: '16px', paddingBottom: '12px' }}>
+            {/* Box 2 (Row 1 Right): Stored Timeline Milestones Card */}
+            <div className="settings-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', margin: 0 }}>
+                <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
                     <GraduationCap size={18} className="card-header-icon" />
                     <h3 style={{ margin: 0, fontSize: '16px' }}>Stored Timeline Milestones ({academics.length})</h3>
                 </div>
 
-                <div className="stored-experiences-list">
+                <div className="stored-experiences-list" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
                     {academics.length === 0 ? (
                         <div className="no-messages" style={{ padding: '60px' }}>
                             No academic entries saved. Add your first milestone on the left!
                         </div>
                     ) : (
                         academics.map(acad => (
-                            <div key={acad.id} className="admin-exp-item">
+                            <div key={acad.id} className="admin-exp-item" style={{ marginBottom: '16px' }}>
                                 <div className="admin-exp-header">
                                     <div className="admin-exp-info">
                                         <div className="admin-exp-title-box" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -594,6 +507,203 @@ export default function AcademicPanel() {
                     )}
                 </div>
             </div>
+
+            {/* Box 3 (Row 2 Left): Academic Summary & Highlights Form */}
+            <form onSubmit={handleSaveSummary} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+                <div>
+                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
+                        <Sliders size={18} className="card-header-icon" />
+                        <h3 style={{ margin: 0, fontSize: '16px' }}>Academic Summary & Highlights</h3>
+                    </div>
+
+                    {summarySuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{summarySuccess}</div>}
+                    {summaryError && <div className="admin-error" style={{ marginBottom: '16px' }}>{summaryError}</div>}
+
+                    <div className="form-group">
+                        <label htmlFor="acad-desc-text">Left-side Description Text</label>
+                        <textarea
+                            id="acad-desc-text"
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
+                            placeholder="Describe your academic foundation mindset..."
+                            rows={4}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Academic Highlights (5 list points)</label>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <input
+                                type="text"
+                                value={highlight1}
+                                onChange={e => setHighlight1(e.target.value)}
+                                placeholder="Highlight 1 (e.g. Consistent Academic Excellence)"
+                                required
+                            />
+                            <input
+                                type="text"
+                                value={highlight2}
+                                onChange={e => setHighlight2(e.target.value)}
+                                placeholder="Highlight 2 (e.g. Major Focus in Software Engineering)"
+                                required
+                            />
+                            <input
+                                type="text"
+                                value={highlight3}
+                                onChange={e => setHighlight3(e.target.value)}
+                                placeholder="Highlight 3 (e.g. 10+ Technical Semester Projects)"
+                                required
+                            />
+                            <input
+                                type="text"
+                                value={highlight4}
+                                onChange={e => setHighlight4(e.target.value)}
+                                placeholder="Highlight 4 (e.g. Consistent Dean's List Awardee)"
+                                required
+                            />
+                            <input
+                                type="text"
+                                value={highlight5}
+                                onChange={e => setHighlight5(e.target.value)}
+                                placeholder="Highlight 5 (e.g. Specialized in Full-Stack Dev)"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    className="save-settings-btn" 
+                    disabled={savingSummary}
+                    style={{ width: '100%', justifyContent: 'center', marginTop: '20px' }}
+                >
+                    {savingSummary ? (
+                        <>
+                            <RefreshCw size={16} className="spin-icon" /> Saving Summary...
+                        </>
+                    ) : (
+                        <>
+                            <Save size={16} /> Save Summary & Highlights
+                        </>
+                    )}
+                </button>
+            </form>
+
+            {/* Box 4 (Row 2 Right): Academic Stats Grid Form */}
+            <form onSubmit={handleSaveStats} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+                <div>
+                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
+                        <Sliders size={18} className="card-header-icon" />
+                        <h3 style={{ margin: 0, fontSize: '16px' }}>Academic Stats Grid (3 display cards)</h3>
+                    </div>
+
+                    {statsSuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{statsSuccess}</div>}
+                    {statsError && <div className="admin-error" style={{ marginBottom: '16px' }}>{statsError}</div>}
+
+                    <div className="form-group" style={{ marginBottom: '16px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#a78bfa' }}>Card 1 (e.g. B.Tech / CGPA)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div>
+                                <label htmlFor="stat1-lbl" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px', display: 'block' }}>Label</label>
+                                <input
+                                    id="stat1-lbl"
+                                    type="text"
+                                    value={stat1Label}
+                                    onChange={e => setStat1Label(e.target.value)}
+                                    placeholder="Stat 1 Label (e.g. B.Tech)"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="stat1-val" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px', display: 'block' }}>Value</label>
+                                <input
+                                    id="stat1-val"
+                                    type="text"
+                                    value={stat1Value}
+                                    onChange={e => setStat1Value(e.target.value)}
+                                    placeholder="Stat 1 Value (e.g. 8.5)"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group" style={{ marginBottom: '16px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#22d3ee' }}>Card 2 (e.g. 12th / Percentage)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div>
+                                <label htmlFor="stat2-lbl" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px', display: 'block' }}>Label</label>
+                                <input
+                                    id="stat2-lbl"
+                                    type="text"
+                                    value={stat2Label}
+                                    onChange={e => setStat2Label(e.target.value)}
+                                    placeholder="Stat 2 Label (e.g. 12th (PCMB))"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="stat2-val" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px', display: 'block' }}>Value</label>
+                                <input
+                                    id="stat2-val"
+                                    type="text"
+                                    value={stat2Value}
+                                    onChange={e => setStat2Value(e.target.value)}
+                                    placeholder="Stat 2 Value (e.g. 91%)"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#34d399' }}>Card 3 (e.g. 10th / Percentage)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div>
+                                <label htmlFor="stat3-lbl" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px', display: 'block' }}>Label</label>
+                                <input
+                                    id="stat3-lbl"
+                                    type="text"
+                                    value={stat3Label}
+                                    onChange={e => setStat3Label(e.target.value)}
+                                    placeholder="Stat 3 Label (e.g. 10th)"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="stat3-val" style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '4px', display: 'block' }}>Value</label>
+                                <input
+                                    id="stat3-val"
+                                    type="text"
+                                    value={stat3Value}
+                                    onChange={e => setStat3Value(e.target.value)}
+                                    placeholder="Stat 3 Value (e.g. 80%)"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    className="save-settings-btn" 
+                    disabled={savingStats}
+                    style={{ width: '100%', justifyContent: 'center' }}
+                >
+                    {savingStats ? (
+                        <>
+                            <RefreshCw size={16} className="spin-icon" /> Saving Stats...
+                        </>
+                    ) : (
+                        <>
+                            <Save size={16} /> Save Academic Stats
+                        </>
+                    )}
+                </button>
+            </form>
         </div>
     );
 }
