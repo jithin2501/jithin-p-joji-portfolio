@@ -43,12 +43,7 @@ export default function AdminPanel() {
                 {activeTab === 'messages' ? (
                     <MessagesPanel />
                 ) : (
-                    <>
-                        <div className="content-header">
-                            <h2>Portfolio Settings</h2>
-                        </div>
-                        <SettingsPanel />
-                    </>
+                    <SettingsPanel />
                 )}
             </main>
         </div>

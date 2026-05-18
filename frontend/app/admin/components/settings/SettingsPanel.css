@@ -6,6 +6,10 @@
     margin-top: 10px;
 }
 
+.settings-form .content-header {
+    margin-bottom: 0; /* Remove global margin-bottom to eliminate double spacing */
+}
+
 .settings-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -92,42 +96,38 @@
     padding-left: 40px;
 }
 
-.settings-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .save-settings-btn {
-    background: #8e6eff; /* Much brighter dynamic violet */
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 14px 32px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 20px rgba(142, 110, 255, 0.4);
+    background: #8b5cf6 !important; /* Extremely bright, rich electric purple */
+    color: #ffffff !important; /* Crisp, pure white text */
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 8px 18px !important; /* Sleek, perfectly proportioned height */
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.35) !important;
+    opacity: 1 !important;
 }
 
 .save-settings-btn:hover:not(:disabled) {
-    background: #a288ff; /* Even brighter on hover */
-    box-shadow: 0 4px 25px rgba(142, 110, 255, 0.6);
-    transform: translateY(-2px);
+    background: #a78bfa !important; /* Super bright glowing pastel purple on hover */
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6) !important;
+    color: #ffffff !important;
 }
 
 .save-settings-btn:active:not(:disabled) {
-    background: #553bb8; /* Satisfying dark/dull purple when pressed */
-    box-shadow: 0 2px 10px rgba(142, 110, 255, 0.2);
-    transform: translateY(1px); /* Press down click effect */
+    background: #6d28d9 !important; /* Rich active click feedback */
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2) !important;
+    transform: translateY(1px) !important;
 }
 
 .save-settings-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
 }
 
 .admin-success-toast {

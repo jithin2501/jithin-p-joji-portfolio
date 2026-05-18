@@ -103,6 +103,21 @@ export default function SettingsPanel() {
 
     return (
         <form onSubmit={handleSave} className="settings-form">
+            <div className="content-header">
+                <h2>Portfolio Settings</h2>
+                <button type="submit" className="save-settings-btn" disabled={saving}>
+                    {saving ? (
+                        <>
+                            <RefreshCw size={16} className="spin-icon" /> Saving...
+                        </>
+                    ) : (
+                        <>
+                            <Save size={16} /> Save Changes
+                        </>
+                    )}
+                </button>
+            </div>
+
             {successMessage && <div className="admin-success-toast">{successMessage}</div>}
             {error && <div className="admin-error">{error}</div>}
 
@@ -247,20 +262,6 @@ export default function SettingsPanel() {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="settings-actions">
-                <button type="submit" className="save-settings-btn" disabled={saving}>
-                    {saving ? (
-                        <>
-                            <RefreshCw size={16} className="spin-icon" /> Saving...
-                        </>
-                    ) : (
-                        <>
-                            <Save size={16} /> Save Changes
-                        </>
-                    )}
-                </button>
             </div>
         </form>
     );
