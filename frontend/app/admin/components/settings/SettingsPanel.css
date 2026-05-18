@@ -1,0 +1,155 @@
+/* Settings Page Styles */
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 10px;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+}
+
+.settings-card {
+    background: #0e0e28;
+    border: 1px solid rgba(124, 92, 255, 0.1);
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.settings-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 16px;
+}
+
+.card-header-icon {
+    color: #7c5cff;
+}
+
+.settings-card-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.settings-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 13px;
+    color: #7070a0;
+    font-weight: 500;
+}
+
+.form-group input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(124, 92, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #7c5cff;
+    background: rgba(124, 92, 255, 0.05);
+    box-shadow: 0 0 10px rgba(124, 92, 255, 0.15);
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-field-icon {
+    position: absolute;
+    left: 14px;
+    color: #505080;
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding-left: 40px;
+}
+
+.settings-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-settings-btn {
+    background: #8e6eff; /* Much brighter dynamic violet */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(142, 110, 255, 0.4);
+}
+
+.save-settings-btn:hover:not(:disabled) {
+    background: #a288ff; /* Even brighter on hover */
+    box-shadow: 0 4px 25px rgba(142, 110, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+.save-settings-btn:active:not(:disabled) {
+    background: #553bb8; /* Satisfying dark/dull purple when pressed */
+    box-shadow: 0 2px 10px rgba(142, 110, 255, 0.2);
+    transform: translateY(1px); /* Press down click effect */
+}
+
+.save-settings-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-success-toast {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.spin-icon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
