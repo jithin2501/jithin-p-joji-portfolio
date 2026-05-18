@@ -101,6 +101,9 @@ export default function Hero() {
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
+      // Prevent spawning ripples when clicking on navbar or footer items
+      if ((e.target as HTMLElement).closest('.navbar') || (e.target as HTMLElement).closest('.footer-section')) return;
+
       const rip = document.createElement('div');
       rip.style.cssText = `
         position:fixed; border:2px solid var(--accent); border-radius:50%;

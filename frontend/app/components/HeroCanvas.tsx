@@ -205,6 +205,9 @@ export default function HeroCanvas() {
       // Check if we are on the project details page, contact page, or admin panel
       if (window.location.pathname.includes('/projects/') || window.location.pathname === '/contact' || window.location.pathname.startsWith('/admin')) return;
       
+      // Prevent spawning ripples when clicking on navbar or footer items
+      if ((e.target as HTMLElement).closest('.navbar') || (e.target as HTMLElement).closest('.footer-section')) return;
+      
       const rip = document.createElement('div');
       rip.className = 'ripple';
       rip.style.left = e.clientX + 'px';
