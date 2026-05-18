@@ -117,6 +117,13 @@ export default function ContactPage() {
                     <p>{socials.location}</p>
                   </div>
                 </div>
+                <div className="connect-item">
+                  <div className="connect-icon-box availability" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}><Clock size={20} /></div>
+                  <div className="connect-info">
+                    <h4>Availability</h4>
+                    <p>Open to freelance & opportunities</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -125,6 +132,8 @@ export default function ContactPage() {
               <div className="social-row" style={{ justifyContent: 'center' }}>
                 <a href={socials.github} target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-github" /></a>
                 <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-linkedin-in" /></a>
+                <a href="https://www.instagram.com/jithin_p_joji/" target="_blank" rel="noopener noreferrer" className="social-btn-small" title="Instagram"><i className="fab fa-instagram" /></a>
+                <a href="https://wa.me/919061058123" target="_blank" rel="noopener noreferrer" className="social-btn-small" title="WhatsApp"><i className="fab fa-whatsapp" /></a>
               </div>
             </div>
           </aside>
