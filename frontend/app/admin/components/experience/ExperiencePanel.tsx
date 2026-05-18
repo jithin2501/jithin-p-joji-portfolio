@@ -1,0 +1,383 @@
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Briefcase, Calendar, Trash2, Edit2, Plus, Save, RefreshCw, MapPin, Tag } from 'lucide-react';
+import './ExperiencePanel.css';
+
+interface ExperienceData {
+    id: string;
+    title: string;
+    company: string;
+    date_from: string;
+    date_to: string;
+    desc: string;
+    tags: string[];
+    location: string;
+    dot_color: string;
+    created_at: string;
+}
+
+export default function ExperiencePanel() {
+    const [experiences, setExperiences] = useState<ExperienceData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    // Form states
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [title, setTitle] = useState('');
+    const [company, setCompany] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('Present');
+    const [desc, setDesc] = useState('');
+    const [location, setLocation] = useState('');
+    const [dotColor, setDotColor] = useState('#818cf8');
+    const [tagInput, setTagInput] = useState('');
+
+    const fetchExperiences = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('http://localhost:8080/api/experiences/');
+            if (!response.ok) throw new Error('Failed to fetch experiences');
+            const data = await response.json();
+            setExperiences(data);
+            setError(null);
+        } catch (err) {
+            setError('Could not connect to the backend database.');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchExperiences();
+    }, []);
+
+    const resetForm = () => {
+        setEditingId(null);
+        setTitle('');
+        setCompany('');
+        setDateFrom('');
+        setDateTo('Present');
+        setDesc('');
+        setLocation('');
+        setDotColor('#818cf8');
+        setTagInput('');
+    };
+
+    const handleEdit = (exp: ExperienceData) => {
+        setEditingId(exp.id);
+        setTitle(exp.title);
+        setCompany(exp.company);
+        setDateFrom(exp.date_from);
+        setDateTo(exp.date_to);
+        setDesc(exp.desc);
+        setLocation(exp.location);
+        setDotColor(exp.dot_color);
+        setTagInput(exp.tags.join(', '));
+        
+        // Scroll form into view gently
+        document.querySelector('.experience-form-card')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!title.trim() || !company.trim() || !dateFrom.trim() || !dateTo.trim() || !desc.trim()) {
+            setError('Please fill in all required fields.');
+            return;
+        }
+
+        setSaving(true);
+        setError(null);
+        setSuccessMessage(null);
+
+        // Process tags: split by comma, strip whitespace, remove empty values
+        const parsedTags = tagInput
+            .split(',')
+            .map(t => t.trim())
+            .filter(t => t.length > 0);
+
+        const payload = {
+            title: title.trim(),
+            company: company.trim(),
+            date_from: dateFrom.trim(),
+            date_to: dateTo.trim(),
+            desc: desc.trim(),
+            tags: parsedTags,
+            location: location.trim(),
+            dot_color: dotColor
+        };
+
+        try {
+            let response;
+            if (editingId) {
+                // Update route
+                response = await fetch(`http://localhost:8080/api/experiences/${editingId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } else {
+                // Create route
+                response = await fetch('http://localhost:8080/api/experiences/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            }
+
+            if (!response.ok) throw new Error('Request failed');
+            
+            setSuccessMessage(editingId ? 'Experience updated successfully!' : 'New experience added successfully!');
+            resetForm();
+            await fetchExperiences();
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (err) {
+            setError('Failed to save experience details.');
+            console.error(err);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this experience entry?')) return;
+        
+        try {
+            const response = await fetch(`http://localhost:8080/api/experiences/${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Delete failed');
+            
+            setSuccessMessage('Experience deleted successfully!');
+            await fetchExperiences();
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (err) {
+            setError('Failed to delete experience.');
+            console.error(err);
+        }
+    };
+
+    if (loading && experiences.length === 0) {
+        return <div className="admin-loading">Loading career experiences...</div>;
+    }
+
+    return (
+        <div className="experience-manager-grid">
+            {/* Left Side: Create/Edit Form */}
+            <div className="experience-manager-left">
+                <form onSubmit={handleSubmit} className="settings-card experience-form-card">
+                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
+                        <Briefcase size={18} className="card-header-icon" />
+                        <h3 style={{ margin: 0, fontSize: '16px' }}>
+                            {editingId ? 'Edit Experience Entry' : 'Add New Experience'}
+                        </h3>
+                    </div>
+
+                    {successMessage && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{successMessage}</div>}
+                    {error && <div className="admin-error" style={{ marginBottom: '16px' }}>{error}</div>}
+
+                    <div className="form-grid-two">
+                        <div className="form-group">
+                            <label htmlFor="exp-title">Job Title *</label>
+                            <input
+                                id="exp-title"
+                                type="text"
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
+                                placeholder="Full Stack Developer"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="exp-company">Company Name *</label>
+                            <input
+                                id="exp-company"
+                                type="text"
+                                value={company}
+                                onChange={e => setCompany(e.target.value)}
+                                placeholder="RP Studios"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-grid-two">
+                        <div className="form-group">
+                            <label htmlFor="exp-from">Duration From *</label>
+                            <input
+                                id="exp-from"
+                                type="text"
+                                value={dateFrom}
+                                onChange={e => setDateFrom(e.target.value)}
+                                placeholder="Mar 2026"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="exp-to">Duration To *</label>
+                            <input
+                                id="exp-to"
+                                type="text"
+                                value={dateTo}
+                                onChange={e => setDateTo(e.target.value)}
+                                placeholder="Present or May 2026"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                        <label htmlFor="exp-location">Location (e.g. Bangalore)</label>
+                        <div className="input-with-icon">
+                            <MapPin size={16} className="input-field-icon" />
+                            <input
+                                id="exp-location"
+                                type="text"
+                                value={location}
+                                onChange={e => setLocation(e.target.value)}
+                                placeholder="Bangalore, India"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="exp-tags">Technologies Used (comma separated)</label>
+                        <div className="input-with-icon">
+                            <Tag size={16} className="input-field-icon" />
+                            <input
+                                id="exp-tags"
+                                type="text"
+                                value={tagInput}
+                                onChange={e => setTagInput(e.target.value)}
+                                placeholder="React, Node.js, MongoDB, Docker"
+                            />
+                        </div>
+                        {tagInput.trim() && (
+                            <div className="tags-live-preview">
+                                {tagInput.split(',').map(t => t.trim()).filter(t => t.length > 0).map((t, idx) => (
+                                    <span key={idx} className="live-preview-tag" style={{ borderLeftColor: dotColor }}>
+                                        {t}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="exp-desc">Job Details & Roles *</label>
+                        <textarea
+                            id="exp-desc"
+                            value={desc}
+                            onChange={e => setDesc(e.target.value)}
+                            placeholder="Describe your responsibilities, technical stacks managed, accomplishments..."
+                            rows={5}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-actions-row">
+                        {editingId && (
+                            <button 
+                                type="button" 
+                                className="remove-action-btn"
+                                onClick={resetForm}
+                                style={{ margin: 0, padding: '10px 18px', width: 'auto' }}
+                            >
+                                Cancel Edit
+                            </button>
+                        )}
+                        <button 
+                            type="submit" 
+                            className="save-settings-btn" 
+                            disabled={saving}
+                            style={{ flex: 1, justifyContent: 'center' }}
+                        >
+                            {saving ? (
+                                <>
+                                    <RefreshCw size={16} className="spin-icon" /> Saving...
+                                </>
+                            ) : (
+                                <>
+                                    <Save size={16} /> {editingId ? 'Update Entry' : 'Add Experience'}
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {/* Right Side: Interactive Stored Entries Timeline */}
+            <div className="experience-manager-right">
+                <div className="settings-card-header" style={{ marginBottom: '16px', paddingBottom: '12px' }}>
+                    <Briefcase size={18} className="card-header-icon" />
+                    <h3 style={{ margin: 0, fontSize: '16px' }}>Stored Timeline Entries ({experiences.length})</h3>
+                </div>
+
+                <div className="stored-experiences-list">
+                    {experiences.length === 0 ? (
+                        <div className="no-messages" style={{ padding: '60px' }}>
+                            No career experiences saved. Add your first job on the left!
+                        </div>
+                    ) : (
+                        experiences.map(exp => (
+                            <div key={exp.id} className="admin-exp-item" style={{ borderLeftColor: exp.dot_color }}>
+                                <div className="admin-exp-header">
+                                    <div className="admin-exp-info">
+                                        <div className="admin-exp-title-box">
+                                            <h4>{exp.title}</h4>
+                                            <span className="admin-exp-company" style={{ color: exp.dot_color }}>
+                                                {exp.company}
+                                            </span>
+                                        </div>
+                                        <div className="admin-exp-meta">
+                                            <span className="admin-exp-date">
+                                                <Calendar size={12} />
+                                                {exp.date_from} — {exp.date_to}
+                                            </span>
+                                            {exp.location && (
+                                                <span className="admin-exp-loc">
+                                                    <MapPin size={12} />
+                                                    {exp.location}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="admin-exp-actions">
+                                        <button 
+                                            className="action-btn edit-btn" 
+                                            title="Edit This Entry"
+                                            onClick={() => handleEdit(exp)}
+                                        >
+                                            <Edit2 size={15} />
+                                        </button>
+                                        <button 
+                                            className="action-btn delete-btn" 
+                                            title="Delete Entry"
+                                            onClick={() => handleDelete(exp.id)}
+                                        >
+                                            <Trash2 size={15} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <p className="admin-exp-desc">{exp.desc}</p>
+
+                                {exp.tags && exp.tags.length > 0 && (
+                                    <div className="admin-exp-tags">
+                                        {exp.tags.map((tag, i) => (
+                                            <span key={i} className="admin-exp-tag" style={{ borderLeftColor: exp.dot_color }}>
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
