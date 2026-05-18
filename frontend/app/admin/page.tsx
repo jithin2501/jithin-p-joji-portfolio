@@ -1,14 +1,16 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, MessageSquare, Sliders } from 'lucide-react';
+import { Shield, MessageSquare, Sliders, FileText } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
+import ResumesPanel from './components/resumes/ResumesPanel';
 import './Admin.css';
 import './components/messages/MessagesPanel.css';
 import './components/settings/SettingsPanel.css';
+import './components/resumes/ResumesPanel.css';
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState<'messages' | 'settings'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes'>('messages');
 
     return (
         <div className="admin-layout">
@@ -32,6 +34,13 @@ export default function AdminPanel() {
                         <Sliders size={18} />
                         Settings
                     </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('resumes')}
+                    >
+                        <FileText size={18} />
+                        Resumes
+                    </button>
                 </nav>
                 <div className="sidebar-footer">
                     <button className="logout-btn" onClick={() => window.location.href = '/'}>
@@ -44,8 +53,15 @@ export default function AdminPanel() {
             <main className="admin-content">
                 {activeTab === 'messages' ? (
                     <MessagesPanel />
-                ) : (
+                ) : activeTab === 'settings' ? (
                     <SettingsPanel />
+                ) : (
+                    <>
+                        <div className="content-header" style={{ marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#fff', margin: 0 }}>Resume Manager</h2>
+                        </div>
+                        <ResumesPanel />
+                    </>
                 )}
             </main>
         </div>

@@ -8,13 +8,38 @@ export default function DownloadButton() {
 
   const circumference = 2 * Math.PI * 18; // ~113.1
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (status !== 'idle') return;
 
     setStatus('loading');
     setProgress(0);
 
-    const duration = 3000; // 3 seconds
+    let activeResumeData: { name: string; base64_data: string } | null = null;
+    let apiCompleted = false;
+    let animationCompleted = false;
+
+    // Fetch active resume from FastAPI/MongoDB
+    const fetchActiveResume = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/resumes/active');
+        if (response.ok) {
+          const data = await response.json();
+          activeResumeData = data;
+        } else {
+          console.warn('No active resume found in backend.');
+        }
+      } catch (err) {
+        console.error('Failed to fetch active resume:', err);
+      } finally {
+        apiCompleted = true;
+        checkCompletion();
+      }
+    };
+
+    fetchActiveResume();
+
+    // Start visual loader animation
+    const duration = 2000; // 2 seconds snappy animation
     const interval = 20;
     const steps = duration / interval;
     const increment = 100 / steps;
@@ -23,19 +48,39 @@ export default function DownloadButton() {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
-          setStatus('done');
-          
-          // Reset to idle after 10 seconds
-          setTimeout(() => {
-            setStatus('idle');
-            setProgress(0);
-          }, 10000);
-          
+          animationCompleted = true;
+          checkCompletion();
           return 100;
         }
         return prev + increment;
       });
     }, interval);
+
+    const checkCompletion = () => {
+      if (apiCompleted && animationCompleted) {
+        if (activeResumeData) {
+          setStatus('done');
+          
+          // Trigger browser PDF download
+          const link = document.createElement('a');
+          link.href = activeResumeData.base64_data;
+          link.download = `${activeResumeData.name}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Reset to idle after 6 seconds
+          setTimeout(() => {
+            setStatus('idle');
+            setProgress(0);
+          }, 6000);
+        } else {
+          alert('No active resume is configured in the Admin Panel yet. Please upload and activate one in the Resume Manager!');
+          setStatus('idle');
+          setProgress(0);
+        }
+      }
+    };
   };
 
   const offset = circumference - (progress / 100) * circumference;
