@@ -9,6 +9,7 @@ from app.api.v1.settings import router as settings_router
 from app.api.v1.resumes import router as resumes_router
 from app.api.v1.experiences import router as experiences_router
 from app.api.v1.academics import router as academics_router
+from app.api.v1.skills import router as skills_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,6 +41,7 @@ app.include_router(settings_router, prefix="/api/v1/settings", tags=["Settings v
 app.include_router(resumes_router, prefix="/api/v1/resumes", tags=["Resumes v1"])
 app.include_router(experiences_router, prefix="/api/v1/experiences", tags=["Experiences v1"])
 app.include_router(academics_router, prefix="/api/v1/academics", tags=["Academics v1"])
+app.include_router(skills_router, prefix="/api/v1/skills", tags=["Skills v1"])
 
 # Support compatibility with previous spring boot controller routes
 app.include_router(contact_router, prefix="/api/contacts", tags=["Contacts Compatibility"])
@@ -47,6 +49,7 @@ app.include_router(settings_router, prefix="/api/settings", tags=["Settings Comp
 app.include_router(resumes_router, prefix="/api/resumes", tags=["Resumes Compatibility"])
 app.include_router(experiences_router, prefix="/api/experiences", tags=["Experiences Compatibility"])
 app.include_router(academics_router, prefix="/api/academics", tags=["Academics Compatibility"])
+app.include_router(skills_router, prefix="/api/skills", tags=["Skills Compatibility"])
 
 @app.get("/")
 async def root():

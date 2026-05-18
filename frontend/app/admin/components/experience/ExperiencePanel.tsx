@@ -214,7 +214,7 @@ export default function ExperiencePanel() {
     }
 
     return (
-        <div className="experience-manager-grid" style={{ display: 'grid', gridTemplateColumns: '0.75fr 1.25fr', gap: '30px', alignItems: 'stretch' }}>
+        <div className="experience-manager-grid" style={{ display: 'grid', gridTemplateColumns: '0.65fr 1.35fr', gap: '30px', alignItems: 'stretch' }}>
             {/* Box 1 (Row 1 Left): Add/Edit Experience Form */}
             <form onSubmit={handleSubmit} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
                 <div>

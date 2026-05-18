@@ -1,0 +1,12 @@
+@import "../experience/ExperiencePanel.css";
+
+/* Skills Panel Specific Styles */
+.skills-icon-preview {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(124, 92, 255, 0.2);
+    border-radius: 8px;
+}

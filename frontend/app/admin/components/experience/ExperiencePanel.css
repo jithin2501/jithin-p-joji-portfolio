@@ -1,7 +1,7 @@
 /* Experience Panel Grid */
 .experience-manager-grid {
     display: grid;
-    grid-template-columns: 0.75fr 1.25fr;
+    grid-template-columns: 0.65fr 1.35fr;
     gap: 30px;
     align-items: stretch;
 }
