@@ -9,6 +9,37 @@ export default function Hero() {
   const heroInnerRef = useRef<HTMLDivElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
+  const [settings, setSettings] = useState({
+    hero: {
+      projects: '15+',
+      experience: '1yr',
+      commits: '2K+',
+      satisfaction: '99%'
+    },
+    socials: {
+      github: 'https://github.com/jithin2501',
+      linkedin: 'https://www.linkedin.com/in/jithin05/',
+      email: 'jithinpjoji@gmail.com',
+      phone: '+91 9061058123',
+      location: 'Bengaluru, Kerala, India'
+    }
+  });
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/settings');
+        if (response.ok) {
+          const data = await response.json();
+          setSettings(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch portfolio settings:', err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   useEffect(() => {
     const sentences = [
       "Building modern and responsive web experiences.",
@@ -124,10 +155,10 @@ export default function Hero() {
         {/* Right Stats Panel */}
         <div className="hero-stats-panel">
           {[
-            { num: '15+', label: 'Projects', color: 'var(--accent)' },
-            { num: '1yr', label: 'Experience', color: 'var(--accent2)' },
-            { num: '2K+', label: 'GitHub commits', color: 'var(--accent3)' },
-            { num: '99%', label: 'Client satisfaction', color: 'var(--green)' },
+            { num: settings.hero.projects, label: 'Projects', color: 'var(--accent)' },
+            { num: settings.hero.experience, label: 'Experience', color: 'var(--accent2)' },
+            { num: settings.hero.commits, label: 'GitHub commits', color: 'var(--accent3)' },
+            { num: settings.hero.satisfaction, label: 'Client satisfaction', color: 'var(--green)' },
           ].map(s => (
             <div key={s.label} className="hero-stat-card">
               <div className="stat-num" style={{ color: s.color }}>{s.num}</div>
@@ -139,11 +170,11 @@ export default function Hero() {
         {/* Social Sidebar */}
         <div className="hero-social-sidebar">
           {[
-            { icon: 'fab fa-github', href: 'https://github.com/jithin2501', label: '' },
-            { icon: 'fab fa-linkedin-in', href: 'https://www.linkedin.com/in/jithin05/', label: '' },
-            { icon: 'far fa-envelope', href: 'mailto:jithinpjoji@gmail.com', label: 'jithinpjoji@gmail.com' },
-            { icon: 'fas fa-phone', href: 'tel:+919061058123', label: '+91 9061058123' },
-            { icon: 'fas fa-location-dot', href: '#', label: 'Bengaluru, Kerala, India' },
+            { icon: 'fab fa-github', href: settings.socials.github, label: '' },
+            { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, label: '' },
+            { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, label: settings.socials.email },
+            { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, label: settings.socials.phone },
+            { icon: 'fas fa-location-dot', href: '#', label: settings.socials.location },
           ].map((s, i) => (
             <a
               key={i}

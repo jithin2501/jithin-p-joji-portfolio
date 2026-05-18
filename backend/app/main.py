@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import connect_to_mongo, close_mongo_connection
 from app.api.v1.contacts import router as contact_router
+from app.api.v1.settings import router as settings_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -32,9 +33,11 @@ app.add_middleware(
 
 # API v1 routes
 app.include_router(contact_router, prefix="/api/v1/contacts", tags=["Contacts v1"])
+app.include_router(settings_router, prefix="/api/v1/settings", tags=["Settings v1"])
 
-# Support compatibility with previous spring boot controller route: /api/contacts
+# Support compatibility with previous spring boot controller routes
 app.include_router(contact_router, prefix="/api/contacts", tags=["Contacts Compatibility"])
+app.include_router(settings_router, prefix="/api/settings", tags=["Settings Compatibility"])
 
 @app.get("/")
 async def root():

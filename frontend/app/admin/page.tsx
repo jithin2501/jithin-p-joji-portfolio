@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Mail, MessageSquare, Trash2, Shield, Calendar, Eye, X } from 'lucide-react';
+import { Mail, MessageSquare, Trash2, Shield, Calendar, Eye, X, Sliders } from 'lucide-react';
+import SettingsPanel from './components/SettingsPanel';
 import './Admin.css';
 
 interface Contact {
@@ -17,6 +18,7 @@ export default function AdminPanel() {
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings'>('messages');
 
     const fetchContacts = async () => {
         setLoading(true);
@@ -57,9 +59,19 @@ export default function AdminPanel() {
                     <span>Admin Panel</span>
                 </div>
                 <nav className="sidebar-nav">
-                    <button className="nav-item active">
+                    <button 
+                        className={`nav-item ${activeTab === 'messages' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('messages')}
+                    >
                         <MessageSquare size={18} />
                         Messages
+                    </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('settings')}
+                    >
+                        <Sliders size={18} />
+                        Settings
                     </button>
                 </nav>
                 <div className="sidebar-footer">
@@ -71,49 +83,60 @@ export default function AdminPanel() {
             </aside>
 
             <main className="admin-content">
-                <div className="content-header">
-                    <h2>Client Messages</h2>
-                    <span className="msg-count">{contacts.length} total</span>
-                </div>
+                {activeTab === 'messages' ? (
+                    <>
+                        <div className="content-header">
+                            <h2>Client Messages</h2>
+                            <span className="msg-count">{contacts.length} total</span>
+                        </div>
 
-                {error && <div className="admin-error">{error}</div>}
+                        {error && <div className="admin-error">{error}</div>}
 
-                {loading && contacts.length === 0 ? (
-                    <div className="admin-loading">Fetching data...</div>
-                ) : (
-                    <div className="messages-grid">
-                        {contacts.length === 0 && !error ? (
-                            <div className="no-messages">No messages yet.</div>
+                        {loading && contacts.length === 0 ? (
+                            <div className="admin-loading">Fetching data...</div>
                         ) : (
-                            contacts.map(contact => (
-                                <div key={contact.id} className="message-card">
-                                    <div className="sender-info">
-                                        <div className="sender-avatar">{contact.name.charAt(0)}</div>
-                                        <div className="sender-details">
-                                            <h3>{contact.name}</h3>
-                                            <p><Mail size={12} /> {contact.email}</p>
-                                            <div className="msg-date">
-                                                <Calendar size={12} />
-                                                {new Date(contact.createdAt).toLocaleString()}
+                            <div className="messages-grid">
+                                {contacts.length === 0 && !error ? (
+                                    <div className="no-messages">No messages yet.</div>
+                                ) : (
+                                    contacts.map(contact => (
+                                        <div key={contact.id} className="message-card">
+                                            <div className="sender-info">
+                                                <div className="sender-avatar">{contact.name.charAt(0)}</div>
+                                                <div className="sender-details">
+                                                    <h3>{contact.name}</h3>
+                                                    <p><Mail size={12} /> {contact.email}</p>
+                                                    <div className="msg-date">
+                                                        <Calendar size={12} />
+                                                        {new Date(contact.createdAt).toLocaleString()}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="msg-subject">{contact.subject}</div>
+                                                <p className="msg-text">{contact.message}</p>
+                                            </div>
+                                            <div className="card-actions">
+                                                <button className="view-btn" onClick={() => setSelectedContact(contact)}>
+                                                    <Eye size={16} />
+                                                </button>
+                                                <button className="del-btn" onClick={() => deleteContact(contact.id)}>
+                                                    <Trash2 size={16} />
+                                                </button>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="msg-subject">{contact.subject}</div>
-                                        <p className="msg-text">{contact.message}</p>
-                                    </div>
-                                    <div className="card-actions">
-                                        <button className="view-btn" onClick={() => setSelectedContact(contact)}>
-                                            <Eye size={16} />
-                                        </button>
-                                        <button className="del-btn" onClick={() => deleteContact(contact.id)}>
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
+                                    ))
+                                )}
+                            </div>
                         )}
-                    </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="content-header">
+                            <h2>Portfolio Settings</h2>
+                        </div>
+                        <SettingsPanel />
+                    </>
                 )}
             </main>
 

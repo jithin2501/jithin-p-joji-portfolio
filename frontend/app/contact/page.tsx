@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Mail, Phone, MapPin, Clock, 
   Send, MessageSquare, 
@@ -15,6 +15,29 @@ export default function ContactPage() {
     message: ''
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const [socials, setSocials] = useState({
+    github: 'https://github.com/jithin2501',
+    linkedin: 'https://www.linkedin.com/in/jithin05/',
+    email: 'jithinpjoji@gmail.com',
+    phone: '+91 9061058123',
+    location: 'Bengaluru, Kerala, India'
+  });
+
+  useEffect(() => {
+    const fetchSocials = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/settings');
+        if (response.ok) {
+          const data = await response.json();
+          setSocials(data.socials);
+        }
+      } catch (err) {
+        console.error('Failed to fetch contact page socials:', err);
+      }
+    };
+    fetchSocials();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -71,19 +94,19 @@ export default function ContactPage() {
               </p>
               
               <div className="connect-list">
-                <a href="mailto:jithinpjoji@gmail.com" className="connect-item">
+                <a href={`mailto:${socials.email}`} className="connect-item">
                   <div className="connect-icon-box email"><Mail size={20} /></div>
                   <div className="connect-info">
                     <h4>Email</h4>
-                    <p>jithinpjoji@gmail.com</p>
+                    <p>{socials.email}</p>
                   </div>
                   <ExternalLink size={14} className="connect-external" />
                 </a>
-                <a href="tel:+919061058123" className="connect-item">
+                <a href={`tel:${socials.phone}`} className="connect-item">
                   <div className="connect-icon-box phone"><Phone size={20} /></div>
                   <div className="connect-info">
                     <h4>Phone</h4>
-                    <p>+91 9061058123</p>
+                    <p>{socials.phone}</p>
                   </div>
                   <ExternalLink size={14} className="connect-external" />
                 </a>
@@ -91,7 +114,7 @@ export default function ContactPage() {
                   <div className="connect-icon-box location"><MapPin size={20} /></div>
                   <div className="connect-info">
                     <h4>Location</h4>
-                    <p>Bengaluru, Kerala, India</p>
+                    <p>{socials.location}</p>
                   </div>
                 </div>
               </div>
@@ -100,9 +123,8 @@ export default function ContactPage() {
             <div className="contact-card-glass">
               <h3 className="card-title-small" style={{ textAlign: 'center' }}>Find me on</h3>
               <div className="social-row" style={{ justifyContent: 'center' }}>
-                <a href="https://github.com/jithin2501" target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-github" /></a>
-                <a href="https://www.linkedin.com/in/jithin05/" target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-linkedin-in" /></a>
-                <a href="https://wa.me/919061058123" target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-whatsapp" /></a>
+                <a href={socials.github} target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-github" /></a>
+                <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-linkedin-in" /></a>
               </div>
             </div>
           </aside>

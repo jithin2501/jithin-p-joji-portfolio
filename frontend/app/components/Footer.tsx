@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Mail, ArrowUp, MapPin, Phone } from 'lucide-react';
 import '../style/Footer.css';
@@ -7,7 +7,30 @@ import '../style/Footer.css';
 const Footer = () => {
     const clickCount = useRef(0);
     const clickTimer = useRef<NodeJS.Timeout | null>(null);
+    const [socials, setSocials] = useState({
+        github: 'https://github.com/jithin2501',
+        linkedin: 'https://www.linkedin.com/in/jithin05/',
+        whatsapp: 'https://wa.me/919061058123',
+        instagram: 'https://www.instagram.com/jith_in05/',
+        email: 'jithinpjoji@gmail.com',
+        phone: '+91 9061058123',
+        location: 'Bengaluru, Kerala, India'
+    });
 
+    useEffect(() => {
+        const fetchSocials = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/settings');
+                if (response.ok) {
+                    const data = await response.json();
+                    setSocials(data.socials);
+                }
+            } catch (err) {
+                console.error('Failed to fetch footer social settings:', err);
+            }
+        };
+        fetchSocials();
+    }, []);
     return (
         <footer className="footer-section">
             <div className="footer-container">
@@ -21,10 +44,10 @@ const Footer = () => {
                             Building digital experiences with passion and precision. 
                         </p>
                         <div className="footer-socials">
-                            <a href="https://github.com/jithin2501" target="_blank" rel="noopener noreferrer" className="social-link" title="Github"><i className="fab fa-github" /></a>
-                            <a href="https://www.linkedin.com/in/jithin05/" target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn"><i className="fab fa-linkedin-in" /></a>
-                            <a href="https://wa.me/919061058123" target="_blank" rel="noopener noreferrer" className="social-link" title="WhatsApp"><i className="fab fa-whatsapp" /></a>
-                            <a href="https://www.instagram.com/jith_in05/" target="_blank" rel="noopener noreferrer" className="social-link" title="Instagram"><i className="fab fa-instagram" /></a>
+                            <a href={socials.github} target="_blank" rel="noopener noreferrer" className="social-link" title="Github"><i className="fab fa-github" /></a>
+                            <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn"><i className="fab fa-linkedin-in" /></a>
+                            <a href={socials.whatsapp} target="_blank" rel="noopener noreferrer" className="social-link" title="WhatsApp"><i className="fab fa-whatsapp" /></a>
+                            <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className="social-link" title="Instagram"><i className="fab fa-instagram" /></a>
                         </div>
                     </div>
 
@@ -43,15 +66,15 @@ const Footer = () => {
                         <ul className="footer-contact" style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <Mail size={14} className="contact-icon" />
-                                <span>jithinpjoji@gmail.com</span>
+                                <span>{socials.email}</span>
                             </li>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <Phone size={14} className="contact-icon" />
-                                <span>+91 9061058123</span>
+                                <span>{socials.phone}</span>
                             </li>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <MapPin size={14} className="contact-icon" />
-                                <span className="location-text">Bengaluru, Kerala, India</span>
+                                <span className="location-text">{socials.location}</span>
                             </li>
                         </ul>
                     </div>
