@@ -15,9 +15,12 @@
     display: flex;
     flex-direction: column;
     padding: 24px;
-    position: sticky;
+    position: fixed;
+    left: 0;
     top: 0;
+    bottom: 0;
     height: 100vh;
+    z-index: 100;
 }
 
 .sidebar-brand {
@@ -80,10 +83,9 @@
 /* Main Content */
 .admin-content {
     flex: 1;
+    margin-left: 280px;
     padding: 24px 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
+    width: calc(100% - 280px);
 }
 
 .content-header {
