@@ -58,26 +58,113 @@ export default function ExperiencePanel() {
         }
     };
 
-    const fetchSettings = async () => {
+    const fetchStats = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/settings/');
+            const response = await fetch('http://localhost:8080/api/experiences/stats');
             if (response.ok) {
                 const data = await response.json();
-                if (data.hero) {
-                    setStatExperience(data.hero.experience || '1+');
-                    setStatProjects(data.hero.projects || '20+');
-                    setStatClients(data.hero.satisfaction || '99+');
-                }
+                setStatExperience(data.statExperience || '1+');
+                setStatProjects(data.statProjects || '20+');
+                setStatClients(data.statClients || '99+');
             }
         } catch (err) {
-            console.error('Failed to load timeline statistics:', err);
+            console.error('Error fetching statistics:', err);
         }
     };
 
     useEffect(() => {
         fetchExperiences();
-        fetchSettings();
+        fetchStats();
     }, []);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSaving(true);
+        setError(null);
+        setSuccessMessage(null);
+
+        const tagsArray = tagInput
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(tag => tag.length > 0);
+
+        const payload = {
+            title: title.trim(),
+            company: company.trim(),
+            date_from: dateFrom.trim(),
+            date_to: dateTo.trim(),
+            desc: desc.trim(),
+            tags: tagsArray,
+            location: location.trim(),
+            dot_color: dotColor
+        };
+
+        try {
+            let response;
+            if (editingId) {
+                // Update existing experience
+                response = await fetch(`http://localhost:8080/api/experiences/${editingId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } else {
+                // Add new experience
+                response = await fetch('http://localhost:8080/api/experiences/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            }
+
+            if (!response.ok) throw new Error('Failed to save experience entry');
+
+            setSuccessMessage(editingId ? 'Experience entry updated successfully!' : 'Experience entry added successfully!');
+            resetForm();
+            fetchExperiences();
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (err) {
+            console.error(err);
+            setError('Could not connect to the backend server. Please verify your connection.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleEdit = (exp: ExperienceData) => {
+        setEditingId(exp.id);
+        setTitle(exp.title);
+        setCompany(exp.company);
+        setDateFrom(exp.date_from);
+        setDateTo(exp.date_to);
+        setDesc(exp.desc);
+        setLocation(exp.location);
+        setDotColor(exp.dot_color || '#818cf8');
+        setTagInput(exp.tags ? exp.tags.join(', ') : '');
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this career experience entry?')) return;
+        
+        setError(null);
+        setSuccessMessage(null);
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/experiences/${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Failed to delete experience');
+
+            setSuccessMessage('Experience entry deleted successfully!');
+            fetchExperiences();
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (err) {
+            console.error(err);
+            setError('Could not delete career experience.');
+        }
+    };
 
     const resetForm = () => {
         setEditingId(null);
@@ -91,133 +178,32 @@ export default function ExperiencePanel() {
         setTagInput('');
     };
 
-    const handleEdit = (exp: ExperienceData) => {
-        setEditingId(exp.id);
-        setTitle(exp.title);
-        setCompany(exp.company);
-        setDateFrom(exp.date_from);
-        setDateTo(exp.date_to);
-        setDesc(exp.desc);
-        setLocation(exp.location);
-        setDotColor(exp.dot_color);
-        setTagInput(exp.tags.join(', '));
-        
-        // Scroll form into view gently
-        document.querySelector('.experience-form-card')?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!title.trim() || !company.trim() || !dateFrom.trim() || !dateTo.trim() || !desc.trim()) {
-            setError('Please fill in all required fields.');
-            return;
-        }
-
-        setSaving(true);
-        setError(null);
-        setSuccessMessage(null);
-
-        // Process tags: split by comma, strip whitespace, remove empty values
-        const parsedTags = tagInput
-            .split(',')
-            .map(t => t.trim())
-            .filter(t => t.length > 0);
-
-        const payload = {
-            title: title.trim(),
-            company: company.trim(),
-            date_from: dateFrom.trim(),
-            date_to: dateTo.trim(),
-            desc: desc.trim(),
-            tags: parsedTags,
-            location: location.trim(),
-            dot_color: dotColor
-        };
-
-        try {
-            let response;
-            if (editingId) {
-                // Update route
-                response = await fetch(`http://localhost:8080/api/experiences/${editingId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            } else {
-                // Create route
-                response = await fetch('http://localhost:8080/api/experiences/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            }
-
-            if (!response.ok) throw new Error('Request failed');
-            
-            setSuccessMessage(editingId ? 'Experience updated successfully!' : 'New experience added successfully!');
-            resetForm();
-            await fetchExperiences();
-            setTimeout(() => setSuccessMessage(null), 3000);
-        } catch (err) {
-            setError('Failed to save experience details.');
-            console.error(err);
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this experience entry?')) return;
-        
-        try {
-            const response = await fetch(`http://localhost:8080/api/experiences/${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) throw new Error('Delete failed');
-            
-            setSuccessMessage('Experience deleted successfully!');
-            await fetchExperiences();
-            setTimeout(() => setSuccessMessage(null), 3000);
-        } catch (err) {
-            setError('Failed to delete experience.');
-            console.error(err);
-        }
-    };
-
     const handleSaveStats = async (e: React.FormEvent) => {
         e.preventDefault();
         setSavingStats(true);
         setStatsSuccess(null);
         setStatsError(null);
 
+        const payload = {
+            statExperience: statExperience.trim(),
+            statProjects: statProjects.trim(),
+            statClients: statClients.trim()
+        };
+
         try {
-            const getResponse = await fetch('http://localhost:8080/api/settings/');
-            if (!getResponse.ok) throw new Error('Failed to fetch settings');
-            const currentSettings = await getResponse.json();
-
-            const updatedSettings = {
-                ...currentSettings,
-                hero: {
-                    ...currentSettings.hero,
-                    experience: statExperience.trim(),
-                    projects: statProjects.trim(),
-                    satisfaction: statClients.trim()
-                }
-            };
-
-            const response = await fetch('http://localhost:8080/api/settings/', {
+            const response = await fetch('http://localhost:8080/api/experiences/stats', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedSettings)
+                body: JSON.stringify(payload)
             });
 
             if (!response.ok) throw new Error('Failed to save timeline statistics');
-            
-            setStatsSuccess('Timeline statistics updated successfully!');
+
+            setStatsSuccess('Timeline stats display updated successfully!');
             setTimeout(() => setStatsSuccess(null), 3000);
         } catch (err) {
-            setStatsError('Failed to save timeline statistics.');
             console.error(err);
+            setStatsError('Could not save timeline statistics.');
         } finally {
             setSavingStats(false);
         }
@@ -228,10 +214,10 @@ export default function ExperiencePanel() {
     }
 
     return (
-        <div className="experience-manager-grid">
-            {/* Left Side: Create/Edit Form */}
-            <div className="experience-manager-left">
-                <form onSubmit={handleSubmit} className="settings-card experience-form-card">
+        <div className="experience-manager-grid" style={{ display: 'grid', gridTemplateColumns: '0.75fr 1.25fr', gap: '30px', alignItems: 'stretch' }}>
+            {/* Box 1 (Row 1 Left): Add/Edit Experience Form */}
+            <form onSubmit={handleSubmit} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+                <div>
                     <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
                         <Briefcase size={18} className="card-header-icon" />
                         <h3 style={{ margin: 0, fontSize: '16px' }}>
@@ -340,117 +326,53 @@ export default function ExperiencePanel() {
                             required
                         />
                     </div>
+                </div>
 
-                    <div className="form-actions-row">
-                        {editingId && (
-                            <button 
-                                type="button" 
-                                className="remove-action-btn"
-                                onClick={resetForm}
-                                style={{ margin: 0, padding: '10px 18px', width: 'auto' }}
-                            >
-                                Cancel Edit
-                            </button>
-                        )}
+                <div className="form-actions-row" style={{ marginTop: '20px' }}>
+                    {editingId && (
                         <button 
-                            type="submit" 
-                            className="save-settings-btn" 
-                            disabled={saving}
-                            style={{ flex: 1, justifyContent: 'center' }}
+                            type="button" 
+                            className="remove-action-btn"
+                            onClick={resetForm}
+                            style={{ margin: 0, padding: '10px 18px', width: 'auto' }}
                         >
-                            {saving ? (
-                                <>
-                                    <RefreshCw size={16} className="spin-icon" /> Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <Save size={16} /> {editingId ? 'Update Entry' : 'Add Experience'}
-                                </>
-                            )}
+                            Cancel Edit
                         </button>
-                    </div>
-                </form>
-
-                {/* Overall Timeline Statistics Form */}
-                <form onSubmit={handleSaveStats} className="settings-card experience-form-card" style={{ marginTop: '24px' }}>
-                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
-                        <Sliders size={18} className="card-header-icon" />
-                        <h3 style={{ margin: 0, fontSize: '16px' }}>Overall Timeline Statistics</h3>
-                    </div>
-
-                    {statsSuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{statsSuccess}</div>}
-                    {statsError && <div className="admin-error" style={{ marginBottom: '16px' }}>{statsError}</div>}
-
-                    <div className="form-grid-three">
-                        <div className="form-group">
-                            <label htmlFor="stat-exp">Years Experience</label>
-                            <input
-                                id="stat-exp"
-                                type="text"
-                                value={statExperience}
-                                onChange={e => setStatExperience(e.target.value)}
-                                placeholder="1+"
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="stat-proj">Projects Completed</label>
-                            <input
-                                id="stat-proj"
-                                type="text"
-                                value={statProjects}
-                                onChange={e => setStatProjects(e.target.value)}
-                                placeholder="20+"
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="stat-clients">Happy Clients</label>
-                            <input
-                                id="stat-clients"
-                                type="text"
-                                value={statClients}
-                                onChange={e => setStatClients(e.target.value)}
-                                placeholder="99+"
-                                required
-                            />
-                        </div>
-                    </div>
-
+                    )}
                     <button 
                         type="submit" 
                         className="save-settings-btn" 
-                        disabled={savingStats}
-                        style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}
+                        disabled={saving}
+                        style={{ flex: 1, justifyContent: 'center' }}
                     >
-                        {savingStats ? (
+                        {saving ? (
                             <>
-                                <RefreshCw size={16} className="spin-icon" /> Saving Stats...
+                                <RefreshCw size={16} className="spin-icon" /> Saving...
                             </>
                         ) : (
                             <>
-                                <Save size={16} /> Save Timeline Statistics
+                                <Save size={16} /> {editingId ? 'Update Entry' : 'Add Experience'}
                             </>
                         )}
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
 
-            {/* Right Side: Interactive Stored Entries Timeline */}
-            <div className="experience-manager-right">
-                <div className="settings-card-header" style={{ marginBottom: '16px', paddingBottom: '12px' }}>
+            {/* Box 2 (Row 1 Right): Stored Timeline Entries Card */}
+            <div className="settings-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', margin: 0 }}>
+                <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
                     <Briefcase size={18} className="card-header-icon" />
                     <h3 style={{ margin: 0, fontSize: '16px' }}>Stored Timeline Entries ({experiences.length})</h3>
                 </div>
 
-                <div className="stored-experiences-list">
+                <div className="stored-experiences-list" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
                     {experiences.length === 0 ? (
                         <div className="no-messages" style={{ padding: '60px' }}>
                             No career experiences saved. Add your first job on the left!
                         </div>
                     ) : (
                         experiences.map(exp => (
-                            <div key={exp.id} className="admin-exp-item">
+                            <div key={exp.id} className="admin-exp-item" style={{ marginBottom: '16px' }}>
                                 <div className="admin-exp-header">
                                     <div className="admin-exp-info">
                                         <div className="admin-exp-title-box">
@@ -495,7 +417,7 @@ export default function ExperiencePanel() {
                                 {exp.tags && exp.tags.length > 0 && (
                                     <div className="admin-exp-tags">
                                         {exp.tags.map((tag, i) => (
-                                            <span key={i} className="admin-exp-tag" style={{ borderLeftColor: exp.dot_color }}>
+                                            <span key={i} className="admin-exp-tag">
                                                 {tag}
                                             </span>
                                         ))}
@@ -506,6 +428,72 @@ export default function ExperiencePanel() {
                     )}
                 </div>
             </div>
+
+            {/* Box 3 (Row 2 Left): Overall Timeline Statistics Form */}
+            <form onSubmit={handleSaveStats} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+                <div>
+                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
+                        <Sliders size={18} className="card-header-icon" />
+                        <h3 style={{ margin: 0, fontSize: '16px' }}>Overall Timeline Statistics</h3>
+                    </div>
+
+                    {statsSuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{statsSuccess}</div>}
+                    {statsError && <div className="admin-error" style={{ marginBottom: '16px' }}>{statsError}</div>}
+
+                    <div className="form-grid-three">
+                        <div className="form-group">
+                            <label htmlFor="stat-exp">Years Experience</label>
+                            <input
+                                id="stat-exp"
+                                type="text"
+                                value={statExperience}
+                                onChange={e => setStatExperience(e.target.value)}
+                                placeholder="1+"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="stat-proj">Projects Completed</label>
+                            <input
+                                id="stat-proj"
+                                type="text"
+                                value={statProjects}
+                                onChange={e => setStatProjects(e.target.value)}
+                                placeholder="20+"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="stat-clients">Happy Clients</label>
+                            <input
+                                id="stat-clients"
+                                type="text"
+                                value={statClients}
+                                onChange={e => setStatClients(e.target.value)}
+                                placeholder="99+"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    className="save-settings-btn" 
+                    disabled={savingStats}
+                    style={{ width: '100%', justifyContent: 'center', marginTop: '20px' }}
+                >
+                    {savingStats ? (
+                        <>
+                            <RefreshCw size={16} className="spin-icon" /> Saving Stats...
+                        </>
+                    ) : (
+                        <>
+                            <Save size={16} /> Save Timeline Statistics
+                        </>
+                    )}
+                </button>
+            </form>
         </div>
     );
 }

@@ -111,3 +111,17 @@
     border-radius: 12px;
 }
 
+/* Custom Symmetrical Grid Spacing Overrides */
+.experience-manager-grid {
+    display: grid !important;
+    grid-template-columns: 0.75fr 1.25fr !important;
+    gap: 30px !important;
+    align-items: stretch !important;
+}
+
+@media (max-width: 1024px) {
+    .experience-manager-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
