@@ -4,6 +4,8 @@ import { Shield, MessageSquare, Sliders } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
 import './Admin.css';
+import './components/messages/MessagesPanel.css';
+import './components/settings/SettingsPanel.css';
 
 export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState<'messages' | 'settings'>('messages');

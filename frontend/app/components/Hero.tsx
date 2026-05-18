@@ -11,17 +11,17 @@ export default function Hero() {
 
   const [settings, setSettings] = useState({
     hero: {
-      projects: '15+',
-      experience: '1yr',
-      commits: '2K+',
-      satisfaction: '99%'
+      projects: '',
+      experience: '',
+      commits: '',
+      satisfaction: ''
     },
     socials: {
-      github: 'https://github.com/jithin2501',
-      linkedin: 'https://www.linkedin.com/in/jithin05/',
-      email: 'jithinpjoji@gmail.com',
-      phone: '+91 9061058123',
-      location: 'Bengaluru, Kerala, India'
+      github: '',
+      linkedin: '',
+      email: '',
+      phone: '',
+      location: ''
     }
   });
 
@@ -161,7 +161,7 @@ export default function Hero() {
             { num: settings.hero.satisfaction, label: 'Client satisfaction', color: 'var(--green)' },
           ].map(s => (
             <div key={s.label} className="hero-stat-card">
-              <div className="stat-num" style={{ color: s.color }}>{s.num}</div>
+              <div className="stat-num" style={{ color: s.color }}>{s.num || '-'}</div>
               <div className="stat-label">{s.label}</div>
             </div>
           ))}
@@ -170,27 +170,29 @@ export default function Hero() {
         {/* Social Sidebar */}
         <div className="hero-social-sidebar">
           {[
-            { icon: 'fab fa-github', href: settings.socials.github, label: '' },
-            { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, label: '' },
-            { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, label: settings.socials.email },
-            { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, label: settings.socials.phone },
-            { icon: 'fas fa-location-dot', href: '#', label: settings.socials.location },
-          ].map((s, i) => (
-            <a
-              key={i}
-              href={s.href}
-              target={s.href.startsWith('http') ? '_blank' : undefined}
-              rel="noreferrer"
-              className="social-link"
-            >
-              <i className={s.icon} />
-              {s.label && (
-                <span className="social-tooltip">
-                  {s.label}
-                </span>
-              )}
-            </a>
-          ))}
+            { icon: 'fab fa-github', href: settings.socials.github, label: '', value: settings.socials.github },
+            { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, label: '', value: settings.socials.linkedin },
+            { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, label: settings.socials.email, value: settings.socials.email },
+            { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, label: settings.socials.phone, value: settings.socials.phone },
+            { icon: 'fas fa-location-dot', href: '#', label: settings.socials.location, value: settings.socials.location },
+          ]
+            .filter(s => s.value && s.value.trim() !== '')
+            .map((s, i) => (
+              <a
+                key={i}
+                href={s.href}
+                target={s.href.startsWith('http') ? '_blank' : undefined}
+                rel="noreferrer"
+                className="social-link"
+              >
+                <i className={s.icon} />
+                {s.label && (
+                  <span className="social-tooltip">
+                    {s.label}
+                  </span>
+                )}
+              </a>
+            ))}
         </div>
       </div>
     </>

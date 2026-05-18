@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Mail, Calendar, Eye, Trash2, X } from 'lucide-react';
-import './MessagesPanel.css';
 
 interface Contact {
     id: string;

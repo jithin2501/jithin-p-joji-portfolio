@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Sliders, Link as LinkIcon, Share2, Save, RefreshCw, Mail, Phone, MapPin } from 'lucide-react';
-import './SettingsPanel.css';
 
 interface SettingsData {
     hero: {
