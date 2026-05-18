@@ -1,0 +1,147 @@
+/* Projects Admin Panel Styling */
+
+.projects-admin-layout {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.project-admin-form {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(124, 92, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.form-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 1024px) {
+  .form-sections-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-sub-section {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a78bfa;
+  border-bottom: 1px solid rgba(124, 92, 255, 0.15);
+  padding-bottom: 8px;
+}
+
+.form-grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .form-grid-three {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Feature builder items styling */
+.features-builder-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.features-builder-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 4px;
+}
+
+.features-builder-list::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 255, 0.15);
+  border-radius: 4px;
+}
+
+.features-builder-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 255, 0.3);
+}
+
+.feature-builder-row {
+  animation: slideInRow 0.3s ease-out;
+  transition: all 0.2s ease;
+}
+
+.feature-builder-row:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(124, 92, 255, 0.1) !important;
+}
+
+.add-feature-btn:hover {
+  background: rgba(124, 92, 255, 0.2) !important;
+  border-color: rgba(124, 92, 255, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+/* Stored Projects section styles */
+.stored-projects-card {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(124, 92, 255, 0.08);
+  border-radius: 16px;
+}
+
+.admin-projects-list-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .admin-projects-list-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-project-list-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-project-list-item:hover {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-color: rgba(124, 92, 255, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+@keyframes slideInRow {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

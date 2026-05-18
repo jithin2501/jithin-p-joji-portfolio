@@ -1,0 +1,557 @@
+'use client';
+import React, { useState, useEffect } from 'react';
+import { 
+  FolderOpen, Trash2, Edit2, Save, RefreshCw, 
+  Search, Star, Globe, GitBranch,
+  Award, Layers
+} from 'lucide-react';
+import './ProjectsPanel.css';
+
+interface FeatureItem {
+  title: string;
+  desc: string;
+  icon: string;
+}
+
+interface TechStackItem {
+  name: string;
+  icon: string;
+}
+
+interface ProjectData {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  long_desc: string;
+  longDesc?: string;
+  image: string;
+  images: string[];
+  category: string;
+  role: string;
+  duration: string;
+  completed: string;
+  tools: string;
+  methodology: string;
+  features: FeatureItem[];
+  tech_stack: TechStackItem[];
+  techStack?: TechStackItem[];
+  learned: string;
+  featured: boolean;
+  live_url: string;
+  liveUrl?: string;
+  github_url: string;
+  githubUrl?: string;
+  created_at: string;
+}
+
+export default function ProjectsPanel() {
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
+  // Search and Filter states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All');
+  const [featuredFilter, setFeaturedFilter] = useState('All');
+
+  // Form states (simplified: card fields only)
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [originalProject, setOriginalProject] = useState<any>(null);
+  
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const [category, setCategory] = useState('Web Apps');
+  const [featured, setFeatured] = useState(false);
+  const [liveUrl, setLiveUrl] = useState('#');
+  const [githubUrl, setGithubUrl] = useState('#');
+  const [techStackStr, setTechStackStr] = useState('');
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:8080/api/projects/');
+      if (!response.ok) throw new Error('Failed to fetch projects');
+      const data = await response.json();
+      setProjects(data);
+      setError(null);
+    } catch (err) {
+      setError('Could not connect to the backend server to fetch projects.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const handleEdit = (project: ProjectData) => {
+    setEditingId(project.id);
+    setOriginalProject(project); // Retain original detail structures so we merge and do not delete them
+    setTitle(project.title);
+    setDescription(project.description);
+    setImage(project.image);
+    setCategory(project.category || 'Web Apps');
+    setFeatured(project.featured || false);
+    setLiveUrl(project.live_url || project.liveUrl || '#');
+    setGithubUrl(project.github_url || project.githubUrl || '#');
+    
+    // Convert tech stack tags back to comma-separated string for editing
+    const techTags = project.tech_stack || project.techStack || [];
+    setTechStackStr(techTags.map((tech: any) => tech.name).join(', '));
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const resetForm = () => {
+    setEditingId(null);
+    setOriginalProject(null);
+    setTitle('');
+    setDescription('');
+    setImage('');
+    setCategory('Web Apps');
+    setFeatured(false);
+    setLiveUrl('#');
+    setGithubUrl('#');
+    setTechStackStr('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    // Convert comma-separated string back to models tech_stack array
+    const techStackList = techStackStr.split(',').map(item => {
+      const name = item.trim();
+      let icon = "fas fa-code";
+      const lower = name.toLowerCase();
+      if (lower.includes("react")) icon = "fab fa-react";
+      else if (lower.includes("node")) icon = "fab fa-node-js";
+      else if (lower.includes("next")) icon = "fab fa-react";
+      else if (lower.includes("tailwind")) icon = "fab fa-css3-alt";
+      else if (lower.includes("figma")) icon = "fab fa-figma";
+      else if (lower.includes("js") || lower.includes("javascript")) icon = "fab fa-js";
+      else if (lower.includes("css")) icon = "fab fa-css3-alt";
+      else if (lower.includes("html")) icon = "fab fa-html5";
+      else if (lower.includes("database") || lower.includes("mongo") || lower.includes("sql") || lower.includes("postgres")) icon = "fas fa-database";
+      else if (lower.includes("github")) icon = "fab fa-github";
+      else if (lower.includes("git")) icon = "fab fa-git-alt";
+      else if (lower.includes("stripe")) icon = "fab fa-stripe";
+      else if (lower.includes("flutter")) icon = "fas fa-mobile-screen-button";
+      return { name, icon };
+    }).filter(t => t.name.length > 0);
+
+    const payload = {
+      ...originalProject,
+      title: title.trim(),
+      description: description.trim(),
+      image: image.trim(),
+      category: category,
+      tech_stack: techStackList,
+      featured: featured,
+      live_url: liveUrl.trim() || '#',
+      github_url: githubUrl.trim() || '#',
+      
+      // Preserve detail properties if editing, otherwise assign clean fallbacks for new card publications
+      subtitle: originalProject?.subtitle || 'PROJECT DETAILS',
+      long_desc: originalProject?.long_desc || originalProject?.longDesc || description.trim(),
+      images: originalProject?.images && originalProject.images.length > 0 ? originalProject.images : [image.trim()],
+      role: originalProject?.role || 'Developer',
+      duration: originalProject?.duration || '4 Weeks',
+      completed: originalProject?.completed || 'N/A',
+      tools: originalProject?.tools || 'VS Code',
+      methodology: originalProject?.methodology || 'Agile',
+      features: originalProject?.features || [
+        { title: 'Responsive Layout', desc: 'Optimized for mobile and tablet views.', icon: 'Layout' },
+        { title: 'High Performance', desc: 'Smooth animations and lightning-fast pages.', icon: 'Zap' }
+      ],
+      learned: originalProject?.learned || 'Strengthened development skills and dynamic architecture.'
+    };
+
+    try {
+      let response;
+      if (editingId) {
+        // Update existing project
+        response = await fetch(`http://localhost:8080/api/projects/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        // Create new project
+        response = await fetch('http://localhost:8080/api/projects/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+
+      if (!response.ok) throw new Error('Failed to save project');
+
+      setSuccessMessage(editingId ? 'Project updated successfully!' : 'Project added successfully!');
+      resetForm();
+      fetchProjects();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setError('Could not connect to the backend database server to save project.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to permanently delete this project?')) return;
+
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/projects/${id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) throw new Error('Failed to delete project');
+
+      setSuccessMessage('Project deleted successfully!');
+      fetchProjects();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setError('Could not delete project from the database.');
+    }
+  };
+
+  const filteredProjects = projects.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === 'All' || p.category.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesFeatured = featuredFilter === 'All' || 
+                            (featuredFilter === 'Featured' && p.featured) ||
+                            (featuredFilter === 'Standard' && !p.featured);
+    return matchesSearch && matchesCategory && matchesFeatured;
+  });
+
+  if (loading && projects.length === 0) {
+    return <div className="admin-loading">Loading projects...</div>;
+  }
+
+  return (
+    <div className="projects-admin-layout">
+      {successMessage && <div className="admin-success-toast" style={{ marginBottom: '20px' }}>{successMessage}</div>}
+      {error && <div className="admin-error" style={{ marginBottom: '20px' }}>{error}</div>}
+
+      {/* Form Section (Unified Card Properties Form) */}
+      <form onSubmit={handleSubmit} className="settings-card project-admin-form">
+        <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
+          <FolderOpen size={18} className="card-header-icon" />
+          <h3 style={{ margin: 0, fontSize: '16px' }}>
+            {editingId ? 'Edit Portfolio Project' : 'Add New Portfolio Project'}
+          </h3>
+        </div>
+
+        <div className="form-sections-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          
+          {/* Column 1: Card Appearance */}
+          <div className="form-sub-section">
+            <h4 className="section-subtitle"><Award size={14} /> Card Appearance</h4>
+            
+            <div className="form-group">
+              <label htmlFor="proj-title">Project Title *</label>
+              <input
+                id="proj-title"
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder="e.g. Analytics Dashboard, Travel Site"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="proj-category">Category *</label>
+              <select
+                id="proj-category"
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(124, 92, 255, 0.1)',
+                  borderRadius: '8px',
+                  padding: '12px 16px',
+                  color: '#fff',
+                  fontSize: '14px',
+                  outline: 'none'
+                }}
+              >
+                <option value="Web Apps" style={{ background: '#0e0e28' }}>Web Apps</option>
+                <option value="E-Commerce" style={{ background: '#0e0e28' }}>E-Commerce</option>
+                <option value="Design" style={{ background: '#0e0e28' }}>Design</option>
+                <option value="Others" style={{ background: '#0e0e28' }}>Others</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="proj-desc">Short Description *</label>
+              <input
+                id="proj-desc"
+                type="text"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                placeholder="A responsive dashboard with real-time analytics..."
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="proj-image">Thumbnail Image URL *</label>
+              <input
+                id="proj-image"
+                type="text"
+                value={image}
+                onChange={e => setImage(e.target.value)}
+                placeholder="https://images.unsplash.com/photo-..."
+                required
+              />
+            </div>
+          </div>
+
+          {/* Column 2: Links & Tech Stack */}
+          <div className="form-sub-section">
+            <h4 className="section-subtitle"><Layers size={14} /> Links & Technologies</h4>
+
+            <div className="form-group">
+              <label htmlFor="proj-tech-stack">Tech Stack Tags (comma separated) *</label>
+              <input
+                id="proj-tech-stack"
+                type="text"
+                value={techStackStr}
+                onChange={e => setTechStackStr(e.target.value)}
+                placeholder="e.g. React.js, Next.js, TypeScript, Tailwind CSS"
+                required
+              />
+              <small style={{ color: '#7070a0', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                We will automatically allocate FontAwesome icons for common tags!
+              </small>
+            </div>
+
+            <div className="form-grid-two">
+              <div className="form-group">
+                <label htmlFor="proj-live-url">Live Preview Link URL</label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input
+                    id="proj-live-url"
+                    type="text"
+                    value={liveUrl}
+                    onChange={e => setLiveUrl(e.target.value)}
+                    placeholder="https://example.com"
+                    style={{ paddingLeft: '38px' }}
+                  />
+                  <Globe size={14} style={{ position: 'absolute', left: '14px', color: '#7070a0' }} />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="proj-github-url">GitHub Repository Link URL</label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input
+                    id="proj-github-url"
+                    type="text"
+                    value={githubUrl}
+                    onChange={e => setGithubUrl(e.target.value)}
+                    placeholder="https://github.com/user/repo"
+                    style={{ paddingLeft: '38px' }}
+                  />
+                  <GitBranch size={14} style={{ position: 'absolute', left: '14px', color: '#7070a0' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Checkbox toggle */}
+            <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px 0 0 0', borderTop: '1px solid rgba(255, 255, 255, 0.03)', marginTop: '5px' }}>
+              <input
+                id="proj-featured"
+                type="checkbox"
+                checked={featured}
+                onChange={e => setFeatured(e.target.checked)}
+                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#7c5cff' }}
+              />
+              <label htmlFor="proj-featured" style={{ cursor: 'pointer', userSelect: 'none', margin: 0 }}>
+                Feature this project (displays a Star badge on dynamic cards)
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Form Actions */}
+        <div className="form-actions-row" style={{ marginTop: '30px', display: 'flex', gap: '12px' }}>
+          {editingId && (
+            <button
+              type="button"
+              className="remove-action-btn"
+              onClick={resetForm}
+              style={{ padding: '12px 24px', width: 'auto', margin: 0 }}
+            >
+              Cancel Edit
+            </button>
+          )}
+          <button
+            type="submit"
+            className="save-settings-btn"
+            disabled={saving}
+            style={{ flex: 1, justifyContent: 'center', padding: '12px 24px' }}
+          >
+            {saving ? (
+              <>
+                <RefreshCw size={16} className="spin-icon" /> Saving...
+              </>
+            ) : (
+              <>
+                <Save size={16} /> {editingId ? 'Update Project' : 'Publish Project'}
+              </>
+            )}
+          </button>
+        </div>
+      </form>
+
+      {/* Projects List Container */}
+      <div className="settings-card stored-projects-card" style={{ marginTop: '30px' }}>
+        <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Layers size={18} className="card-header-icon" />
+            <h3 style={{ margin: 0, fontSize: '16px' }}>Stored Projects ({projects.length})</h3>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginLeft: 'auto' }}>
+            {/* Category Filter */}
+            <select
+              value={categoryFilter}
+              onChange={e => setCategoryFilter(e.target.value)}
+              style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(124, 92, 255, 0.08)',
+                borderRadius: '20px',
+                padding: '5px 12px',
+                color: '#fff',
+                fontSize: '11px',
+                outline: 'none'
+              }}
+            >
+              <option value="All" style={{ background: '#0e0e28' }}>All Categories</option>
+              <option value="Web Apps" style={{ background: '#0e0e28' }}>Web Apps</option>
+              <option value="E-Commerce" style={{ background: '#0e0e28' }}>E-Commerce</option>
+              <option value="Design" style={{ background: '#0e0e28' }}>Design</option>
+              <option value="Others" style={{ background: '#0e0e28' }}>Others</option>
+            </select>
+
+            {/* Featured Filter */}
+            <select
+              value={featuredFilter}
+              onChange={e => setFeaturedFilter(e.target.value)}
+              style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(124, 92, 255, 0.08)',
+                borderRadius: '20px',
+                padding: '5px 12px',
+                color: '#fff',
+                fontSize: '11px',
+                outline: 'none'
+              }}
+            >
+              <option value="All" style={{ background: '#0e0e28' }}>All Types</option>
+              <option value="Featured" style={{ background: '#0e0e28' }}>Featured Only</option>
+              <option value="Standard" style={{ background: '#0e0e28' }}>Standard Only</option>
+            </select>
+
+            {/* Search Input */}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '180px' }}>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid rgba(124, 92, 255, 0.08)',
+                  borderRadius: '20px',
+                  padding: '5px 12px 5px 30px',
+                  color: '#fff',
+                  fontSize: '11px',
+                  outline: 'none'
+                }}
+              />
+              <Search size={12} style={{ position: 'absolute', left: '11px', color: '#7070a0' }} />
+            </div>
+          </div>
+        </div>
+
+        {filteredProjects.length === 0 ? (
+          <div className="no-messages" style={{ padding: '60px' }}>
+            {searchQuery || categoryFilter !== 'All' || featuredFilter !== 'All' 
+              ? 'No projects match your current filters.' 
+              : 'No projects stored yet. Publish your first project above!'}
+          </div>
+        ) : (
+          <div className="admin-projects-list-grid">
+            {filteredProjects.map(p => (
+              <div key={p.id} className="admin-project-list-item" style={{ display: 'flex', gap: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.02)', borderRadius: '12px', padding: '16px', alignItems: 'center' }}>
+                <img
+                  src={p.image || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"}
+                  alt={p.title}
+                  style={{ width: '80px', height: '60px', borderRadius: '6px', objectFit: 'cover', flexShrink: 0 }}
+                />
+                
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</h4>
+                    
+                    <span style={{ fontSize: '9px', background: 'rgba(124, 92, 255, 0.08)', color: '#a78bfa', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                      {p.category}
+                    </span>
+                    
+                    {p.featured && (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(255, 215, 0, 0.08)', color: '#ffd700', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                        <Star size={8} fill="#ffd700" /> Featured
+                      </span>
+                    )}
+                  </div>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: '#7070a0', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: 1.4 }}>
+                    {p.description}
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                  <button
+                    className="action-btn edit-btn"
+                    title="Edit Project"
+                    onClick={() => handleEdit(p)}
+                    style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Edit2 size={13} />
+                  </button>
+                  <button
+                    className="action-btn delete-btn"
+                    title="Delete Project"
+                    onClick={() => handleDelete(p.id)}
+                    style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

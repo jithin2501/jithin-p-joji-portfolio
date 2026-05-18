@@ -116,166 +116,120 @@ const ProjectSlider = ({ images, title }: { images: string[], title: string }) =
   );
 };
 
-// This would normally come from a CMS or API
-const projectsData: Record<string, any> = {
-  "1": {
-    title: "Analytics Dashboard",
-    subtitle: "PROJECT DETAILS",
-    description: "A responsive analytics dashboard with real-time data visualization and reporting.",
-    longDesc: "This Analytics Dashboard provides businesses with a powerful way to visualize their data. It features real-time charts, user activity tracking, and customizable reporting tools, all wrapped in a sleek, dark-themed interface. By leveraging modern visualization libraries and real-time data streaming, it empowers stakeholders to make data-driven decisions with confidence and speed.",
-    images: [
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1504868584819-f8e90526354a?q=80&w=2000&auto=format&fit=crop"
-    ],
-    category: "Web Application",
-    role: "Full Stack Developer",
-    duration: "4 Weeks",
-    completed: "March 2024",
-    tools: "VS Code, Figma, Postman",
-    methodology: "Scrum",
-    features: [
-      { title: "Real-time Data", desc: "Live updates using WebSocket technology.", icon: Zap },
-      { title: "Custom Charts", desc: "Interactive visualizations with Recharts.", icon: BarChart3 },
-      { title: "User Management", desc: "Complete RBAC (Role-Based Access Control).", icon: Users },
-      { title: "Performance Monitoring", desc: "Track server-side performance metrics.", icon: Rocket },
-      { title: "Responsive Layout", desc: "Optimized for desktop and tablet views.", icon: Layout },
-      { title: "Export Reports", desc: "Download data in CSV and PDF formats.", icon: ExternalLink },
-    ],
-    techStack: [
-      { name: "React.js", icon: "fab fa-react" },
-      { name: "Node.js", icon: "fab fa-node-js" },
-      { name: "MongoDB", icon: "fas fa-database" },
-      { name: "Express.js", icon: "fas fa-server" },
-      { name: "TypeScript", icon: "fas fa-code" },
-      { name: "Tailwind CSS", icon: "fab fa-css3-alt" }
-    ],
-    learned: "Working on this dashboard taught me a lot about data handling and state management in complex React applications. I learned how to optimize rendering for large datasets and implement real-time features efficiently."
-  },
-  "2": {
-    title: "Travel Website",
-    subtitle: "PROJECT DETAILS",
-    description: "A modern travel website UI with beautiful destinations and booking functionality.",
-    longDesc: "This Travel Website was designed to provide users with an immersive booking experience. It features stunning destination galleries, a seamless booking flow, and integrated maps for trip planning. The platform prioritizes high-performance visuals and lightning-fast search capabilities to ensure travelers can find and book their dream vacations with ease and transparency.",
-    images: [
-      "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=2000&auto=format&fit=crop"
-    ],
-    category: "Web Application",
-    role: "Frontend Developer",
-    duration: "3 Weeks",
-    completed: "April 2024",
-    tools: "Figma, VS Code, Git",
-    methodology: "Agile",
-    features: [
-      { title: "Destination Search", desc: "Advanced filtering for finding the perfect trip.", icon: Tag },
-      { title: "Interactive Maps", desc: "Integrated Google Maps for location tracking.", icon: Smartphone },
-      { title: "Booking System", desc: "Smooth multi-step booking and payment process.", icon: Settings },
-      { title: "User Reviews", desc: "Community-driven feedback and ratings.", icon: Users },
-      { title: "Mobile Optimized", desc: "First-class experience on mobile devices.", icon: Layout },
-      { title: "Secure Checkout", desc: "Stripe integration for safe transactions.", icon: CheckCircle2 },
-    ],
-    techStack: [
-      { name: "Next.js", icon: "fab fa-react" },
-      { name: "Tailwind CSS", icon: "fab fa-css3-alt" },
-      { name: "Framer Motion", icon: "fas fa-magic" },
-      { name: "Clerk Auth", icon: "fas fa-user-shield" },
-      { name: "Prisma", icon: "fas fa-database" },
-      { name: "PostgreSQL", icon: "fas fa-server" }
-    ],
-    learned: "I focused heavily on user experience and animations in this project. Using Framer Motion helped me create smooth transitions that make the app feel premium. I also improved my skills in handling complex forms and state in Next.js."
-  },
-  "3": {
-    title: "Task Manager App",
-    subtitle: "PROJECT DETAILS",
-    description: "A mobile task management app to boost productivity and organize daily tasks.",
-    longDesc: "Task Manager is a productivity-focused app designed for individuals and small teams. It simplifies task tracking with a clean UI, priority levels, and smart notifications to ensure nothing falls through the cracks. Built with a focus on minimalism and efficiency, it provides a distraction-free environment for managing complex workflows and daily agendas.",
-    images: [
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540350394557-8d14678e7f91?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=2000&auto=format&fit=crop"
-    ],
-    category: "Mobile Application",
-    role: "UI/UX Designer & Dev",
-    duration: "2 Weeks",
-    completed: "February 2024",
-    tools: "Figma, Flutter, Firebase",
-    methodology: "Personal Project",
-    features: [
-      { title: "Smart Notifications", desc: "Timely reminders for upcoming deadlines.", icon: Zap },
-      { title: "Priority Levels", desc: "Color-coded tasks based on importance.", icon: Tag },
-      { title: "Cloud Sync", desc: "Instant sync across all your devices.", icon: Rocket },
-      { title: "Dark Mode", desc: "Eye-friendly interface for late-night work.", icon: Sparkles },
-      { title: "Offline Access", desc: "Work on your tasks even without internet.", icon: CheckCircle2 },
-      { title: "Team Sharing", desc: "Share lists and tasks with friends.", icon: Users },
-    ],
-    techStack: [
-      { name: "Flutter", icon: "fas fa-mobile-screen-button" },
-      { name: "Dart", icon: "fas fa-code" },
-      { name: "Firebase", icon: "fas fa-fire" },
-      { name: "Provider", icon: "fas fa-box" },
-      { name: "Hive", icon: "fas fa-database" },
-      { name: "Git", icon: "fab fa-git-alt" }
-    ],
-    learned: "This project allowed me to explore Flutter and cross-platform development. I learned how to manage local storage for offline support and integrate Firebase for real-time data synchronization. Designing the UI was also a great exercise in mobile ergonomics."
-  },
-  "4": {
-    title: "Eco-Friendly E-commerce",
-    subtitle: "PROJECT DETAILS",
-    description: "Sustainable shopping platform with focus on clean UI and smooth user experience.",
-    longDesc: "This Eco-Friendly E-commerce platform was built to promote sustainable products. It features a minimalist design, carbon footprint tracking for shipments, and a highly optimized product discovery experience. By integrating ethical shopping practices with modern technology, it creates a unique marketplace where conscious consumers can shop with peace of mind.",
-    images: [
-      "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=2000&auto=format&fit=crop"
-    ],
-    category: "E-Commerce",
-    role: "Full Stack Developer",
-    duration: "5 Weeks",
-    completed: "May 2024",
-    tools: "Figma, VS Code, Strapi",
-    methodology: "Agile",
-    features: [
-      { title: "Carbon Tracking", desc: "Estimate the footprint of your purchases.", icon: BarChart3 },
-      { title: "Sustainable Filters", desc: "Filter products by eco-friendly criteria.", icon: Tag },
-      { title: "One-Click Checkout", desc: "Optimized sales funnel for high conversion.", icon: Rocket },
-      { title: "Product Story", desc: "Detailed info about the origin of items.", icon: BookOpen },
-      { title: "Loyalty Program", desc: "Rewards for sustainable shopping habits.", icon: Users },
-      { title: "Advanced Search", desc: "Fast and relevant product discovery.", icon: Zap },
-    ],
-    techStack: [
-      { name: "React.js", icon: "fab fa-react" },
-      { name: "Strapi", icon: "fas fa-leaf" },
-      { name: "Tailwind CSS", icon: "fab fa-css3-alt" },
-      { name: "Stripe", icon: "fab fa-stripe" },
-      { name: "Redux Toolkit", icon: "fas fa-layer-group" },
-      { name: "Cloudinary", icon: "fas fa-image" }
-    ],
-    learned: "Building this platform taught me the importance of performance in e-commerce. I learned how to implement server-side rendering for better SEO and use Redux for managing complex shopping cart states. I also gained experience in integrating headless CMS like Strapi."
-  }
+// Map of string icon names to Lucide icons for dynamic rendering
+const iconMap: Record<string, any> = {
+  Zap, BarChart3, Users, Rocket, Layout, ExternalLink, Tag, Smartphone,
+  Settings, CheckCircle2, Sparkles, BookOpen, Clock, Calendar, User, Info, Code2
+};
+
+const getIcon = (iconName: string) => {
+  if (!iconName) return Info;
+  return iconMap[iconName] || Info;
 };
 
 export default function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const project = projectsData[resolvedParams.id] || projectsData["1"]; // Fallback for demo
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:8080/api/projects/${resolvedParams.id}`);
+        if (!res.ok) throw new Error('Project not found or invalid ID');
+        const data = await res.json();
+        setProject(data);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error loading project detail:', err);
+        setError(err.message || 'Failed to load project details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [resolvedParams.id]);
+
+  if (loading) {
+    return (
+      <div className="project-detail-page" style={{ opacity: 0.8 }}>
+        <div className="detail-container" style={{ padding: '80px 20px', textAlign: 'center' }}>
+          <div className="skeleton-shimmer" style={{ width: '150px', height: '24px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', margin: '0 auto 20px auto' }} />
+          <div className="skeleton-shimmer" style={{ width: '300px', height: '48px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', margin: '0 auto 40px auto' }} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '40px', maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '16px', height: '350px', padding: '30px' }} className="skeleton-card">
+              <div className="skeleton-shimmer" style={{ height: '30px', background: 'rgba(255,255,255,0.05)', width: '100%', marginBottom: '20px' }} />
+              <div className="skeleton-shimmer" style={{ height: '20px', background: 'rgba(255,255,255,0.05)', width: '80%', marginBottom: '20px' }} />
+              <div className="skeleton-shimmer" style={{ height: '20px', background: 'rgba(255,255,255,0.05)', width: '70%', marginBottom: '20px' }} />
+            </div>
+            <div className="skeleton-shimmer" style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '16px', height: '450px' }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !project) {
+    return (
+      <div className="project-detail-page">
+        <div className="detail-container" style={{ padding: '100px 20px', textAlign: 'center' }}>
+          <Info size={64} style={{ margin: '0 auto 20px auto', opacity: 0.5, color: '#ff4d4d' }} />
+          <h2 style={{ fontSize: '28px', marginBottom: '10px' }}>Project Not Found</h2>
+          <p style={{ opacity: 0.7, marginBottom: '30px' }}>{error || 'The requested project could not be found.'}</p>
+          <Link href="/projects" className="visit-btn" style={{ display: 'inline-flex', padding: '12px 24px' }}>
+            <ArrowLeft size={18} style={{ marginRight: '8px' }} />
+            Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Safe fallbacks for all fields from database model
+  const subtitle = project.subtitle || "PROJECT DETAILS";
+  const longDesc = project.long_desc || project.longDesc || project.description || "No description provided.";
+  const images = project.images && project.images.length > 0
+    ? project.images
+    : [project.image || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop"];
+  
+  const category = project.category || "Others";
+  const role = project.role || "Developer";
+  const duration = project.duration || "N/A";
+  const completed = project.completed || "N/A";
+  const tools = project.tools || "N/A";
+  const methodology = project.methodology || "N/A";
+  const features = project.features || [];
+  const techStack = project.tech_stack || project.techStack || [];
+  const learned = project.learned || "In this project, I strengthened my development and problem solving skills.";
+  const liveUrl = project.live_url || project.liveUrl || "#";
+  const githubUrl = project.github_url || project.githubUrl || "#";
 
   return (
     <div className="project-detail-page">
       <div className="detail-container">
+        <div style={{ marginBottom: '20px' }}>
+          <Link href="/projects" className="back-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.6)', textDecoration: 'none', transition: 'color 0.2s' }}>
+            <ArrowLeft size={16} />
+            Back to Projects
+          </Link>
+        </div>
+
         <div className="detail-grid">
           {/* Left Sidebar */}
           <aside className="detail-sidebar">
             <div className="detail-header">
-              <span className="detail-tag">{project.subtitle}</span>
+              <span className="detail-tag">{subtitle}</span>
               <h1 className="detail-title">{project.title}</h1>
               
               <div className="detail-btns">
-                <a href="#" className="visit-btn">
+                <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="visit-btn">
                   <Rocket size={18} />
                   Visit Live Site
                 </a>
-                <a href="#" className="github-outline-btn">
+                <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="github-outline-btn">
                   <i className="fab fa-github" style={{ fontSize: '18px' }} />
                   View on GitHub
                 </a>
@@ -286,22 +240,32 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
               <div className="info-item">
                 <Tag size={16} className="info-icon" />
                 <span className="info-label">Category</span>
-                <span className="info-value">{project.category}</span>
+                <span className="info-value">{category}</span>
+              </div>
+              <div className="info-item">
+                <User size={16} className="info-icon" />
+                <span className="info-label">Role</span>
+                <span className="info-value">{role}</span>
               </div>
               <div className="info-item">
                 <Clock size={16} className="info-icon" />
                 <span className="info-label">Duration</span>
-                <span className="info-value">{project.duration}</span>
+                <span className="info-value">{duration}</span>
               </div>
               <div className="info-item">
                 <CheckCircle2 size={16} className="info-icon" />
                 <span className="info-label">Completed</span>
-                <span className="info-value">{project.completed}</span>
+                <span className="info-value">{completed}</span>
               </div>
               <div className="info-item">
                 <Zap size={16} className="info-icon" />
                 <span className="info-label">Methodology</span>
-                <span className="info-value">{project.methodology}</span>
+                <span className="info-value">{methodology}</span>
+              </div>
+              <div className="info-item">
+                <Settings size={16} className="info-icon" />
+                <span className="info-label">Tools</span>
+                <span className="info-value">{tools}</span>
               </div>
             </div>
           </aside>
@@ -309,7 +273,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
           {/* Right Main Content */}
           <main className="detail-main-content">
             <div className="preview-mockup">
-              <ProjectSlider images={project.images} title={project.title} />
+              <ProjectSlider images={images} title={project.title} />
             </div>
           </main>
         </div>
@@ -320,60 +284,66 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
             <Info size={20} />
             About {project.title}
           </h3>
-          <h3 className="section-header">
-            <Sparkles size={20} />
-            Key Features
-          </h3>
+          {features.length > 0 && (
+            <h3 className="section-header">
+              <Sparkles size={20} />
+              Key Features
+            </h3>
+          )}
         </div>
 
         <div className="detail-middle-row">
           <section className="about-project-col">
-            <p className="about-text">{project.longDesc}</p>
+            <p className="about-text">{longDesc}</p>
           </section>
 
-          <section className="features-section-col">
-            <div className="features-grid">
-              {project.features.map((feature: any, i: number) => {
-                const Icon = feature.icon;
-                return (
-                  <div key={i} className="feature-card">
-                    <div className="feature-icon-box">
-                      <Icon size={24} />
+          {features.length > 0 && (
+            <section className="features-section-col">
+              <div className="features-grid">
+                {features.map((feature: any, i: number) => {
+                  const Icon = getIcon(feature.icon);
+                  return (
+                    <div key={i} className="feature-card">
+                      <div className="feature-icon-box">
+                        <Icon size={24} />
+                      </div>
+                      <div className="feature-content">
+                        <h4>{feature.title}</h4>
+                        <p>{feature.desc}</p>
+                      </div>
                     </div>
-                    <div className="feature-content">
-                      <h4>{feature.title}</h4>
-                      <p>{feature.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+                  );
+                })}
+              </div>
+            </section>
+          )}
         </div>
 
         {/* Bottom Row */}
         <div className="detail-bottom-row">
-          <div className="bottom-box">
-            <h3 className="section-header">
-              <Code2 size={22} />
-              Tech Stack
-            </h3>
-            <div className="tech-stack-grid">
-              {project.techStack.map((tech: any, i: number) => (
-                <div key={i} className="tech-badge-detail">
-                  <i className={tech.icon} />
-                  {tech.name}
-                </div>
-              ))}
+          {techStack.length > 0 && (
+            <div className="bottom-box">
+              <h3 className="section-header">
+                <Code2 size={22} />
+                Tech Stack
+              </h3>
+              <div className="tech-stack-grid">
+                {techStack.map((tech: any, i: number) => (
+                  <div key={i} className="tech-badge-detail">
+                    {tech.icon && <i className={tech.icon} />}
+                    {tech.name}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="bottom-box">
             <h3 className="section-header">
               <BookOpen size={22} />
               What I Learned
             </h3>
-            <p className="learned-text">{project.learned}</p>
+            <p className="learned-text">{learned}</p>
           </div>
         </div>
       </div>

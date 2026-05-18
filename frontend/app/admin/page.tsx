@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code } from 'lucide-react';
+import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code, FolderOpen } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
 import ResumesPanel from './components/resumes/ResumesPanel';
@@ -8,6 +8,7 @@ import AboutImagePanel from './components/about/AboutImagePanel';
 import ExperiencePanel from './components/experience/ExperiencePanel';
 import AcademicPanel from './components/academic/AcademicPanel';
 import SkillsPanel from './components/skills/SkillsPanel';
+import ProjectsPanel from './components/projects/ProjectsPanel';
 import './Admin.css';
 import './components/messages/MessagesPanel.css';
 import './components/settings/SettingsPanel.css';
@@ -15,9 +16,10 @@ import './components/resumes/ResumesPanel.css';
 import './components/experience/ExperiencePanel.css';
 import './components/academic/AcademicPanel.css';
 import './components/skills/SkillsPanel.css';
+import './components/projects/ProjectsPanel.css';
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects'>('messages');
 
     return (
         <div className="admin-layout">
@@ -61,6 +63,13 @@ export default function AdminPanel() {
                     >
                         <Code size={18} />
                         Tech Stack
+                    </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('projects')}
+                    >
+                        <FolderOpen size={18} />
+                        Projects
                     </button>
                     <button 
                         className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
@@ -110,6 +119,13 @@ export default function AdminPanel() {
                             <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Tech Stack Manager</h2>
                         </div>
                         <SkillsPanel />
+                    </>
+                ) : activeTab === 'projects' ? (
+                    <>
+                        <div className="content-header" style={{ marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Portfolio Projects</h2>
+                        </div>
+                        <ProjectsPanel />
                     </>
                 ) : activeTab === 'resumes' ? (
                     <>
