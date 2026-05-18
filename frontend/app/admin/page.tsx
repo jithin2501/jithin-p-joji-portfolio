@@ -1,19 +1,21 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase } from 'lucide-react';
+import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
 import ResumesPanel from './components/resumes/ResumesPanel';
 import AboutImagePanel from './components/about/AboutImagePanel';
 import ExperiencePanel from './components/experience/ExperiencePanel';
+import AcademicPanel from './components/academic/AcademicPanel';
 import './Admin.css';
 import './components/messages/MessagesPanel.css';
 import './components/settings/SettingsPanel.css';
 import './components/resumes/ResumesPanel.css';
 import './components/experience/ExperiencePanel.css';
+import './components/academic/AcademicPanel.css';
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic'>('messages');
 
     return (
         <div className="admin-layout">
@@ -43,6 +45,13 @@ export default function AdminPanel() {
                     >
                         <Briefcase size={18} />
                         Experience
+                    </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'academic' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('academic')}
+                    >
+                        <GraduationCap size={18} />
+                        Academic
                     </button>
                     <button 
                         className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
@@ -78,6 +87,13 @@ export default function AdminPanel() {
                             <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Career Timeline</h2>
                         </div>
                         <ExperiencePanel />
+                    </>
+                ) : activeTab === 'academic' ? (
+                    <>
+                        <div className="content-header" style={{ marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Academic Path</h2>
+                        </div>
+                        <AcademicPanel />
                     </>
                 ) : activeTab === 'resumes' ? (
                     <>
