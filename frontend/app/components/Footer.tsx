@@ -1,12 +1,10 @@
 'use client';
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Mail, ArrowUp, MapPin, Phone } from 'lucide-react';
 import '../style/Footer.css';
 
 const Footer = () => {
-    const clickCount = useRef(0);
-    const clickTimer = useRef<NodeJS.Timeout | null>(null);
 
     return (
         <footer className="footer-section">
@@ -59,27 +57,7 @@ const Footer = () => {
 
                 <div className="footer-bottom">
                     <div className="footer-copyright">
-                        © {new Date().getFullYear()} 
-                        <span 
-                            className="admin-trigger"
-                            onClick={() => {
-                                clickCount.current += 1;
-                                
-                                if (clickCount.current === 3) {
-                                    window.location.href = '/admin';
-                                    clickCount.current = 0;
-                                }
-
-                                if (clickTimer.current) clearTimeout(clickTimer.current);
-                                clickTimer.current = setTimeout(() => {
-                                    clickCount.current = 0;
-                                }, 1000);
-                            }}
-                            style={{ cursor: 'default', userSelect: 'none', marginLeft: '5px', fontWeight: 'inherit', color: 'inherit' }}
-                        >
-                            Jithin P Joji
-                        </span>. 
-                        All rights reserved.
+                        © {new Date().getFullYear()} Jithin P Joji. All rights reserved.
                     </div>
                 </div>
             </div>

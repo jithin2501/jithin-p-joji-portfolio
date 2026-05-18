@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { 
   Mail, Phone, MapPin, Clock, 
-  Send, ShieldCheck, MessageSquare, 
-  Rocket, Code, Heart, ExternalLink 
+  Send, MessageSquare, 
+  Code, Heart, ExternalLink 
 } from 'lucide-react';
 import '../style/Contact.css';
 
@@ -23,21 +23,10 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
-    try {
-      const response = await fetch('http://localhost:8080/api/contacts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (response.ok) {
-        setStatus('success');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      } else {
-        setStatus('error');
-      }
-    } catch (err) {
-      setStatus('error');
-    }
+    setTimeout(() => {
+      setStatus('success');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    }, 1000);
   };
 
   return (
@@ -51,12 +40,12 @@ export default function ContactPage() {
             <span className="contact-tag-line" />
           </div>
           <h1 className="contact-title">
-            Let's Build Something<br />
+            Let&apos;s Build Something<br />
             <span className="contact-gradient-text">Amazing Together</span>
           </h1>
           <p className="contact-subtitle">
             Have a project idea or want to collaborate? <br />
-            I'd love to hear from you. Let's turn <span>your ideas into reality</span>!
+            I&apos;d love to hear from you. Let&apos;s turn <span>your ideas into reality</span>!
           </p>
         </header>
 
@@ -65,9 +54,9 @@ export default function ContactPage() {
           {/* Sidebar */}
           <aside className="contact-sidebar">
             <div className="contact-card-glass">
-              <h3 className="card-title-small" style={{ textAlign: 'center' }}>Let's Connect</h3>
+              <h3 className="card-title-small" style={{ textAlign: 'center' }}>Let&apos;s Connect</h3>
               <p className="card-desc-small" style={{ textAlign: 'center' }}>
-                I'm currently available for freelance work or exciting opportunities.
+                I&apos;m currently available for freelance work or exciting opportunities.
               </p>
               
               <div className="connect-list">
@@ -112,7 +101,7 @@ export default function ContactPage() {
             <div className="form-header-group">
               <div className="form-header-text">
                 <h3>Send me a message</h3>
-                <p>Fill out the form below and I'll get back to you.</p>
+                <p>Fill out the form below and I&apos;ll get back to you.</p>
               </div>
             </div>
 
