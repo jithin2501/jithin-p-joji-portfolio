@@ -139,10 +139,22 @@ export default function ProjectsPage() {
               return (
                 <div key={project.id} className="project-card-new">
                   <div className="project-img-box">
-                    {project.featured && (
-                      <div className="featured-badge">
-                        <Star size={12} fill="white" />
+                    {project.featured === 'feature' && (
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #ffd700, #ff8c00)', color: '#000', fontWeight: 'bold' }}>
+                        <Star size={12} fill="black" />
                         Featured
+                      </div>
+                    )}
+                    {project.featured === 'new' && (
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', color: '#fff', fontWeight: 'bold' }}>
+                        <Star size={12} fill="white" />
+                        New
+                      </div>
+                    )}
+                    {project.featured === 'freelancing' && (
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', color: '#fff', fontWeight: 'bold' }}>
+                        <Star size={12} fill="white" />
+                        Freelance
                       </div>
                     )}
                     <img src={project.image || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"} alt={project.title} className="project-img-placeholder" />

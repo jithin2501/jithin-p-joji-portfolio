@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   FolderOpen, Trash2, Edit2, Save, RefreshCw, 
   Search, Star, Globe, GitBranch,
-  Award, Layers
+  Award, Layers, Upload
 } from 'lucide-react';
 import './ProjectsPanel.css';
 
@@ -37,7 +37,7 @@ interface ProjectData {
   tech_stack: TechStackItem[];
   techStack?: TechStackItem[];
   learned: string;
-  featured: boolean;
+  featured: string;
   live_url: string;
   liveUrl?: string;
   github_url: string;
@@ -65,7 +65,7 @@ export default function ProjectsPanel() {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('Web Apps');
-  const [featured, setFeatured] = useState(false);
+  const [featured, setFeatured] = useState('project'); // feature, project, new, freelancing
   const [liveUrl, setLiveUrl] = useState('#');
   const [githubUrl, setGithubUrl] = useState('#');
   const [techStackStr, setTechStackStr] = useState('');
@@ -97,7 +97,7 @@ export default function ProjectsPanel() {
     setDescription(project.description);
     setImage(project.image);
     setCategory(project.category || 'Web Apps');
-    setFeatured(project.featured || false);
+    setFeatured(project.featured || 'project');
     setLiveUrl(project.live_url || project.liveUrl || '#');
     setGithubUrl(project.github_url || project.githubUrl || '#');
     
@@ -115,7 +115,7 @@ export default function ProjectsPanel() {
     setDescription('');
     setImage('');
     setCategory('Web Apps');
-    setFeatured(false);
+    setFeatured('project');
     setLiveUrl('#');
     setGithubUrl('#');
     setTechStackStr('');
@@ -126,6 +126,12 @@ export default function ProjectsPanel() {
     setSaving(true);
     setError(null);
     setSuccessMessage(null);
+
+    if (!image) {
+      setError('Please choose or upload a thumbnail image file.');
+      setSaving(false);
+      return;
+    }
 
     // Convert comma-separated string back to models tech_stack array
     const techStackList = techStackStr.split(',').map(item => {
@@ -233,9 +239,7 @@ export default function ProjectsPanel() {
                           p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           p.category.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = categoryFilter === 'All' || p.category.toLowerCase() === categoryFilter.toLowerCase();
-    const matchesFeatured = featuredFilter === 'All' || 
-                            (featuredFilter === 'Featured' && p.featured) ||
-                            (featuredFilter === 'Standard' && !p.featured);
+    const matchesFeatured = featuredFilter === 'All' || p.featured === featuredFilter;
     return matchesSearch && matchesCategory && matchesFeatured;
   });
 
@@ -275,28 +279,54 @@ export default function ProjectsPanel() {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="proj-category">Category *</label>
-              <select
-                id="proj-category"
-                value={category}
-                onChange={e => setCategory(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(124, 92, 255, 0.1)',
-                  borderRadius: '8px',
-                  padding: '12px 16px',
-                  color: '#fff',
-                  fontSize: '14px',
-                  outline: 'none'
-                }}
-              >
-                <option value="Web Apps" style={{ background: '#0e0e28' }}>Web Apps</option>
-                <option value="E-Commerce" style={{ background: '#0e0e28' }}>E-Commerce</option>
-                <option value="Design" style={{ background: '#0e0e28' }}>Design</option>
-                <option value="Others" style={{ background: '#0e0e28' }}>Others</option>
-              </select>
+            <div className="form-grid-two">
+              <div className="form-group">
+                <label htmlFor="proj-category">Category *</label>
+                <select
+                  id="proj-category"
+                  value={category}
+                  onChange={e => setCategory(e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(124, 92, 255, 0.1)',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    color: '#fff',
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="Web Apps" style={{ background: '#0e0e28' }}>Web Apps</option>
+                  <option value="E-Commerce" style={{ background: '#0e0e28' }}>E-Commerce</option>
+                  <option value="Design" style={{ background: '#0e0e28' }}>Design</option>
+                  <option value="Others" style={{ background: '#0e0e28' }}>Others</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="proj-featured">Classification *</label>
+                <select
+                  id="proj-featured"
+                  value={featured}
+                  onChange={e => setFeatured(e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(124, 92, 255, 0.1)',
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    color: '#fff',
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="feature" style={{ background: '#0e0e28' }}>Featured</option>
+                  <option value="project" style={{ background: '#0e0e28' }}>Project</option>
+                  <option value="new" style={{ background: '#0e0e28' }}>New</option>
+                  <option value="freelancing" style={{ background: '#0e0e28' }}>Freelancing</option>
+                </select>
+              </div>
             </div>
 
             <div className="form-group">
@@ -312,14 +342,89 @@ export default function ProjectsPanel() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="proj-image">Thumbnail Image URL *</label>
+              <label htmlFor="proj-image-file-input">Thumbnail Image *</label>
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginTop: '8px' }}>
+                {image ? (
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      src={image}
+                      alt="Thumbnail Preview"
+                      style={{ width: '120px', height: '90px', borderRadius: '8px', objectFit: 'cover', border: '2px solid rgba(124, 92, 255, 0.3)', boxShadow: '0 8px 24px rgba(124, 92, 255, 0.15)' }}
+                    />
+                  </div>
+                ) : (
+                  <div style={{ width: '120px', height: '90px', borderRadius: '8px', background: 'rgba(255,255,255,0.02)', border: '2px dashed rgba(124, 92, 255, 0.15)', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', justifyContent: 'center', fontSize: '11px', color: '#7070a0' }}>
+                    <Upload size={20} style={{ opacity: 0.4, color: '#7c5cff' }} />
+                    <span>No Image Chosen</span>
+                  </div>
+                )}
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById('proj-image-file-input')?.click()}
+                    style={{
+                      padding: '10px 18px',
+                      background: 'rgba(124, 92, 255, 0.12)',
+                      border: '1px solid rgba(124, 92, 255, 0.25)',
+                      borderRadius: '8px',
+                      color: '#fff',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      width: 'auto',
+                      margin: 0,
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <Upload size={16} /> Choose Image File
+                  </button>
+                  {image && (
+                    <button
+                      type="button"
+                      onClick={() => setImage('')}
+                      style={{
+                        padding: '10px 18px',
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '1px solid rgba(239, 68, 68, 0.25)',
+                        borderRadius: '8px',
+                        color: '#ef4444',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        width: 'auto',
+                        margin: 0,
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <Trash2 size={16} /> Clear Selection
+                    </button>
+                  )}
+                </div>
+              </div>
+              
               <input
-                id="proj-image"
-                type="text"
-                value={image}
-                onChange={e => setImage(e.target.value)}
-                placeholder="https://images.unsplash.com/photo-..."
-                required
+                id="proj-image-file-input"
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    if (typeof reader.result === 'string') {
+                      setImage(reader.result);
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                }}
               />
             </div>
           </div>
@@ -372,20 +477,6 @@ export default function ProjectsPanel() {
                   <GitBranch size={14} style={{ position: 'absolute', left: '14px', color: '#7070a0' }} />
                 </div>
               </div>
-            </div>
-
-            {/* Checkbox toggle */}
-            <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px 0 0 0', borderTop: '1px solid rgba(255, 255, 255, 0.03)', marginTop: '5px' }}>
-              <input
-                id="proj-featured"
-                type="checkbox"
-                checked={featured}
-                onChange={e => setFeatured(e.target.checked)}
-                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#7c5cff' }}
-              />
-              <label htmlFor="proj-featured" style={{ cursor: 'pointer', userSelect: 'none', margin: 0 }}>
-                Feature this project (displays a Star badge on dynamic cards)
-              </label>
             </div>
           </div>
 
@@ -452,7 +543,7 @@ export default function ProjectsPanel() {
               <option value="Others" style={{ background: '#0e0e28' }}>Others</option>
             </select>
 
-            {/* Featured Filter */}
+            {/* Classification Filter */}
             <select
               value={featuredFilter}
               onChange={e => setFeaturedFilter(e.target.value)}
@@ -466,9 +557,11 @@ export default function ProjectsPanel() {
                 outline: 'none'
               }}
             >
-              <option value="All" style={{ background: '#0e0e28' }}>All Types</option>
-              <option value="Featured" style={{ background: '#0e0e28' }}>Featured Only</option>
-              <option value="Standard" style={{ background: '#0e0e28' }}>Standard Only</option>
+              <option value="All" style={{ background: '#0e0e28' }}>All Classifications</option>
+              <option value="feature" style={{ background: '#0e0e28' }}>Featured</option>
+              <option value="project" style={{ background: '#0e0e28' }}>Project</option>
+              <option value="new" style={{ background: '#0e0e28' }}>New</option>
+              <option value="freelancing" style={{ background: '#0e0e28' }}>Freelancing</option>
             </select>
 
             {/* Search Input */}
@@ -518,9 +611,24 @@ export default function ProjectsPanel() {
                       {p.category}
                     </span>
                     
-                    {p.featured && (
+                    {p.featured === 'feature' && (
                       <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(255, 215, 0, 0.08)', color: '#ffd700', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
                         <Star size={8} fill="#ffd700" /> Featured
+                      </span>
+                    )}
+                    {p.featured === 'new' && (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(16, 185, 129, 0.08)', color: '#10b981', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                        New
+                      </span>
+                    )}
+                    {p.featured === 'freelancing' && (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(139, 92, 246, 0.08)', color: '#8b5cf6', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                        Freelancing
+                      </span>
+                    )}
+                    {p.featured === 'project' && (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(255, 255, 255, 0.03)', color: '#a0a0c0', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                        Project
                       </span>
                     )}
                   </div>

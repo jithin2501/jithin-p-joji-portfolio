@@ -20,7 +20,7 @@ class Project:
         features: List[Dict[str, str]],
         tech_stack: List[Dict[str, str]],
         learned: str,
-        featured: bool = False,
+        featured: str = "project",
         live_url: str = "#",
         github_url: str = "#",
         created_at: Optional[datetime] = None,
@@ -42,7 +42,7 @@ class Project:
         self.features = features or []
         self.tech_stack = tech_stack or []
         self.learned = learned
-        self.featured = featured
+        self.featured = featured or "project"
         self.live_url = live_url or "#"
         self.github_url = github_url or "#"
         self.created_at = created_at or datetime.utcnow()
@@ -51,6 +51,14 @@ class Project:
     def from_mongo(data: dict) -> "Project":
         if not data:
             return None
+        
+        # Backward compatibility for boolean featured fields
+        raw_featured = data.get("featured", "project")
+        if isinstance(raw_featured, bool):
+            featured_val = "feature" if raw_featured else "project"
+        else:
+            featured_val = str(raw_featured) if raw_featured is not None else "project"
+
         return Project(
             id=str(data.get("_id")),
             title=data.get("title"),
@@ -68,7 +76,7 @@ class Project:
             features=data.get("features") or [],
             tech_stack=data.get("tech_stack") or data.get("techStack") or [],
             learned=data.get("learned") or "",
-            featured=data.get("featured", False),
+            featured=featured_val,
             live_url=data.get("live_url") or data.get("liveUrl") or "#",
             github_url=data.get("github_url") or data.get("githubUrl") or "#",
             created_at=data.get("created_at") or datetime.utcnow()

@@ -2,19 +2,31 @@ from typing import List, Optional
 from app.repositories.project_repository import ProjectRepository
 from app.models.project import Project
 from app.schemas.project import ProjectCreate, ProjectUpdate
+from app.services.cloudinary_service import CloudinaryService
 
 class ProjectService:
     def __init__(self, repository: ProjectRepository):
         self.repository = repository
+        self.cloudinary_service = CloudinaryService()
 
     async def create_project(self, schema: ProjectCreate) -> Project:
+        # Check if the incoming image is a base64 string and upload it to Cloudinary
+        image_url = schema.image or ""
+        if image_url and image_url.startswith("data:"):
+            try:
+                uploaded_url = self.cloudinary_service.upload_base64_image(image_url)
+                if uploaded_url:
+                    image_url = uploaded_url
+            except Exception as e:
+                print("Cloudinary upload failed for project thumbnail, falling back to original value:", e)
+
         project = Project(
             title=schema.title,
             subtitle=schema.subtitle,
             description=schema.description,
             long_desc=schema.long_desc,
-            image=schema.image,
-            images=schema.images,
+            image=image_url,
+            images=schema.images or [image_url] if image_url else [],
             category=schema.category,
             role=schema.role,
             duration=schema.duration,
@@ -47,6 +59,18 @@ class ProjectService:
             val = getattr(schema, field, None)
             if val is not None:
                 update_data[field] = val
+
+        # Check if the incoming image is a base64 string and upload it to Cloudinary
+        if "image" in update_data and update_data["image"] and update_data["image"].startswith("data:"):
+            try:
+                uploaded_url = self.cloudinary_service.upload_base64_image(update_data["image"])
+                if uploaded_url:
+                    update_data["image"] = uploaded_url
+                    # Also sync in the list of images if present or empty
+                    if not update_data.get("images"):
+                        update_data["images"] = [uploaded_url]
+            except Exception as e:
+                print("Cloudinary upload failed for project thumbnail, falling back to original value:", e)
 
         # Handle naming conventions differences if any
         if "long_desc" in update_data:

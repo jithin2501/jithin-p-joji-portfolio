@@ -49,7 +49,7 @@ class ProjectRepository:
                     {"name": "Tailwind CSS", "icon": "fab fa-css3-alt"}
                 ],
                 "learned": "Working on this dashboard taught me a lot about data handling and state management in complex React applications. I learned how to optimize rendering for large datasets and implement real-time features efficiently.",
-                "featured": True,
+                "featured": "feature",
                 "live_url": "#",
                 "github_url": "#"
             },
@@ -87,7 +87,7 @@ class ProjectRepository:
                     {"name": "PostgreSQL", "icon": "fas fa-server"}
                 ],
                 "learned": "I focused heavily on user experience and animations in this project. Using Framer Motion helped me create smooth transitions that make the app feel premium. I also improved my skills in handling complex forms and state in Next.js.",
-                "featured": False,
+                "featured": "project",
                 "live_url": "#",
                 "github_url": "#"
             },
@@ -125,7 +125,7 @@ class ProjectRepository:
                     {"name": "Git", "icon": "fab fa-git-alt"}
                 ],
                 "learned": "This project allowed me to explore Flutter and cross-platform development. I learned how to manage local storage for offline support and integrate Firebase for real-time data synchronization. Designing the UI was also a great exercise in mobile ergonomics.",
-                "featured": False,
+                "featured": "project",
                 "live_url": "#",
                 "github_url": "#"
             },
@@ -163,7 +163,7 @@ class ProjectRepository:
                     {"name": "Cloudinary", "icon": "fas fa-image"}
                 ],
                 "learned": "Building this platform taught me the importance of performance in e-commerce. I learned how to implement server-side rendering for better SEO and use Redux for managing complex shopping cart states. I also gained experience in integrating headless CMS like Strapi.",
-                "featured": True,
+                "featured": "feature",
                 "live_url": "#",
                 "github_url": "#"
             }

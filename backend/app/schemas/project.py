@@ -18,7 +18,7 @@ class ProjectCreate(BaseModel):
     features: List[Dict[str, str]] = Field(default=[], description="Key features of the project: list of {'title': str, 'desc': str, 'icon': str}")
     tech_stack: List[Dict[str, str]] = Field(default=[], description="Tech stack tags: list of {'name': str, 'icon': str}")
     learned: str = Field(..., description="What was learned during the project")
-    featured: bool = Field(default=False, description="Is it a featured project?")
+    featured: str = Field(default="project", description="Classification tag (feature, project, new, freelancing)")
     live_url: Optional[str] = Field(default="#", description="Live project URL")
     github_url: Optional[str] = Field(default="#", description="GitHub URL")
 
@@ -38,7 +38,7 @@ class ProjectUpdate(BaseModel):
     features: Optional[List[Dict[str, str]]] = None
     tech_stack: Optional[List[Dict[str, str]]] = None
     learned: Optional[str] = None
-    featured: Optional[bool] = None
+    featured: Optional[str] = None
     live_url: Optional[str] = None
     github_url: Optional[str] = None
 
@@ -59,7 +59,7 @@ class ProjectResponse(BaseModel):
     features: List[Dict[str, str]]
     tech_stack: List[Dict[str, str]]
     learned: str
-    featured: bool
+    featured: str
     live_url: str
     github_url: str
     created_at: datetime
