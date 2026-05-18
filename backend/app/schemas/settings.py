@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Optional
 
 class HeroStatsSchema(BaseModel):
     projects: str = Field(..., description="Project count statistic (e.g. 15+)")
@@ -16,6 +17,7 @@ class SocialLinksSchema(BaseModel):
 class SettingsResponse(BaseModel):
     hero: HeroStatsSchema
     socials: SocialLinksSchema
+    about_image: Optional[str] = ""
 
     class Config:
         from_attributes = True

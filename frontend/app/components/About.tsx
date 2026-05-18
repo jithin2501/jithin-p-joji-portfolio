@@ -6,7 +6,25 @@ import '../style/About.css';
 
 export default function About() {
   const [isVisible, setIsVisible] = useState(false);
+  const [aboutImage, setAboutImage] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const fetchAboutImage = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/settings/', { cache: 'no-store' });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.about_image) {
+            setAboutImage(data.about_image);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch about image:', err);
+      }
+    };
+    fetchAboutImage();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,8 +66,14 @@ export default function About() {
 
       <div className={`about-image-container ${isVisible ? 'visible' : ''}`}>
         <div className="about-image-border" />
-        <div className="about-image-mask">
-          <Image src="/me2.png" alt="Profile" fill style={{ objectFit: 'cover' }} />
+        <div className="about-image-mask" style={{ position: 'relative' }}>
+          {aboutImage && (
+            <img 
+              src={aboutImage} 
+              alt="Profile" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            />
+          )}
         </div>
         
         {/* Updated Badge Design */}

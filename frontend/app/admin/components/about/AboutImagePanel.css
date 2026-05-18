@@ -1,0 +1,114 @@
+/* About Image Panel Styles */
+.about-image-panel-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.about-image-card {
+    background: #0e0e28;
+    border: 1px solid rgba(124, 92, 255, 0.15);
+    border-radius: 16px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+}
+
+.about-image-preview-wrapper {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+    border: 3.5px solid rgba(124, 92, 255, 0.4);
+    padding: 8px;
+    background: #050510;
+    transition: all 0.5s ease;
+    box-shadow: 0 10px 30px rgba(124, 92, 255, 0.05);
+}
+
+.about-image-preview-wrapper:hover {
+    border-color: rgba(124, 92, 255, 0.8);
+    box-shadow: 0 15px 40px rgba(124, 92, 255, 0.15);
+}
+
+.about-image-preview-mask {
+    width: 100%;
+    height: 100%;
+    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+    overflow: hidden;
+    position: relative;
+    background: #111;
+}
+
+.about-image-preview-mask img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about-image-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.upload-action-btn {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(124, 92, 255, 0.1);
+    border: 1px solid rgba(124, 92, 255, 0.25);
+    color: #8b5cf6;
+    padding: 14px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.upload-action-btn:hover {
+    background: #8b5cf6;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+}
+
+.remove-action-btn {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 78, 78, 0.08);
+    border: 1px solid rgba(255, 78, 78, 0.2);
+    color: #ff4e4e;
+    padding: 14px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.remove-action-btn:hover {
+    background: #ff4e4e;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 78, 78, 0.4);
+}
+
+.about-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #505080;
+    text-align: center;
+    padding: 20px;
+}

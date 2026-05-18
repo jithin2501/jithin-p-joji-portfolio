@@ -1,16 +1,17 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, MessageSquare, Sliders, FileText } from 'lucide-react';
+import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
 import ResumesPanel from './components/resumes/ResumesPanel';
+import AboutImagePanel from './components/about/AboutImagePanel';
 import './Admin.css';
 import './components/messages/MessagesPanel.css';
 import './components/settings/SettingsPanel.css';
 import './components/resumes/ResumesPanel.css';
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage'>('messages');
 
     return (
         <div className="admin-layout">
@@ -41,6 +42,13 @@ export default function AdminPanel() {
                         <FileText size={18} />
                         Resumes
                     </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'aboutImage' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('aboutImage')}
+                    >
+                        <ImageIcon size={18} />
+                        About Image
+                    </button>
                 </nav>
                 <div className="sidebar-footer">
                     <button className="logout-btn" onClick={() => window.location.href = '/'}>
@@ -55,13 +63,15 @@ export default function AdminPanel() {
                     <MessagesPanel />
                 ) : activeTab === 'settings' ? (
                     <SettingsPanel />
-                ) : (
+                ) : activeTab === 'resumes' ? (
                     <>
                         <div className="content-header" style={{ marginBottom: '24px' }}>
                             <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#fff', margin: 0 }}>Resume Manager</h2>
                         </div>
                         <ResumesPanel />
                     </>
+                ) : (
+                    <AboutImagePanel />
                 )}
             </main>
         </div>

@@ -62,16 +62,18 @@ class SocialLinks:
         )
 
 class PortfolioSettings:
-    def __init__(self, hero: HeroStats, socials: SocialLinks, id: Optional[str] = "global"):
+    def __init__(self, hero: HeroStats, socials: SocialLinks, about_image: Optional[str] = "", id: Optional[str] = "global"):
         self.id = id
         self.hero = hero
         self.socials = socials
+        self.about_image = about_image
 
     def to_mongo(self) -> dict:
         return {
             "_id": self.id,
             "hero": self.hero.to_mongo(),
-            "socials": self.socials.to_mongo()
+            "socials": self.socials.to_mongo(),
+            "about_image": self.about_image or ""
         }
 
     @staticmethod
@@ -79,10 +81,12 @@ class PortfolioSettings:
         if not data:
             return PortfolioSettings(
                 hero=HeroStats.from_mongo(None),
-                socials=SocialLinks.from_mongo(None)
+                socials=SocialLinks.from_mongo(None),
+                about_image=""
             )
         return PortfolioSettings(
             id=data.get("_id", "global"),
             hero=HeroStats.from_mongo(data.get("hero")),
-            socials=SocialLinks.from_mongo(data.get("socials"))
+            socials=SocialLinks.from_mongo(data.get("socials")),
+            about_image=data.get("about_image", "")
         )

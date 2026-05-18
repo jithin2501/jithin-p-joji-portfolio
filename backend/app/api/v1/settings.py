@@ -26,7 +26,8 @@ async def get_settings(service: SettingsService = Depends(get_settings_service))
             email=settings.socials.email,
             phone=settings.socials.phone,
             location=settings.socials.location
-        )
+        ),
+        about_image=settings.about_image
     )
 
 @router.put("/", response_model=SettingsResponse)
@@ -45,5 +46,6 @@ async def update_settings(settings_in: SettingsResponse, service: SettingsServic
             email=settings.socials.email,
             phone=settings.socials.phone,
             location=settings.socials.location
-        )
+        ),
+        about_image=settings.about_image
     )

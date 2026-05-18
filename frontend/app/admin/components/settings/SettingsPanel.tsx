@@ -28,7 +28,7 @@ export default function SettingsPanel() {
     const fetchSettings = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/settings');
+            const response = await fetch('http://localhost:8080/api/settings/');
             if (!response.ok) throw new Error('Failed to fetch settings');
             const data = await response.json();
             setSettings(data);
@@ -64,7 +64,7 @@ export default function SettingsPanel() {
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8080/api/settings', {
+            const response = await fetch('http://localhost:8080/api/settings/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
