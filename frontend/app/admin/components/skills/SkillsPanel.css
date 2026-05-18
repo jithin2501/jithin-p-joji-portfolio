@@ -1,12 +1,109 @@
 @import "../experience/ExperiencePanel.css";
 
-/* Skills Panel Specific Styles */
-.skills-icon-preview {
-    margin-top: 10px;
+/* Skills Panel General Layout */
+.skills-main-layout {
     display: flex;
-    justify-content: center;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px dashed rgba(124, 92, 255, 0.2);
-    border-radius: 8px;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
 }
+
+.skills-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+    align-items: stretch;
+}
+
+.skills-form-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0;
+}
+
+.slugs-library-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+/* Click-to-Fill Slugs Library Item Hover States */
+.slug-grid-item {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.slug-grid-item:hover {
+    background: rgba(124, 92, 255, 0.08) !important;
+    border-color: rgba(124, 92, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 92, 255, 0.1);
+}
+
+.slug-grid-item:active {
+    transform: scale(0.97);
+}
+
+/* Category Tab Buttons Hover & Active States */
+.slug-tab-btn:hover {
+    border-color: rgba(124, 92, 255, 0.25) !important;
+    color: #a78bfa !important;
+    background: rgba(124, 92, 255, 0.05) !important;
+}
+
+.slug-tab-btn.active {
+    box-shadow: 0 0 10px rgba(124, 92, 255, 0.15);
+}
+
+/* Stored Tech Grid Layout (Full Width Bottom Section) */
+.stored-tech-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    max-height: 800px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Custom Scrollbar for Slugs and Tech Grids */
+.slugs-grid-scroll::-webkit-scrollbar,
+.stored-tech-grid-layout::-webkit-scrollbar {
+    width: 6px;
+}
+
+.slugs-grid-scroll::-webkit-scrollbar-track,
+.stored-tech-grid-layout::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 3px;
+}
+
+.slugs-grid-scroll::-webkit-scrollbar-thumb,
+.stored-tech-grid-layout::-webkit-scrollbar-thumb {
+    background: rgba(124, 92, 255, 0.15);
+    border-radius: 3px;
+}
+
+.slugs-grid-scroll::-webkit-scrollbar-thumb:hover,
+.stored-tech-grid-layout::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 92, 255, 0.3);
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+    .skills-top-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stored-tech-grid-layout {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .stored-tech-grid-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
