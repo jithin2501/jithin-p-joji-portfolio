@@ -184,10 +184,10 @@ const Education = () => {
 
     const formatDescription = (desc: string) => {
         if (!desc) return '';
-        // If it matches the default description (ignoring newlines/spaces), split it into 3 clean lines with br tags
-        const cleanDesc = desc.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
-        const defaultMatch = "A strong academic foundation that shaped my problem-solving mindset and passion for technology.";
-        if (cleanDesc === defaultMatch) {
+        // Highly robust normalization (lowercase, alphanumeric only) to match the default text reliably
+        const normalized = desc.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const target = "astrongacademicfoundationthatshapedmyproblemsolvingmindsetandpassionfortechnology";
+        if (normalized === target) {
             return (
                 <>
                     A strong academic foundation that shaped <br />
