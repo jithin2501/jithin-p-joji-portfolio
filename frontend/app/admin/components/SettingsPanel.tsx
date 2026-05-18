@@ -118,7 +118,7 @@ export default function SettingsPanel() {
                             <input
                                 id="stat-projects"
                                 type="text"
-                                value={settings.hero.projects}
+                                value={settings.hero.projects || ''}
                                 onChange={e => handleChange('hero', 'projects', e.target.value)}
                                 placeholder="15+"
                                 required
@@ -130,7 +130,7 @@ export default function SettingsPanel() {
                             <input
                                 id="stat-experience"
                                 type="text"
-                                value={settings.hero.experience}
+                                value={settings.hero.experience || ''}
                                 onChange={e => handleChange('hero', 'experience', e.target.value)}
                                 placeholder="1yr"
                                 required
@@ -142,7 +142,7 @@ export default function SettingsPanel() {
                             <input
                                 id="stat-commits"
                                 type="text"
-                                value={settings.hero.commits}
+                                value={settings.hero.commits || ''}
                                 onChange={e => handleChange('hero', 'commits', e.target.value)}
                                 placeholder="2K+"
                                 required
@@ -154,7 +154,7 @@ export default function SettingsPanel() {
                             <input
                                 id="stat-satisfaction"
                                 type="text"
-                                value={settings.hero.satisfaction}
+                                value={settings.hero.satisfaction || ''}
                                 onChange={e => handleChange('hero', 'satisfaction', e.target.value)}
                                 placeholder="99%"
                                 required
@@ -177,7 +177,7 @@ export default function SettingsPanel() {
                                 <input
                                     id="social-github"
                                     type="url"
-                                    value={settings.socials.github}
+                                    value={settings.socials.github || ''}
                                     onChange={e => handleChange('socials', 'github', e.target.value)}
                                     placeholder="https://github.com/..."
                                     required
@@ -192,7 +192,7 @@ export default function SettingsPanel() {
                                 <input
                                     id="social-linkedin"
                                     type="url"
-                                    value={settings.socials.linkedin}
+                                    value={settings.socials.linkedin || ''}
                                     onChange={e => handleChange('socials', 'linkedin', e.target.value)}
                                     placeholder="https://www.linkedin.com/in/..."
                                     required
@@ -207,7 +207,7 @@ export default function SettingsPanel() {
                                 <input
                                     id="contact-email"
                                     type="email"
-                                    value={settings.socials.email}
+                                    value={settings.socials.email || ''}
                                     onChange={e => handleChange('socials', 'email', e.target.value)}
                                     placeholder="your-name@example.com"
                                     required
@@ -222,7 +222,7 @@ export default function SettingsPanel() {
                                 <input
                                     id="contact-phone"
                                     type="text"
-                                    value={settings.socials.phone}
+                                    value={settings.socials.phone || ''}
                                     onChange={e => handleChange('socials', 'phone', e.target.value)}
                                     placeholder="+91 98765 43210"
                                     required
@@ -237,7 +237,7 @@ export default function SettingsPanel() {
                                 <input
                                     id="contact-location"
                                     type="text"
-                                    value={settings.socials.location}
+                                    value={settings.socials.location || ''}
                                     onChange={e => handleChange('socials', 'location', e.target.value)}
                                     placeholder="Bengaluru, Kerala, India"
                                     required
