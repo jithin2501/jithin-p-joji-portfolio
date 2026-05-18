@@ -304,7 +304,7 @@ export default function ResumesPanel() {
                         </div>
                     ) : previewBase64 ? (
                         <iframe 
-                            src={previewBase64} 
+                            src={`${previewBase64}#toolbar=0`} 
                             className="preview-iframe"
                             title="PDF Previewer"
                         />
