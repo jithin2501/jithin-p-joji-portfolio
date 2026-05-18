@@ -182,6 +182,23 @@ const Education = () => {
         }
     ];
 
+    const formatDescription = (desc: string) => {
+        if (!desc) return '';
+        // If it matches the default description (ignoring newlines/spaces), split it into 3 clean lines with br tags
+        const cleanDesc = desc.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
+        const defaultMatch = "A strong academic foundation that shaped my problem-solving mindset and passion for technology.";
+        if (cleanDesc === defaultMatch) {
+            return (
+                <>
+                    A strong academic foundation that shaped <br />
+                    my problem-solving mindset and passion <br />
+                    for technology.
+                </>
+            );
+        }
+        return desc;
+    };
+
     const activeMilestones = academics.length > 0 ? academics : staticMilestones;
 
     return (
@@ -197,7 +214,7 @@ const Education = () => {
                 {/* Left Section */}
                 <div className="edu-intro-column">
                     <p className="edu-description" style={{ whiteSpace: 'pre-line' }}>
-                        {settings.description}
+                        {formatDescription(settings.description)}
                     </p>
 
                     <div className="edu-highlights-container">
