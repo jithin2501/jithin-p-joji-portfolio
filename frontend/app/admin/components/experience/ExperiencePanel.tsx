@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Briefcase, Calendar, Trash2, Edit2, Plus, Save, RefreshCw, MapPin, Tag } from 'lucide-react';
+import { Briefcase, Calendar, Trash2, Edit2, Plus, Save, RefreshCw, MapPin, Tag, Sliders } from 'lucide-react';
 import './ExperiencePanel.css';
 
 interface ExperienceData {
@@ -34,6 +34,14 @@ export default function ExperiencePanel() {
     const [dotColor, setDotColor] = useState('#818cf8');
     const [tagInput, setTagInput] = useState('');
 
+    // Overall stats form states
+    const [statExperience, setStatExperience] = useState('1+');
+    const [statProjects, setStatProjects] = useState('20+');
+    const [statClients, setStatClients] = useState('99+');
+    const [savingStats, setSavingStats] = useState(false);
+    const [statsSuccess, setStatsSuccess] = useState<string | null>(null);
+    const [statsError, setStatsError] = useState<string | null>(null);
+
     const fetchExperiences = async () => {
         setLoading(true);
         try {
@@ -50,8 +58,25 @@ export default function ExperiencePanel() {
         }
     };
 
+    const fetchSettings = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/settings/');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.hero) {
+                    setStatExperience(data.hero.experience || '1+');
+                    setStatProjects(data.hero.projects || '20+');
+                    setStatClients(data.hero.satisfaction || '99+');
+                }
+            }
+        } catch (err) {
+            console.error('Failed to load timeline statistics:', err);
+        }
+    };
+
     useEffect(() => {
         fetchExperiences();
+        fetchSettings();
     }, []);
 
     const resetForm = () => {
@@ -156,6 +181,45 @@ export default function ExperiencePanel() {
         } catch (err) {
             setError('Failed to delete experience.');
             console.error(err);
+        }
+    };
+
+    const handleSaveStats = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSavingStats(true);
+        setStatsSuccess(null);
+        setStatsError(null);
+
+        try {
+            const getResponse = await fetch('http://localhost:8080/api/settings/');
+            if (!getResponse.ok) throw new Error('Failed to fetch settings');
+            const currentSettings = await getResponse.json();
+
+            const updatedSettings = {
+                ...currentSettings,
+                hero: {
+                    ...currentSettings.hero,
+                    experience: statExperience.trim(),
+                    projects: statProjects.trim(),
+                    satisfaction: statClients.trim()
+                }
+            };
+
+            const response = await fetch('http://localhost:8080/api/settings/', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedSettings)
+            });
+
+            if (!response.ok) throw new Error('Failed to save timeline statistics');
+            
+            setStatsSuccess('Timeline statistics updated successfully!');
+            setTimeout(() => setStatsSuccess(null), 3000);
+        } catch (err) {
+            setStatsError('Failed to save timeline statistics.');
+            console.error(err);
+        } finally {
+            setSavingStats(false);
         }
     };
 
@@ -306,6 +370,70 @@ export default function ExperiencePanel() {
                         </button>
                     </div>
                 </form>
+
+                {/* Overall Timeline Statistics Form */}
+                <form onSubmit={handleSaveStats} className="settings-card experience-form-card" style={{ marginTop: '24px' }}>
+                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
+                        <Sliders size={18} className="card-header-icon" />
+                        <h3 style={{ margin: 0, fontSize: '16px' }}>Overall Timeline Statistics</h3>
+                    </div>
+
+                    {statsSuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{statsSuccess}</div>}
+                    {statsError && <div className="admin-error" style={{ marginBottom: '16px' }}>{statsError}</div>}
+
+                    <div className="form-grid-three">
+                        <div className="form-group">
+                            <label htmlFor="stat-exp">Years Experience</label>
+                            <input
+                                id="stat-exp"
+                                type="text"
+                                value={statExperience}
+                                onChange={e => setStatExperience(e.target.value)}
+                                placeholder="1+"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="stat-proj">Projects Completed</label>
+                            <input
+                                id="stat-proj"
+                                type="text"
+                                value={statProjects}
+                                onChange={e => setStatProjects(e.target.value)}
+                                placeholder="20+"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="stat-clients">Happy Clients</label>
+                            <input
+                                id="stat-clients"
+                                type="text"
+                                value={statClients}
+                                onChange={e => setStatClients(e.target.value)}
+                                placeholder="99+"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        className="save-settings-btn" 
+                        disabled={savingStats}
+                        style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}
+                    >
+                        {savingStats ? (
+                            <>
+                                <RefreshCw size={16} className="spin-icon" /> Saving Stats...
+                            </>
+                        ) : (
+                            <>
+                                <Save size={16} /> Save Timeline Statistics
+                            </>
+                        )}
+                    </button>
+                </form>
             </div>
 
             {/* Right Side: Interactive Stored Entries Timeline */}
@@ -322,7 +450,7 @@ export default function ExperiencePanel() {
                         </div>
                     ) : (
                         experiences.map(exp => (
-                            <div key={exp.id} className="admin-exp-item" style={{ borderLeftColor: exp.dot_color }}>
+                            <div key={exp.id} className="admin-exp-item">
                                 <div className="admin-exp-header">
                                     <div className="admin-exp-info">
                                         <div className="admin-exp-title-box">
