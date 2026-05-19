@@ -878,164 +878,181 @@ export default function ProjectsPanel() {
                   required
                 />
               </div>
-            </div>
 
-          </div>
+              {/* Key Features Array Editor Section (Moved inside Column 2 below Key Takeaways) */}
+              <div className="key-features-editor-sub" style={{ marginTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '20px' }}>
+                <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Star size={14} style={{ color: '#60a5fa' }} /> Key Features List
+                </h4>
 
-          {/* Key Features Array Editor Section */}
-          <div className="form-sub-section" style={{ marginTop: '30px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '24px' }}>
-            <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Star size={14} style={{ color: '#60a5fa' }} /> Key Features List
-            </h4>
-
-            {detailFeatures.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '30px', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '10px', color: '#7070a0', marginBottom: '20px' }}>
-                No features added yet. Click "+ Add New Key Feature Item" below to build your dynamic features section!
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
-                {detailFeatures.map((feat, index) => (
-                  <div 
-                    key={index} 
-                    style={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: '1fr 2fr 1fr auto', 
-                      gap: '12px', 
-                      alignItems: 'center', 
-                      background: 'rgba(255, 255, 255, 0.02)', 
-                      border: '1px solid rgba(255, 255, 255, 0.05)', 
-                      padding: '16px', 
-                      borderRadius: '10px'
-                    }}
-                  >
-                    {/* Feature Title */}
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Feature Title *</label>
-                      <input
-                        type="text"
-                        value={feat.title}
-                        onChange={e => {
-                          const updated = [...detailFeatures];
-                          updated[index] = { ...updated[index], title: e.target.value };
-                          setDetailFeatures(updated);
-                        }}
-                        placeholder="e.g. Real-time Chats"
-                        required
-                        style={{ padding: '8px 12px', fontSize: '13px' }}
-                      />
-                    </div>
-
-                    {/* Feature Description */}
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Description *</label>
-                      <input
-                        type="text"
-                        value={feat.desc}
-                        onChange={e => {
-                          const updated = [...detailFeatures];
-                          updated[index] = { ...updated[index], desc: e.target.value };
-                          setDetailFeatures(updated);
-                        }}
-                        placeholder="e.g. Instant communication between users powered by Socket.io"
-                        required
-                        style={{ padding: '8px 12px', fontSize: '13px' }}
-                      />
-                    </div>
-
-                    {/* Feature Icon Name Selection */}
-                    <div className="form-group" style={{ margin: 0 }}>
-                      <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Visual Icon *</label>
-                      <select
-                        value={feat.icon}
-                        onChange={e => {
-                          const updated = [...detailFeatures];
-                          updated[index] = { ...updated[index], icon: e.target.value };
-                          setDetailFeatures(updated);
-                        }}
-                        style={{
-                          width: '100%',
-                          background: '#0a0a1f',
-                          border: '1px solid rgba(124, 92, 255, 0.15)',
-                          borderRadius: '8px',
-                          padding: '8px 12px',
-                          color: '#fff',
-                          fontSize: '13px',
-                          outline: 'none',
-                          height: '37px'
+                {detailFeatures.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '30px', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '10px', color: '#7070a0', marginBottom: '20px' }}>
+                    No features added yet. Click "+ Add New Key Feature Item" below to build your dynamic features section!
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+                    {detailFeatures.map((feat, index) => (
+                      <div 
+                        key={index} 
+                        style={{ 
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '12px', 
+                          background: 'rgba(255, 255, 255, 0.02)', 
+                          border: '1px solid rgba(255, 255, 255, 0.05)', 
+                          padding: '16px', 
+                          borderRadius: '10px'
                         }}
                       >
-                        <option value="Zap" style={{ background: '#0e0e28' }}>Zap (Performance / Speed)</option>
-                        <option value="Layout" style={{ background: '#0e0e28' }}>Layout (UI / Dashboard)</option>
-                        <option value="Users" style={{ background: '#0e0e28' }}>Users (Collaboration)</option>
-                        <option value="Rocket" style={{ background: '#0e0e28' }}>Rocket (Launch / Deploy)</option>
-                        <option value="Smartphone" style={{ background: '#0e0e28' }}>Smartphone (Mobile / Responsive)</option>
-                        <option value="BarChart3" style={{ background: '#0e0e28' }}>BarChart (Analytics / Metrics)</option>
-                        <option value="CheckCircle2" style={{ background: '#0e0e28' }}>CheckCircle (Verification / Tasks)</option>
-                        <option value="Sparkles" style={{ background: '#0e0e28' }}>Sparkles (Premium Features)</option>
-                        <option value="Settings" style={{ background: '#0e0e28' }}>Settings (Control / Options)</option>
-                        <option value="BookOpen" style={{ background: '#0e0e28' }}>BookOpen (Documentation / Guides)</option>
-                        <option value="Info" style={{ background: '#0e0e28' }}>Info (Details / FAQ)</option>
-                        <option value="Code2" style={{ background: '#0e0e28' }}>Code (Tech Stack)</option>
-                      </select>
-                    </div>
+                        {/* Line 1: Title & Description */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 2fr',
+                          gap: '10px',
+                          alignItems: 'center'
+                        }}>
+                          {/* Feature Title */}
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Feature Title *</label>
+                            <input
+                              type="text"
+                              value={feat.title}
+                              onChange={e => {
+                                const updated = [...detailFeatures];
+                                updated[index] = { ...updated[index], title: e.target.value };
+                                setDetailFeatures(updated);
+                              }}
+                              placeholder="e.g. Real-time Chats"
+                              required
+                              style={{ padding: '8px 10px', fontSize: '13px' }}
+                            />
+                          </div>
 
-                    {/* Delete Item Button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = detailFeatures.filter((_, idx) => idx !== index);
-                        setDetailFeatures(updated);
-                      }}
-                      style={{
-                        padding: '10px',
-                        background: 'rgba(239, 68, 68, 0.1)',
-                        border: '1px solid rgba(239, 68, 68, 0.25)',
-                        borderRadius: '8px',
-                        color: '#ef4444',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginTop: '16px',
-                        width: '38px',
-                        height: '37px',
-                        transition: 'all 0.2s ease',
-                        margin: '16px 0 0 0'
-                      }}
-                      title="Remove Feature"
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                          {/* Feature Description */}
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Description *</label>
+                            <input
+                              type="text"
+                              value={feat.desc}
+                              onChange={e => {
+                                const updated = [...detailFeatures];
+                                updated[index] = { ...updated[index], desc: e.target.value };
+                                setDetailFeatures(updated);
+                              }}
+                              placeholder="e.g. Instant communication powered by Socket.io"
+                              required
+                              style={{ padding: '8px 10px', fontSize: '13px' }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Line 2: Visual Icon (Left) & Delete Button (Right) */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr auto',
+                          gap: '12px',
+                          alignItems: 'flex-end',
+                          marginTop: '4px'
+                        }}>
+                          {/* Feature Icon Name Selection */}
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Visual Icon *</label>
+                            <select
+                              value={feat.icon}
+                              onChange={e => {
+                                const updated = [...detailFeatures];
+                                updated[index] = { ...updated[index], icon: e.target.value };
+                                setDetailFeatures(updated);
+                              }}
+                              style={{
+                                width: '100%',
+                                background: '#0a0a1f',
+                                border: '1px solid rgba(124, 92, 255, 0.15)',
+                                borderRadius: '8px',
+                                padding: '8px 10px',
+                                color: '#fff',
+                                fontSize: '13px',
+                                outline: 'none',
+                                height: '37px'
+                              }}
+                            >
+                              <option value="Zap" style={{ background: '#0e0e28' }}>Zap (Speed)</option>
+                              <option value="Layout" style={{ background: '#0e0e28' }}>Layout (UI)</option>
+                              <option value="Users" style={{ background: '#0e0e28' }}>Users (Collaboration)</option>
+                              <option value="Rocket" style={{ background: '#0e0e28' }}>Rocket (Deploy)</option>
+                              <option value="Smartphone" style={{ background: '#0e0e28' }}>Smartphone (Mobile)</option>
+                              <option value="BarChart3" style={{ background: '#0e0e28' }}>BarChart (Analytics)</option>
+                              <option value="CheckCircle2" style={{ background: '#0e0e28' }}>CheckCircle (Tasks)</option>
+                              <option value="Sparkles" style={{ background: '#0e0e28' }}>Sparkles (Premium)</option>
+                              <option value="Settings" style={{ background: '#0e0e28' }}>Settings (Control)</option>
+                              <option value="BookOpen" style={{ background: '#0e0e28' }}>BookOpen (Docs)</option>
+                              <option value="Info" style={{ background: '#0e0e28' }}>Info (Details)</option>
+                              <option value="Code2" style={{ background: '#0e0e28' }}>Code (Stack)</option>
+                            </select>
+                          </div>
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = detailFeatures.filter((_, idx) => idx !== index);
+                              setDetailFeatures(updated);
+                            }}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '10px 16px',
+                              background: 'rgba(239, 68, 68, 0.08)',
+                              border: '1px solid rgba(239, 68, 68, 0.25)',
+                              borderRadius: '8px',
+                              color: '#f87171',
+                              cursor: 'pointer',
+                              fontSize: '13px',
+                              fontWeight: 500,
+                              height: '37px',
+                              transition: 'all 0.2s ease',
+                              width: 'auto',
+                              margin: 0
+                            }}
+                          >
+                            <Trash2 size={13} style={{ color: '#f87171' }} />
+                            Remove Feature
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
+                )}
 
-            {/* Add Feature Button */}
-            <button
-              type="button"
-              onClick={() => {
-                setDetailFeatures([...detailFeatures, { title: '', desc: '', icon: 'Zap' }]);
-              }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 20px',
-                background: 'rgba(124, 92, 255, 0.12)',
-                border: '1px dashed rgba(124, 92, 255, 0.3)',
-                borderRadius: '8px',
-                color: '#a78bfa',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                width: 'auto',
-                margin: 0
-              }}
-            >
-              + Add New Key Feature Item
-            </button>
+                {/* Add Feature Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDetailFeatures([...detailFeatures, { title: '', desc: '', icon: 'Zap' }]);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 20px',
+                    background: 'rgba(124, 92, 255, 0.12)',
+                    border: '1px dashed rgba(124, 92, 255, 0.3)',
+                    borderRadius: '8px',
+                    color: '#a78bfa',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    width: 'auto',
+                    margin: 0
+                  }}
+                >
+                  + Add New Key Feature Item
+                </button>
+              </div>
+            </div>
+
           </div>
 
           {/* Form Actions */}
