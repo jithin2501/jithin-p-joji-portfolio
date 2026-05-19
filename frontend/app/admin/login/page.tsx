@@ -263,16 +263,21 @@ export default function AdminLogin() {
     }
   };
 
+  // Auto-submit hook when exact 6-digit length is reached
+  useEffect(() => {
+    if (enteredPin.length === 6) {
+      // Delay slightly for visual feedback before verification
+      const timer = setTimeout(() => {
+        verifyPasscode(enteredPin);
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [enteredPin]);
+
   const registerDigit = (digit: string) => {
     setEnteredPin(prev => {
       if (prev.length >= 6) return prev;
-      const nextArr = [...prev, digit];
-      
-      // Auto-submit only when the maximum length of 6 digits is reached
-      if (nextArr.length === 6) {
-        setTimeout(() => verifyPasscode(nextArr), 350);
-      }
-      return nextArr;
+      return [...prev, digit];
     });
   };
 
@@ -618,7 +623,7 @@ export default function AdminLogin() {
               </div>
 
               {/* Delete / Clear Actions row */}
-              <div className="action-panel-footer" style={{ padding: '0px', gap: '10px' }}>
+              <div className="action-panel-footer" style={{ padding: '0px', gap: '16px' }}>
                 <button 
                   onClick={handleClear}
                   className="action-footer-btn"
@@ -634,25 +639,6 @@ export default function AdminLogin() {
                 >
                   <Trash2 size={13} className="text-indigo-400" />
                   Delete
-                </button>
-                <button 
-                  onClick={() => {
-                    if (enteredPin.length >= 4) {
-                      verifyPasscode(enteredPin);
-                    }
-                  }}
-                  disabled={enteredPin.length < 4}
-                  className="action-footer-btn"
-                  style={{ 
-                    flex: 1.5,
-                    background: enteredPin.length >= 4 ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'rgba(31, 41, 55, 0.2)',
-                    color: enteredPin.length >= 4 ? '#fff' : '#4b5563',
-                    borderColor: enteredPin.length >= 4 ? '#818cf8' : 'rgba(255, 255, 255, 0.04)',
-                    cursor: enteredPin.length >= 4 ? 'pointer' : 'not-allowed',
-                    boxShadow: enteredPin.length >= 4 ? '0 0 15px rgba(99, 102, 241, 0.4)' : 'none'
-                  }}
-                >
-                  Verify
                 </button>
               </div>
             </>
