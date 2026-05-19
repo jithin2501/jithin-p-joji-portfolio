@@ -12,6 +12,7 @@ from app.api.v1.academics import router as academics_router
 from app.api.v1.skills import router as skills_router
 from app.api.v1.projects import router as projects_router
 from app.api.v1.analytics import router as analytics_router
+from app.api.v1.auth import router as auth_router
 
 
 @asynccontextmanager
@@ -39,6 +40,7 @@ app.add_middleware(
 )
 
 # API v1 routes
+app.include_router(auth_router, prefix="/api/v1/auth", tags=["Auth v1"])
 app.include_router(contact_router, prefix="/api/v1/contacts", tags=["Contacts v1"])
 app.include_router(settings_router, prefix="/api/v1/settings", tags=["Settings v1"])
 app.include_router(resumes_router, prefix="/api/v1/resumes", tags=["Resumes v1"])
@@ -49,6 +51,7 @@ app.include_router(projects_router, prefix="/api/v1/projects", tags=["Projects v
 app.include_router(analytics_router, prefix="/api/v1/analytics", tags=["Analytics v1"])
 
 # Support compatibility with previous spring boot controller routes
+app.include_router(auth_router, prefix="/api/auth", tags=["Auth Compatibility"])
 app.include_router(contact_router, prefix="/api/contacts", tags=["Contacts Compatibility"])
 app.include_router(settings_router, prefix="/api/settings", tags=["Settings Compatibility"])
 app.include_router(resumes_router, prefix="/api/resumes", tags=["Resumes Compatibility"])

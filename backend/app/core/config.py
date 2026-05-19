@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     DATABASE_NAME: str = "portfolio"
     PORT: int = int(os.getenv("PORT", 8080))
     HOST: str = "0.0.0.0"
+    ADMIN_PINCODE: str = os.getenv("ADMIN_PINCODE", "1234")
+    JWT_SECRET: str = os.getenv("JWT_SECRET", "super-secret-key-change-me")
 
     class Config:
         extra = "ignore"

@@ -2,15 +2,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  Shield, MessageSquare, Sliders, FileText, 
-  Trash2, Globe, Laptop, RefreshCw, Compass,
-  Activity, Users, MapPin, Eye, Clock, 
-  Lock, Sun, Moon, Volume2, ArrowLeft, Terminal, Play, Square
+  Trash2, RefreshCw, Sun, Moon, Volume2, ArrowLeft
 } from 'lucide-react';
 import './Login.css';
-
-// Sound frequencies mapping
-const RETRO_MELODY = [261.63, 329.63, 392.00, 493.88, 523.25, 493.88, 392.00, 329.63];
 
 interface DiagnosticLog {
   time: string;
@@ -22,18 +16,12 @@ export default function AdminLogin() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'dialer' | 'settings'>('dialer');
   const [enteredPin, setEnteredPin] = useState<string[]>([]);
-  const [systemPasscode, setSystemPasscode] = useState('1234');
-  const [customPinInput, setCustomPinInput] = useState('1234');
   
   // Synthesizer controls
   const [soundTheme, setSoundTheme] = useState<'mechanical' | 'retro' | 'silent'>('mechanical');
   const [feedbackVolume, setFeedbackVolume] = useState(70); // %
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
   const [clockTime, setClockTime] = useState('--:--:--');
-  
-  // Live diagnostic logs
-  const [logs, setLogs] = useState<DiagnosticLog[]>([]);
-  const terminalEndRef = useRef<HTMLDivElement>(null);
   
   // Custom Toast layer
   const [toastMsg, setToastMsg] = useState('');
@@ -67,18 +55,10 @@ export default function AdminLogin() {
     '0': 342
   };
 
-  // Add Log helper
+  // Mock logs for keeping dependencies running smoothly in wheel dragging callbacks
   const addLog = (text: string, type: 'sys' | 'sensor' | 'success' | 'error' | 'music' = 'sys') => {
-    const timestamp = new Date().toLocaleTimeString([], { hour12: false });
-    setLogs(prev => [...prev, { time: timestamp, text, type }]);
+    console.log(`[Diagnostic Log] ${type.toUpperCase()}: ${text}`);
   };
-
-  // Scroll to bottom of terminal
-  useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [logs]);
 
   // Toast trigger helper
   const showToast = (msg: string) => {
@@ -97,11 +77,6 @@ export default function AdminLogin() {
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
-    
-    // Seed initial logs
-    addLog("Security card initialization completed.", "sys");
-    addLog("System secured. Key lock engaged.", "sys");
-
     return () => clearInterval(interval);
   }, []);
 
@@ -248,24 +223,39 @@ export default function AdminLogin() {
     } catch (e) {}
   };
 
-  // 4. Verification logic
-  const verifyPasscode = (pinArray: string[]) => {
+  // 4. Verification logic linked with JWT Backend Login
+  const verifyPasscode = async (pinArray: string[]) => {
     const combinedPin = pinArray.join('');
-    if (combinedPin === systemPasscode) {
-      addLog(`Passcode matched! Granting profile access.`, "success");
-      playSuccessChime();
-      showToast("🔓 Access Granted!");
+    try {
+      const res = await fetch('http://localhost:8080/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ pincode: combinedPin })
+      });
       
-      // Store credentials and redirect to admin page!
-      sessionStorage.setItem('isAdminAuthenticated', 'true');
-      
-      setTimeout(() => {
-        router.push('/admin');
-      }, 1000);
-    } else {
-      addLog(`Incorrect passcode mismatch: [${combinedPin}]`, "error");
+      if (res.ok) {
+        const data = await res.json();
+        playSuccessChime();
+        showToast("🔓 Access Granted!");
+        
+        // Store JWT token and authentication status in sessionStorage
+        sessionStorage.setItem('isAdminAuthenticated', 'true');
+        sessionStorage.setItem('adminToken', data.access_token);
+        
+        setTimeout(() => {
+          router.push('/admin');
+        }, 1000);
+      } else {
+        const errData = await res.json().catch(() => ({ detail: "Incorrect passcode" }));
+        playErrorBuzzer();
+        showToast(`❌ ${errData.detail || "Incorrect PIN!"}`);
+        setEnteredPin([]);
+      }
+    } catch (err) {
       playErrorBuzzer();
-      showToast("❌ Mismatched Key!");
+      showToast("❌ Backend Connection Failed!");
       setEnteredPin([]);
     }
   };
@@ -274,7 +264,6 @@ export default function AdminLogin() {
     setEnteredPin(prev => {
       if (prev.length >= 4) return prev;
       const nextArr = [...prev, digit];
-      addLog(`Registered digit "${digit}". Current buffer: [${nextArr.join(', ')}]`, "sys");
       
       if (nextArr.length === 4) {
         setTimeout(() => verifyPasscode(nextArr), 350);
@@ -288,7 +277,6 @@ export default function AdminLogin() {
       if (prev.length === 0) return prev;
       const nextArr = prev.slice(0, -1);
       playTickSound();
-      addLog(`Deleted last digit. Current buffer: [${nextArr.join(', ')}]`, "sys");
       return nextArr;
     });
   };
@@ -296,7 +284,6 @@ export default function AdminLogin() {
   const handleClear = () => {
     setEnteredPin([]);
     playTickSound();
-    addLog(`Dial plate buffer flushed.`, "sys");
   };
 
   // 5. Dial Rotation Gestures Handler
@@ -311,8 +298,6 @@ export default function AdminLogin() {
     if (wheelRef.current) {
       wheelRef.current.classList.remove('returning');
     }
-
-    addLog(`Dial rotation started for digit "${digit}"`, "sensor");
 
     const rect = wheelRef.current!.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
@@ -360,7 +345,6 @@ export default function AdminLogin() {
           if (!clickTriggered.current) {
             playLockRegisterSound();
             clickTriggered.current = true;
-            addLog(`Stopper reached! Digit "${activeDigit.current}" locked in`, "success");
           }
         }
       } else {
@@ -380,8 +364,6 @@ export default function AdminLogin() {
       
       if (reachedStopper.current && activeDigit.current !== null) {
         registerDigit(activeDigit.current);
-      } else {
-        addLog(`Dial released prematurely - Digit discarded`, "error");
       }
       
       springBackWheel(currentWheelRotation.current);
@@ -399,8 +381,6 @@ export default function AdminLogin() {
     
     const baseAngle = DIGIT_ANGLES[digit];
     const targetRotation = (STOPPER_ANGLE - baseAngle + 360) % 360;
-    
-    addLog(`Auto-dialing digit "${digit}"...`, "sensor");
     
     let start: number | null = null;
     const duration = 280 + (targetRotation * 1.2);
@@ -469,23 +449,8 @@ export default function AdminLogin() {
     requestAnimationFrame(returnAnimation);
   };
 
-  // 6. Settings Panel handlers
-  const updatePasscodeVal = () => {
-    const val = customPinInput.trim();
-    if (val.length === 4 && /^\d+$/.test(val)) {
-      setSystemPasscode(val);
-      addLog(`Passcode modified. New verification key: [${val}]`, "success");
-      showToast(`Key configured to ${val}!`);
-    } else {
-      addLog("Invalid passcode schema. Must contain exactly 4 digits.", "error");
-      showToast("❌ Key must be 4 digits!");
-      setCustomPinInput(systemPasscode);
-    }
-  };
-
   const handleSoundThemeSelect = (theme: 'mechanical' | 'retro' | 'silent') => {
     setSoundTheme(theme);
-    addLog(`Sound engine theme switched to "${theme}"`, "sys");
   };
 
   // Generate Digit positions around the dial circular housing
@@ -654,45 +619,12 @@ export default function AdminLogin() {
             </>
           ) : (
             /* VIEW 2: SYNTHESIZER SYSTEM CONFIGURATION */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', flex: 1, justifyContent: 'center' }}>
               
-              {/* Change Password settings box */}
-              <div style={{ padding: '16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
-                <label style={{ display: 'block', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: '#8888aa', marginBottom: '8px' }}>Change Security Key</label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input 
-                    type="password" 
-                    maxLength={4}
-                    value={customPinInput}
-                    onChange={(e) => setCustomPinInput(e.target.value.replace(/\D/g, ''))}
-                    style={{ 
-                      flex: 1, 
-                      background: '#030712', 
-                      border: '1px solid rgba(255,255,255,0.08)', 
-                      borderRadius: '12px', 
-                      padding: '8px 12px', 
-                      fontFamily: 'monospace', 
-                      fontSize: '16px', 
-                      letterSpacing: '0.2em',
-                      textAlign: 'center',
-                      color: '#fff'
-                    }}
-                  />
-                  <button 
-                    onClick={updatePasscodeVal}
-                    className="action-footer-btn"
-                    style={{ padding: '8px 16px', flex: 'none', background: '#4f46e5', color: '#fff', border: 'none' }}
-                  >
-                    Update
-                  </button>
-                </div>
-                <p style={{ fontSize: '10px', color: '#4b5563', marginTop: '6px', margin: '6px 0 0 0' }}>Configure a 4-digit code. Default dial code is <strong style={{ color: '#d1d5db' }}>1234</strong>.</p>
-              </div>
-
               {/* Sound engines switches */}
-              <div style={{ padding: '16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ display: 'block', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: '#8888aa' }}>Sound Engine Theme</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              <div style={{ padding: '20px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#8888aa', letterSpacing: '0.05em' }}>Sound Engine Theme</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                   {(['mechanical', 'retro', 'silent'] as const).map((theme) => (
                     <button
                       key={theme}
@@ -707,12 +639,12 @@ export default function AdminLogin() {
               </div>
 
               {/* Gain Volume Slider */}
-              <div style={{ padding: '16px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', color: '#8888aa', marginBottom: '8px' }}>
+              <div style={{ padding: '20px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#8888aa', marginBottom: '12px', letterSpacing: '0.05em' }}>
                   <span>Synthesizer Gain</span>
                   <span style={{ color: '#818cf8', fontFamily: 'monospace' }}>{feedbackVolume}%</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Volume2 size={16} className="text-slate-500" />
                   <input 
                     type="range" 
@@ -722,38 +654,6 @@ export default function AdminLogin() {
                     onChange={(e) => setFeedbackVolume(Number(e.target.value))}
                     style={{ flex: 1, accentColor: '#6366f1', height: '4px', cursor: 'pointer' }}
                   />
-                </div>
-              </div>
-
-              {/* Live Terminal Diagnostic Panel */}
-              <div className="diagnostic-terminal-box">
-                <div className="terminal-header-row">
-                  <span className="terminal-header-title">
-                    <span className="diagnostic-pulse-green"></span>
-                    Live diagnostics
-                  </span>
-                  <button 
-                    onClick={() => {
-                      setLogs([]);
-                      addLog("Terminal diagnostic logs flushed.", "sys");
-                    }}
-                    className="terminal-clear-action"
-                  >
-                    Clear Feed
-                  </button>
-                </div>
-                <div className="terminal-logs-scroll custom-scrollbar">
-                  {logs.map((log, idx) => (
-                    <div key={idx} className="log-item-row" style={{
-                      color: log.type === 'error' ? '#f87171' : log.type === 'success' ? '#34d399' : log.type === 'sensor' ? '#fbbf24' : '#d1d5db'
-                    }}>
-                      <span className="log-item-time">{log.time}</span>
-                      <span>
-                        <strong>{log.type === 'error' ? '⚠️' : log.type === 'success' ? '✔️' : '⚙️'}</strong> {log.text}
-                      </span>
-                    </div>
-                  ))}
-                  <div ref={terminalEndRef}></div>
                 </div>
               </div>
             </div>
