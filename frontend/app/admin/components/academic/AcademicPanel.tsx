@@ -382,30 +382,154 @@ export default function AcademicPanel() {
                                 required
                             />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="acad-color">Accent Color Theme</label>
-                            <select
-                                id="acad-color"
-                                value={colorTheme}
-                                onChange={e => setColorTheme(e.target.value)}
-                            >
-                                <option value="purple">Purple Theme</option>
-                                <option value="blue">Cyan / Blue Theme</option>
-                                <option value="green">Green Theme</option>
-                            </select>
+                        <div className="form-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', textAlign: 'center' }}>Theme</label>
+                            <div className="theme-circles-container" style={{ display: 'flex', gap: '14px', alignItems: 'center', height: '42px', justifyContent: 'center' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setColorTheme('purple')}
+                                    title="Purple Theme"
+                                    style={{
+                                        width: '30px',
+                                        height: '30px',
+                                        borderRadius: '50%',
+                                        background: '#7c5cff',
+                                        border: colorTheme === 'purple' ? '2.5px solid #fff' : '2.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: colorTheme === 'purple' ? '0 0 14px rgba(124, 92, 255, 0.8)' : 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        padding: 0,
+                                        transform: colorTheme === 'purple' ? 'scale(1.15)' : 'scale(1)'
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setColorTheme('blue')}
+                                    title="Cyan / Blue Theme"
+                                    style={{
+                                        width: '30px',
+                                        height: '30px',
+                                        borderRadius: '50%',
+                                        background: '#00e5ff',
+                                        border: colorTheme === 'blue' ? '2.5px solid #fff' : '2.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: colorTheme === 'blue' ? '0 0 14px rgba(0, 229, 255, 0.8)' : 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        padding: 0,
+                                        transform: colorTheme === 'blue' ? 'scale(1.15)' : 'scale(1)'
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setColorTheme('green')}
+                                    title="Green Theme"
+                                    style={{
+                                        width: '30px',
+                                        height: '30px',
+                                        borderRadius: '50%',
+                                        background: '#00ff88',
+                                        border: colorTheme === 'green' ? '2.5px solid #fff' : '2.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: colorTheme === 'green' ? '0 0 14px rgba(0, 255, 136, 0.8)' : 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        padding: 0,
+                                        transform: colorTheme === 'green' ? 'scale(1.15)' : 'scale(1)'
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="acad-icon">Timeline Icon</label>
-                            <select
-                                id="acad-icon"
-                                value={iconType}
-                                onChange={e => setIconType(e.target.value)}
-                            >
-                                <option value="graduation">Graduation Cap</option>
-                                <option value="book">Open Book</option>
-                                <option value="pencil">Pencil</option>
-                                <option value="award">Badge / Award</option>
-                            </select>
+                        <div className="form-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <label style={{ display: 'block', marginBottom: '8px', textAlign: 'center' }}>Icon</label>
+                            <div className="icon-selector-container" style={{ display: 'flex', gap: '12px', alignItems: 'center', height: '42px', justifyContent: 'center' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setIconType('graduation')}
+                                    title="Graduation Cap"
+                                    style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(255, 255, 255, 0.03)',
+                                        border: iconType === 'graduation' ? `2px solid ${colorTheme === 'purple' ? '#7c5cff' : colorTheme === 'blue' ? '#00e5ff' : '#00ff88'}` : '1.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: iconType === 'graduation' ? `0 0 12px ${colorTheme === 'purple' ? 'rgba(124, 92, 255, 0.6)' : colorTheme === 'blue' ? 'rgba(0, 229, 255, 0.6)' : 'rgba(0, 255, 136, 0.6)'}` : 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: iconType === 'graduation' ? '#fff' : 'rgba(255, 255, 255, 0.4)',
+                                        transition: 'all 0.25s ease',
+                                        padding: 0
+                                    }}
+                                >
+                                    <GraduationCap size={16} />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIconType('book')}
+                                    title="Open Book"
+                                    style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(255, 255, 255, 0.03)',
+                                        border: iconType === 'book' ? `2px solid ${colorTheme === 'purple' ? '#7c5cff' : colorTheme === 'blue' ? '#00e5ff' : '#00ff88'}` : '1.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: iconType === 'book' ? `0 0 12px ${colorTheme === 'purple' ? 'rgba(124, 92, 255, 0.6)' : colorTheme === 'blue' ? 'rgba(0, 229, 255, 0.6)' : 'rgba(0, 255, 136, 0.6)'}` : 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: iconType === 'book' ? '#fff' : 'rgba(255, 255, 255, 0.4)',
+                                        transition: 'all 0.25s ease',
+                                        padding: 0
+                                    }}
+                                >
+                                    <Book size={16} />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIconType('pencil')}
+                                    title="Pencil"
+                                    style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(255, 255, 255, 0.03)',
+                                        border: iconType === 'pencil' ? `2px solid ${colorTheme === 'purple' ? '#7c5cff' : colorTheme === 'blue' ? '#00e5ff' : '#00ff88'}` : '1.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: iconType === 'pencil' ? `0 0 12px ${colorTheme === 'purple' ? 'rgba(124, 92, 255, 0.6)' : colorTheme === 'blue' ? 'rgba(0, 229, 255, 0.6)' : 'rgba(0, 255, 136, 0.6)'}` : 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: iconType === 'pencil' ? '#fff' : 'rgba(255, 255, 255, 0.4)',
+                                        transition: 'all 0.25s ease',
+                                        padding: 0
+                                    }}
+                                >
+                                    <Pencil size={16} />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIconType('award')}
+                                    title="Badge / Award"
+                                    style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(255, 255, 255, 0.03)',
+                                        border: iconType === 'award' ? `2px solid ${colorTheme === 'purple' ? '#7c5cff' : colorTheme === 'blue' ? '#00e5ff' : '#00ff88'}` : '1.5px solid rgba(255, 255, 255, 0.1)',
+                                        boxShadow: iconType === 'award' ? `0 0 12px ${colorTheme === 'purple' ? 'rgba(124, 92, 255, 0.6)' : colorTheme === 'blue' ? 'rgba(0, 229, 255, 0.6)' : 'rgba(0, 255, 136, 0.6)'}` : 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: iconType === 'award' ? '#fff' : 'rgba(255, 255, 255, 0.4)',
+                                        transition: 'all 0.25s ease',
+                                        padding: 0
+                                    }}
+                                >
+                                    <Award size={16} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
