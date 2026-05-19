@@ -287,3 +287,32 @@
     opacity: 1;
   }
 }
+
+/* Action Buttons Premium Hover Effects */
+.action-btn {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.action-btn.edit-btn:hover {
+    background: rgba(124, 92, 255, 0.25) !important;
+    border-color: rgba(124, 92, 255, 0.5) !important;
+    box-shadow: 0 0 12px rgba(124, 92, 255, 0.3) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+.action-btn.details-btn:hover {
+    background: rgba(59, 130, 246, 0.25) !important;
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.3) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+.action-btn.delete-btn:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.3) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}

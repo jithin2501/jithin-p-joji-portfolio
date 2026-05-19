@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   FolderOpen, Trash2, Edit2, Save, RefreshCw, 
   Search, Star, Globe, GitBranch,
-  Award, Layers, Upload, ExternalLink
+  Award, Layers, Upload, ExternalLink, Sliders, BookOpen, FileText, Info
 } from 'lucide-react';
 import './ProjectsPanel.css';
 
@@ -70,6 +70,19 @@ export default function ProjectsPanel() {
   const [githubUrl, setGithubUrl] = useState('#');
   const [techStackStr, setTechStackStr] = useState('');
 
+  // Details Editor states
+  const [detailsProject, setDetailsProject] = useState<ProjectData | null>(null);
+  const [detailSubtitle, setDetailSubtitle] = useState('');
+  const [detailRole, setDetailRole] = useState('');
+  const [detailDuration, setDetailDuration] = useState('');
+  const [detailCompleted, setDetailCompleted] = useState('');
+  const [detailTools, setDetailTools] = useState('');
+  const [detailMethodology, setDetailMethodology] = useState('');
+  const [detailLongDesc, setDetailLongDesc] = useState('');
+  const [detailLearned, setDetailLearned] = useState('');
+  const [detailImagesStr, setDetailImagesStr] = useState('');
+  const [detailFeatures, setDetailFeatures] = useState<FeatureItem[]>([]);
+
   const fetchProjects = async () => {
     setLoading(true);
     try {
@@ -119,6 +132,70 @@ export default function ProjectsPanel() {
     setLiveUrl('#');
     setGithubUrl('#');
     setTechStackStr('');
+  };
+
+  const handleOpenDetails = (project: ProjectData) => {
+    setDetailsProject(project);
+    setDetailSubtitle(project.subtitle || 'PROJECT DETAILS');
+    setDetailRole(project.role || 'Developer');
+    setDetailDuration(project.duration || '4 Weeks');
+    setDetailCompleted(project.completed || 'N/A');
+    setDetailTools(project.tools || 'VS Code');
+    setDetailMethodology(project.methodology || 'Agile');
+    setDetailLongDesc(project.long_desc || project.longDesc || project.description || '');
+    setDetailLearned(project.learned || '');
+    setDetailImagesStr((project.images && project.images.length > 0 ? project.images : [project.image || '']).join(', '));
+    setDetailFeatures(project.features || []);
+    
+    // Smooth scroll to details editor section
+    setTimeout(() => {
+      document.getElementById('project-details-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  };
+
+  const handleSaveDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!detailsProject) return;
+    setSaving(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    const imagesList = detailImagesStr.split(',').map(img => img.trim()).filter(img => img.length > 0);
+
+    const payload = {
+      ...detailsProject,
+      subtitle: detailSubtitle.trim(),
+      role: detailRole.trim(),
+      duration: detailDuration.trim(),
+      completed: detailCompleted.trim(),
+      tools: detailTools.trim(),
+      methodology: detailMethodology.trim(),
+      long_desc: detailLongDesc.trim(),
+      learned: detailLearned.trim(),
+      images: imagesList.length > 0 ? imagesList : [detailsProject.image],
+      features: detailFeatures
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/projects/${detailsProject.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) throw new Error('Failed to update project details');
+      
+      setSuccessMessage(`Project details for "${detailsProject.title}" saved successfully!`);
+      setDetailsProject(null);
+      fetchProjects();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to update project details. Please check your backend connection.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -513,6 +590,341 @@ export default function ProjectsPanel() {
         </div>
       </form>
 
+      {/* Stateful Project Details Editor Form Card */}
+      {detailsProject && (
+        <form 
+          id="project-details-section" 
+          onSubmit={handleSaveDetails} 
+          className="settings-card project-admin-form"
+          style={{ marginTop: '30px', border: '1px solid rgba(59, 130, 246, 0.25)', boxShadow: '0 0 25px rgba(59, 130, 246, 0.1)' }}
+        >
+          <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <FileText size={18} className="card-header-icon" style={{ color: '#3b82f6' }} />
+              <h3 style={{ margin: 0, fontSize: '16px' }}>
+                Project Details Editor: <span style={{ color: '#60a5fa' }}>{detailsProject.title}</span>
+              </h3>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => setDetailsProject(null)} 
+              className="remove-action-btn"
+              style={{ margin: 0, padding: '4px 12px', fontSize: '12px', width: 'auto' }}
+            >
+              Close
+            </button>
+          </div>
+
+          <div className="form-sections-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+            
+            {/* Details Column 1: Core Technical Details */}
+            <div className="form-sub-section">
+              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><Sliders size={14} /> Core Metrics & Meta</h4>
+              
+              <div className="form-grid-two">
+                <div className="form-group">
+                  <label htmlFor="detail-subtitle">Details Page Subtitle *</label>
+                  <input
+                    id="detail-subtitle"
+                    type="text"
+                    value={detailSubtitle}
+                    onChange={e => setDetailSubtitle(e.target.value)}
+                    placeholder="e.g. FULL-STACK WEB DEVELOPMENT"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="detail-role">My Role *</label>
+                  <input
+                    id="detail-role"
+                    type="text"
+                    value={detailRole}
+                    onChange={e => setDetailRole(e.target.value)}
+                    placeholder="e.g. Lead Full Stack Developer"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-grid-two">
+                <div className="form-group">
+                  <label htmlFor="detail-duration">Duration *</label>
+                  <input
+                    id="detail-duration"
+                    type="text"
+                    value={detailDuration}
+                    onChange={e => setDetailDuration(e.target.value)}
+                    placeholder="e.g. 3 Months"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="detail-completed">Completed Date *</label>
+                  <input
+                    id="detail-completed"
+                    type="text"
+                    value={detailCompleted}
+                    onChange={e => setDetailCompleted(e.target.value)}
+                    placeholder="e.g. Dec 2026"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-grid-two">
+                <div className="form-group">
+                  <label htmlFor="detail-tools">Tools & Environment *</label>
+                  <input
+                    id="detail-tools"
+                    type="text"
+                    value={detailTools}
+                    onChange={e => setDetailTools(e.target.value)}
+                    placeholder="e.g. Git, Docker, MongoDB"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="detail-methodology">Methodology *</label>
+                  <input
+                    id="detail-methodology"
+                    type="text"
+                    value={detailMethodology}
+                    onChange={e => setDetailMethodology(e.target.value)}
+                    placeholder="e.g. Agile Scrum"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="detail-images">Details Image Gallery (comma separated URLs)</label>
+                <textarea
+                  id="detail-images"
+                  value={detailImagesStr}
+                  onChange={e => setDetailImagesStr(e.target.value)}
+                  placeholder="Paste thumbnail URL or multiple URLs separated by commas..."
+                  rows={2}
+                />
+              </div>
+            </div>
+
+            {/* Details Column 2: Detailed Text Narratives */}
+            <div className="form-sub-section">
+              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><BookOpen size={14} /> Narratives & Insights</h4>
+
+              <div className="form-group">
+                <label htmlFor="detail-longdesc">Long Detailed Description *</label>
+                <textarea
+                  id="detail-longdesc"
+                  value={detailLongDesc}
+                  onChange={e => setDetailLongDesc(e.target.value)}
+                  placeholder="Provide an extensive walkthrough of the project, architecture choice, challenge solved..."
+                  rows={5}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="detail-learned">Key Takeaways & What was learned *</label>
+                <textarea
+                  id="detail-learned"
+                  value={detailLearned}
+                  onChange={e => setDetailLearned(e.target.value)}
+                  placeholder="What libraries or architectural patterns did you master in this project?"
+                  rows={5}
+                  required
+                />
+              </div>
+            </div>
+
+          </div>
+
+          {/* Key Features Array Editor Section */}
+          <div className="form-sub-section" style={{ marginTop: '30px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '24px' }}>
+            <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Star size={14} style={{ color: '#60a5fa' }} /> Key Features List
+            </h4>
+
+            {detailFeatures.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '30px', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '10px', color: '#7070a0', marginBottom: '20px' }}>
+                No features added yet. Click "+ Add New Key Feature Item" below to build your dynamic features section!
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+                {detailFeatures.map((feat, index) => (
+                  <div 
+                    key={index} 
+                    style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: '1fr 2fr 1fr auto', 
+                      gap: '12px', 
+                      alignItems: 'center', 
+                      background: 'rgba(255, 255, 255, 0.02)', 
+                      border: '1px solid rgba(255, 255, 255, 0.05)', 
+                      padding: '16px', 
+                      borderRadius: '10px'
+                    }}
+                  >
+                    {/* Feature Title */}
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Feature Title *</label>
+                      <input
+                        type="text"
+                        value={feat.title}
+                        onChange={e => {
+                          const updated = [...detailFeatures];
+                          updated[index] = { ...updated[index], title: e.target.value };
+                          setDetailFeatures(updated);
+                        }}
+                        placeholder="e.g. Real-time Chats"
+                        required
+                        style={{ padding: '8px 12px', fontSize: '13px' }}
+                      />
+                    </div>
+
+                    {/* Feature Description */}
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Description *</label>
+                      <input
+                        type="text"
+                        value={feat.desc}
+                        onChange={e => {
+                          const updated = [...detailFeatures];
+                          updated[index] = { ...updated[index], desc: e.target.value };
+                          setDetailFeatures(updated);
+                        }}
+                        placeholder="e.g. Instant communication between users powered by Socket.io"
+                        required
+                        style={{ padding: '8px 12px', fontSize: '13px' }}
+                      />
+                    </div>
+
+                    {/* Feature Icon Name Selection */}
+                    <div className="form-group" style={{ margin: 0 }}>
+                      <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Visual Icon *</label>
+                      <select
+                        value={feat.icon}
+                        onChange={e => {
+                          const updated = [...detailFeatures];
+                          updated[index] = { ...updated[index], icon: e.target.value };
+                          setDetailFeatures(updated);
+                        }}
+                        style={{
+                          width: '100%',
+                          background: '#0a0a1f',
+                          border: '1px solid rgba(124, 92, 255, 0.15)',
+                          borderRadius: '8px',
+                          padding: '8px 12px',
+                          color: '#fff',
+                          fontSize: '13px',
+                          outline: 'none',
+                          height: '37px'
+                        }}
+                      >
+                        <option value="Zap" style={{ background: '#0e0e28' }}>Zap (Performance / Speed)</option>
+                        <option value="Layout" style={{ background: '#0e0e28' }}>Layout (UI / Dashboard)</option>
+                        <option value="Users" style={{ background: '#0e0e28' }}>Users (Collaboration)</option>
+                        <option value="Rocket" style={{ background: '#0e0e28' }}>Rocket (Launch / Deploy)</option>
+                        <option value="Smartphone" style={{ background: '#0e0e28' }}>Smartphone (Mobile / Responsive)</option>
+                        <option value="BarChart3" style={{ background: '#0e0e28' }}>BarChart (Analytics / Metrics)</option>
+                        <option value="CheckCircle2" style={{ background: '#0e0e28' }}>CheckCircle (Verification / Tasks)</option>
+                        <option value="Sparkles" style={{ background: '#0e0e28' }}>Sparkles (Premium Features)</option>
+                        <option value="Settings" style={{ background: '#0e0e28' }}>Settings (Control / Options)</option>
+                        <option value="BookOpen" style={{ background: '#0e0e28' }}>BookOpen (Documentation / Guides)</option>
+                        <option value="Info" style={{ background: '#0e0e28' }}>Info (Details / FAQ)</option>
+                        <option value="Code2" style={{ background: '#0e0e28' }}>Code (Tech Stack)</option>
+                      </select>
+                    </div>
+
+                    {/* Delete Item Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = detailFeatures.filter((_, idx) => idx !== index);
+                        setDetailFeatures(updated);
+                      }}
+                      style={{
+                        padding: '10px',
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '1px solid rgba(239, 68, 68, 0.25)',
+                        borderRadius: '8px',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: '16px',
+                        width: '38px',
+                        height: '37px',
+                        transition: 'all 0.2s ease',
+                        margin: '16px 0 0 0'
+                      }}
+                      title="Remove Feature"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add Feature Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setDetailFeatures([...detailFeatures, { title: '', desc: '', icon: 'Zap' }]);
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 20px',
+                background: 'rgba(124, 92, 255, 0.12)',
+                border: '1px dashed rgba(124, 92, 255, 0.3)',
+                borderRadius: '8px',
+                color: '#a78bfa',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                width: 'auto',
+                margin: 0
+              }}
+            >
+              + Add New Key Feature Item
+            </button>
+          </div>
+
+          {/* Form Actions */}
+          <div className="form-actions-row" style={{ marginTop: '30px', display: 'flex', gap: '12px' }}>
+            <button
+              type="button"
+              className="remove-action-btn"
+              onClick={() => setDetailsProject(null)}
+              style={{ padding: '12px 24px', width: 'auto', margin: 0 }}
+            >
+              Cancel Edit
+            </button>
+            <button
+              type="submit"
+              className="save-settings-btn"
+              disabled={saving}
+              style={{ flex: 1, justifyContent: 'center', padding: '12px 24px', background: '#3b82f6', borderColor: 'rgba(59, 130, 246, 0.4)', boxShadow: '0 0 15px rgba(59, 130, 246, 0.2)' }}
+            >
+              {saving ? (
+                <>
+                  <RefreshCw size={16} className="spin-icon" /> Saving Details...
+                </>
+              ) : (
+                <>
+                  <Save size={16} /> Save Project Details
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      )}
+
       {/* Projects List Container */}
       <div className="settings-card stored-projects-card" style={{ marginTop: '30px' }}>
         <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
@@ -678,6 +1090,29 @@ export default function ProjectsPanel() {
                         }}
                       >
                         <Edit2 size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        className="action-btn details-btn"
+                        title="Edit Project Details"
+                        onClick={() => handleOpenDetails(p)}
+                        style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          padding: 0, 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          borderRadius: '8px',
+                          background: 'rgba(59, 130, 246, 0.1)',
+                          border: '1px solid rgba(59, 130, 246, 0.25)',
+                          color: '#60a5fa',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          margin: 0
+                        }}
+                      >
+                        <FileText size={13} />
                       </button>
                       <button
                         type="button"
