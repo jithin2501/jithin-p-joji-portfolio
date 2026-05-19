@@ -245,6 +245,7 @@ export default function AdminLogin() {
         // Store JWT token and authentication status in sessionStorage
         sessionStorage.setItem('isAdminAuthenticated', 'true');
         sessionStorage.setItem('adminToken', data.access_token);
+        sessionStorage.setItem('adminPageAccess', data.page_access || '');
         
         setTimeout(() => {
           router.push('/admin');

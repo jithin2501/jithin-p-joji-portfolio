@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code, FolderOpen, Activity } from 'lucide-react';
+import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code, FolderOpen, Activity, Users } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
 import ResumesPanel from './components/resumes/ResumesPanel';
@@ -10,6 +10,7 @@ import AcademicPanel from './components/academic/AcademicPanel';
 import SkillsPanel from './components/skills/SkillsPanel';
 import ProjectsPanel from './components/projects/ProjectsPanel';
 import AnalyticsPanel from './components/analytics/AnalyticsPanel';
+import UsersPanel from './components/users/UsersPanel';
 import './Admin.css';
 import './components/messages/MessagesPanel.css';
 import './components/settings/SettingsPanel.css';
@@ -19,19 +20,29 @@ import './components/academic/AcademicPanel.css';
 import './components/skills/SkillsPanel.css';
 import './components/projects/ProjectsPanel.css';
 import './components/analytics/AnalyticsPanel.css';
+import './components/users/UsersPanel.css';
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects' | 'analytics'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects' | 'analytics' | 'users'>('messages');
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+    const [allowedTabs, setAllowedTabs] = useState<string[]>([]);
 
     useEffect(() => {
         const isAuth = sessionStorage.getItem('isAdminAuthenticated');
         if (isAuth !== 'true') {
             window.location.href = '/admin/login';
         } else {
+            const accessStr = sessionStorage.getItem('adminPageAccess') || '';
+            const tabs = accessStr.split(',').map(t => t.trim()).filter(Boolean);
+            setAllowedTabs(tabs);
+            
+            // If the active tab is not in the allowed list, default to first allowed tab
+            if (tabs.length > 0 && !tabs.includes(activeTab)) {
+                setActiveTab(tabs[0] as any);
+            }
             setIsCheckingAuth(false);
         }
-    }, []);
+    }, [activeTab]);
 
     if (isCheckingAuth) {
         return (
@@ -73,70 +84,98 @@ export default function AdminPanel() {
                     <span>Admin Panel</span>
                 </div>
                 <nav className="sidebar-nav">
-                    <button 
-                        className={`nav-item ${activeTab === 'messages' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('messages')}
-                    >
-                        <MessageSquare size={18} />
-                        Messages
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('settings')}
-                    >
-                        <Sliders size={18} />
-                        Settings
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('resumes')}
-                    >
-                        <FileText size={18} />
-                        Resumes
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'skills' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('skills')}
-                    >
-                        <Code size={18} />
-                        Tech Stack
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'experience' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('experience')}
-                    >
-                        <Briefcase size={18} />
-                        Experience
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'academic' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('academic')}
-                    >
-                        <GraduationCap size={18} />
-                        Academic
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'aboutImage' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('aboutImage')}
-                    >
-                        <ImageIcon size={18} />
-                        About Image
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('projects')}
-                    >
-                        <FolderOpen size={18} />
-                        Projects
-                    </button>
+                    {allowedTabs.includes('messages') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'messages' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('messages')}
+                        >
+                            <MessageSquare size={18} />
+                            Messages
+                        </button>
+                    )}
+                    {allowedTabs.includes('settings') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('settings')}
+                        >
+                            <Sliders size={18} />
+                            Settings
+                        </button>
+                    )}
+                    {allowedTabs.includes('resumes') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('resumes')}
+                        >
+                            <FileText size={18} />
+                            Resumes
+                        </button>
+                    )}
+                    {allowedTabs.includes('skills') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'skills' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('skills')}
+                        >
+                            <Code size={18} />
+                            Tech Stack
+                        </button>
+                    )}
+                    {allowedTabs.includes('experience') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'experience' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('experience')}
+                        >
+                            <Briefcase size={18} />
+                            Experience
+                        </button>
+                    )}
+                    {allowedTabs.includes('academic') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'academic' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('academic')}
+                        >
+                            <GraduationCap size={18} />
+                            Academic
+                        </button>
+                    )}
+                    {allowedTabs.includes('aboutImage') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'aboutImage' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('aboutImage')}
+                        >
+                            <ImageIcon size={18} />
+                            About Image
+                        </button>
+                    )}
+                    {allowedTabs.includes('projects') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('projects')}
+                        >
+                            <FolderOpen size={18} />
+                            Projects
+                        </button>
+                    )}
 
-                    <button 
-                        className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('analytics')}
-                    >
-                        <Activity size={18} />
-                        Analytics
-                    </button>
+                    {allowedTabs.includes('analytics') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('analytics')}
+                        >
+                            <Activity size={18} />
+                            Analytics
+                        </button>
+                    )}
+
+                    {allowedTabs.includes('users') && (
+                        <button 
+                            className={`nav-item ${activeTab === 'users' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('users')}
+                        >
+                            <Users size={18} />
+                            Users
+                        </button>
+                    )}
                 </nav>
                  <div className="sidebar-footer">
                     <button className="logout-btn" onClick={() => {
@@ -195,6 +234,13 @@ export default function AdminPanel() {
                             <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Resume Manager</h2>
                         </div>
                         <ResumesPanel />
+                    </>
+                ) : activeTab === 'users' ? (
+                    <>
+                        <div className="content-header" style={{ marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Security Access Keys</h2>
+                        </div>
+                        <UsersPanel />
                     </>
                 ) : (
                     <AboutImagePanel />
