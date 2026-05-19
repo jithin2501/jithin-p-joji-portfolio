@@ -4,6 +4,59 @@ import Link from 'next/link';
 
 import '../style/Hero.css';
 
+interface AnimatedStatProps {
+  value: string;
+  color: string;
+}
+
+function AnimatedStat({ value, color }: AnimatedStatProps) {
+  const [displayValue, setDisplayValue] = useState('0');
+
+  useEffect(() => {
+    if (!value) return;
+
+    const numMatch = value.match(/^([\d.]+)(.*)$/);
+    if (!numMatch) {
+      setDisplayValue(value);
+      return;
+    }
+
+    const targetNum = parseFloat(numMatch[1]);
+    const suffix = numMatch[2] || '';
+
+    if (isNaN(targetNum)) {
+      setDisplayValue(value);
+      return;
+    }
+
+    const duration = 1200; // 1.2s animation
+    const startTime = performance.now();
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = progress * (2 - progress); // easeOutQuad
+      
+      const currentNum = Math.floor(easeProgress * targetNum);
+      setDisplayValue(`${currentNum}${suffix}`);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(value);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [value]);
+
+  return (
+    <div className="stat-num" style={{ color }}>
+      {displayValue}
+    </div>
+  );
+}
+
 export default function Hero() {
   const [typewriterText, setTypewriterText] = useState('');
   const heroInnerRef = useRef<HTMLDivElement>(null);
@@ -164,9 +217,13 @@ export default function Hero() {
             { num: settings.hero.experience, label: 'Experience', color: 'var(--accent2)' },
             { num: settings.hero.commits, label: 'GitHub commits', color: 'var(--accent3)' },
             { num: settings.hero.satisfaction, label: 'Client satisfaction', color: 'var(--green)' },
-          ].map(s => (
-            <div key={s.label} className="hero-stat-card">
-              <div className="stat-num" style={{ color: s.color }}>{s.num || '-'}</div>
+          ].map((s, i) => (
+            <div 
+              key={s.label} 
+              className="hero-stat-card"
+              style={{ animationDelay: `${1.2 + i * 0.15}s` }}
+            >
+              <AnimatedStat value={s.num || ''} color={s.color} />
               <div className="stat-label">{s.label}</div>
             </div>
           ))}
