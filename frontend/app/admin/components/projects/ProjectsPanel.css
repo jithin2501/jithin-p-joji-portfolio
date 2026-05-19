@@ -122,13 +122,12 @@
     flex-direction: column;
     gap: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-    height: 100%;
+    height: 490px;
 }
 
 .project-card-new:hover {
     border-color: #7c5cff !important;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(124, 92, 255, 0.2);
-    transform: translateY(-5px);
 }
 
 .project-img-box {

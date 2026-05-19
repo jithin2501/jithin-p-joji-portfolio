@@ -170,10 +170,22 @@
     font-size: 11px;
     color: #7070a0;
 }
-
 .admin-exp-actions {
     display: flex;
     gap: 8px;
+    align-items: center;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .action-btn.edit-btn {
@@ -186,6 +198,18 @@
     background: #8b5cf6;
     color: #fff;
     box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+}
+
+.action-btn.delete-btn {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #ef4444;
+}
+
+.action-btn.delete-btn:hover {
+    background: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
 }
 
 .admin-exp-desc {
