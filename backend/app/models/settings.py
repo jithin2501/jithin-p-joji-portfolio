@@ -2,12 +2,13 @@ from typing import Optional
 
 class HeroStats:
     def __init__(self, projects: str, experience: str, commits: str, satisfaction: str,
-                 availability: str = "Open to freelance & opportunities"):
+                 availability: str = "Open to freelance & opportunities", clients: str = "10+"):
         self.projects = projects
         self.experience = experience
         self.commits = commits
         self.satisfaction = satisfaction
         self.availability = availability
+        self.clients = clients
 
     def to_mongo(self) -> dict:
         return {
@@ -15,19 +16,21 @@ class HeroStats:
             "experience": self.experience,
             "commits": self.commits,
             "satisfaction": self.satisfaction,
-            "availability": self.availability
+            "availability": self.availability,
+            "clients": self.clients
         }
 
     @staticmethod
     def from_mongo(data: dict) -> "HeroStats":
         if not data:
-            return HeroStats("15+", "1yr", "2K+", "99%", "Open to freelance & opportunities")
+            return HeroStats("15+", "1yr", "2K+", "99%", "Open to freelance & opportunities", "10+")
         return HeroStats(
             projects=data.get("projects", "15+"),
             experience=data.get("experience", "1yr"),
             commits=data.get("commits", "2K+"),
             satisfaction=data.get("satisfaction", "99%"),
-            availability=data.get("availability", "Open to freelance & opportunities")
+            availability=data.get("availability", "Open to freelance & opportunities"),
+            clients=data.get("clients", "10+")
         )
 
 class SocialLinks:

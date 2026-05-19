@@ -7,6 +7,7 @@ class HeroStatsSchema(BaseModel):
     commits: str = Field(..., description="Github commit count (e.g. 2K+)")
     satisfaction: str = Field(..., description="Client satisfaction rate (e.g. 99%)")
     availability: Optional[str] = Field("Open to freelance & opportunities", description="Current availability status")
+    clients: Optional[str] = Field("10+", description="Happy Clients statistic (e.g. 10+)")
 
 class SocialLinksSchema(BaseModel):
     github: str = Field(..., description="GitHub profile URL")

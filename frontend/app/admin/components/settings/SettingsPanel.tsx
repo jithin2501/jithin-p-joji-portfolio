@@ -9,6 +9,7 @@ interface SettingsData {
         commits: string;
         satisfaction: string;
         availability: string;
+        clients: string;
     };
     socials: {
         github: string;
@@ -175,6 +176,18 @@ export default function SettingsPanel() {
                                 value={settings.hero.satisfaction || ''}
                                 onChange={e => handleChange('hero', 'satisfaction', e.target.value)}
                                 placeholder="99%"
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="stat-clients">Happy Clients (e.g. 10+)</label>
+                            <input
+                                id="stat-clients"
+                                type="text"
+                                value={settings.hero.clients || ''}
+                                onChange={e => handleChange('hero', 'clients', e.target.value)}
+                                placeholder="10+"
                                 required
                             />
                         </div>

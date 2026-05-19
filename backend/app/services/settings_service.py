@@ -17,7 +17,8 @@ class SettingsService:
             experience=schema.hero.experience,
             commits=schema.hero.commits,
             satisfaction=schema.hero.satisfaction,
-            availability=schema.hero.availability
+            availability=schema.hero.availability,
+            clients=schema.hero.clients
         )
         socials = SocialLinks(
             github=schema.socials.github,

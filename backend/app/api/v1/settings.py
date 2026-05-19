@@ -19,7 +19,8 @@ async def get_settings(service: SettingsService = Depends(get_settings_service))
             experience=settings.hero.experience,
             commits=settings.hero.commits,
             satisfaction=settings.hero.satisfaction,
-            availability=settings.hero.availability
+            availability=settings.hero.availability,
+            clients=settings.hero.clients
         ),
         socials=SocialLinksSchema(
             github=settings.socials.github,
@@ -42,7 +43,8 @@ async def update_settings(settings_in: SettingsResponse, service: SettingsServic
             experience=settings.hero.experience,
             commits=settings.hero.commits,
             satisfaction=settings.hero.satisfaction,
-            availability=settings.hero.availability
+            availability=settings.hero.availability,
+            clients=settings.hero.clients
         ),
         socials=SocialLinksSchema(
             github=settings.socials.github,

@@ -24,6 +24,7 @@ interface SettingsData {
         experience: string;
         commits: string;
         satisfaction: string;
+        clients: string;
     };
 }
 
@@ -288,7 +289,7 @@ export default function Experience() {
     // Static counter statistics for the experience page, independent of Hero page dynamic settings
     const yearsExpTarget = 1;
     const projectsTarget = 15;
-    const clientsTarget = 10;
+    const clientsTarget = parseNumber(settings?.hero?.clients, 10);
 
     return (
         <section

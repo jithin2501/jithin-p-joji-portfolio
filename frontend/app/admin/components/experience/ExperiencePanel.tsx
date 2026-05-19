@@ -34,14 +34,6 @@ export default function ExperiencePanel() {
     const [dotColor, setDotColor] = useState('#818cf8');
     const [tagInput, setTagInput] = useState('');
 
-    // Overall stats form states
-    const [statExperience, setStatExperience] = useState('1+');
-    const [statProjects, setStatProjects] = useState('20+');
-    const [statClients, setStatClients] = useState('99+');
-    const [savingStats, setSavingStats] = useState(false);
-    const [statsSuccess, setStatsSuccess] = useState<string | null>(null);
-    const [statsError, setStatsError] = useState<string | null>(null);
-
     const fetchExperiences = async () => {
         setLoading(true);
         try {
@@ -58,23 +50,8 @@ export default function ExperiencePanel() {
         }
     };
 
-    const fetchStats = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/api/experiences/stats');
-            if (response.ok) {
-                const data = await response.json();
-                setStatExperience(data.statExperience || '1+');
-                setStatProjects(data.statProjects || '20+');
-                setStatClients(data.statClients || '99+');
-            }
-        } catch (err) {
-            console.error('Error fetching statistics:', err);
-        }
-    };
-
     useEffect(() => {
         fetchExperiences();
-        fetchStats();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -178,36 +155,6 @@ export default function ExperiencePanel() {
         setTagInput('');
     };
 
-    const handleSaveStats = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setSavingStats(true);
-        setStatsSuccess(null);
-        setStatsError(null);
-
-        const payload = {
-            statExperience: statExperience.trim(),
-            statProjects: statProjects.trim(),
-            statClients: statClients.trim()
-        };
-
-        try {
-            const response = await fetch('http://localhost:8080/api/experiences/stats', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) throw new Error('Failed to save timeline statistics');
-
-            setStatsSuccess('Timeline stats display updated successfully!');
-            setTimeout(() => setStatsSuccess(null), 3000);
-        } catch (err) {
-            console.error(err);
-            setStatsError('Could not save timeline statistics.');
-        } finally {
-            setSavingStats(false);
-        }
-    };
 
     if (loading && experiences.length === 0) {
         return <div className="admin-loading">Loading career experiences...</div>;
@@ -430,70 +377,6 @@ export default function ExperiencePanel() {
             </div>
 
             {/* Box 3 (Row 2 Left): Overall Timeline Statistics Form */}
-            <form onSubmit={handleSaveStats} className="settings-card experience-form-card" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
-                <div>
-                    <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px' }}>
-                        <Sliders size={18} className="card-header-icon" />
-                        <h3 style={{ margin: 0, fontSize: '16px' }}>Overall Timeline Statistics</h3>
-                    </div>
-
-                    {statsSuccess && <div className="admin-success-toast" style={{ marginBottom: '16px' }}>{statsSuccess}</div>}
-                    {statsError && <div className="admin-error" style={{ marginBottom: '16px' }}>{statsError}</div>}
-
-                    <div className="form-grid-three">
-                        <div className="form-group">
-                            <label htmlFor="stat-exp">Years Experience</label>
-                            <input
-                                id="stat-exp"
-                                type="text"
-                                value={statExperience}
-                                onChange={e => setStatExperience(e.target.value)}
-                                placeholder="1+"
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="stat-proj">Projects Completed</label>
-                            <input
-                                id="stat-proj"
-                                type="text"
-                                value={statProjects}
-                                onChange={e => setStatProjects(e.target.value)}
-                                placeholder="20+"
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="stat-clients">Happy Clients</label>
-                            <input
-                                id="stat-clients"
-                                type="text"
-                                value={statClients}
-                                onChange={e => setStatClients(e.target.value)}
-                                placeholder="99+"
-                                required
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <button 
-                    type="submit" 
-                    className="save-settings-btn" 
-                    disabled={savingStats}
-                    style={{ width: '100%', justifyContent: 'center', marginTop: '20px' }}
-                >
-                    {savingStats ? (
-                        <>
-                            <RefreshCw size={16} className="spin-icon" /> Saving Stats...
-                        </>
-                    ) : (
-                        <>
-                            <Save size={16} /> Save Timeline Statistics
-                        </>
-                    )}
-                </button>
-            </form>
         </div>
     );
 }
