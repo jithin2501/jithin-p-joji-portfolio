@@ -34,7 +34,7 @@
 /* Main Content Grid */
 .detail-grid {
     display: grid;
-    grid-template-columns: 420px 1fr;
+    grid-template-columns: 360px 1fr;
     gap: 60px;
     margin-bottom: 50px;
     align-items: stretch;
@@ -44,7 +44,7 @@
 .detail-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     height: 100%;
 }
 
@@ -82,7 +82,8 @@
     width: 100%;
 }
 
-.visit-btn, .github-outline-btn {
+.visit-btn,
+.github-outline-btn {
     flex: 1;
     padding: 14px 20px;
     border-radius: 12px;
@@ -123,8 +124,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 25px;
-    padding: 40px;
+    gap: 18px;
+    padding: 24px 30px;
     background: rgba(255, 255, 255, 0.03);
     border: 1.5px solid rgba(255, 255, 255, 0.05);
     border-radius: 20px;
@@ -371,7 +372,7 @@
 
 .middle-section-header-row {
     display: grid;
-    grid-template-columns: 420px 1fr;
+    grid-template-columns: 360px 1fr;
     gap: 60px;
     margin-bottom: 20px;
 }
@@ -396,7 +397,7 @@
 /* Middle Alignment Row */
 .detail-middle-row {
     display: grid;
-    grid-template-columns: 420px 1fr;
+    grid-template-columns: 360px 1fr;
     gap: 60px;
     margin-bottom: 50px;
     align-items: stretch;
@@ -406,7 +407,10 @@
     .detail-container {
         padding: 0 24px;
     }
-    .detail-grid, .detail-middle-row, .middle-section-header-row {
+
+    .detail-grid,
+    .detail-middle-row,
+    .middle-section-header-row {
         grid-template-columns: 1fr;
         gap: 40px;
     }
@@ -416,9 +420,11 @@
     .detail-bottom-row {
         grid-template-columns: 1fr;
     }
+
     .features-grid {
         grid-template-columns: 1fr;
     }
+
     .detail-btns {
         flex-direction: column;
     }

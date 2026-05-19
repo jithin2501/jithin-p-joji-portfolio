@@ -211,12 +211,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
   return (
     <div className="project-detail-page">
       <div className="detail-container">
-        <div style={{ marginBottom: '20px' }}>
-          <Link href="/projects" className="back-link" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.6)', textDecoration: 'none', transition: 'color 0.2s' }}>
-            <ArrowLeft size={16} />
-            Back to Projects
-          </Link>
-        </div>
+
 
         <div className="detail-grid">
           {/* Left Sidebar */}
@@ -243,21 +238,13 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
                 <span className="info-label">Category</span>
                 <span className="info-value">{category}</span>
               </div>
-              <div className="info-item">
-                <User size={16} className="info-icon" />
-                <span className="info-label">Role</span>
-                <span className="info-value">{role}</span>
-              </div>
+
               <div className="info-item">
                 <Clock size={16} className="info-icon" />
                 <span className="info-label">Duration</span>
                 <span className="info-value">{duration}</span>
               </div>
-              <div className="info-item">
-                <CheckCircle2 size={16} className="info-icon" />
-                <span className="info-label">Completed</span>
-                <span className="info-value">{completed}</span>
-              </div>
+
               <div className="info-item">
                 <Zap size={16} className="info-icon" />
                 <span className="info-label">Methodology</span>

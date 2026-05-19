@@ -466,54 +466,28 @@ export default function ProjectsPanel() {
             <div className="form-sub-section">
               <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><Sliders size={14} /> Core Metrics & Meta</h4>
               
-              <div className="form-grid-two">
-                <div className="form-group">
-                  <label htmlFor="detail-subtitle">Details Page Subtitle *</label>
-                  <input
-                    id="detail-subtitle"
-                    type="text"
-                    value={detailSubtitle}
-                    onChange={e => setDetailSubtitle(e.target.value)}
-                    placeholder="e.g. FULL-STACK WEB DEVELOPMENT"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="detail-role">My Role *</label>
-                  <input
-                    id="detail-role"
-                    type="text"
-                    value={detailRole}
-                    onChange={e => setDetailRole(e.target.value)}
-                    placeholder="e.g. Lead Full Stack Developer"
-                    required
-                  />
-                </div>
+              <div className="form-group">
+                <label htmlFor="detail-subtitle">Details Page Subtitle *</label>
+                <input
+                  id="detail-subtitle"
+                  type="text"
+                  value={detailSubtitle}
+                  onChange={e => setDetailSubtitle(e.target.value)}
+                  placeholder="e.g. FULL-STACK WEB DEVELOPMENT"
+                  required
+                />
               </div>
 
-              <div className="form-grid-two">
-                <div className="form-group">
-                  <label htmlFor="detail-duration">Duration *</label>
-                  <input
-                    id="detail-duration"
-                    type="text"
-                    value={detailDuration}
-                    onChange={e => setDetailDuration(e.target.value)}
-                    placeholder="e.g. 3 Months"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="detail-completed">Completed Date *</label>
-                  <input
-                    id="detail-completed"
-                    type="text"
-                    value={detailCompleted}
-                    onChange={e => setDetailCompleted(e.target.value)}
-                    placeholder="e.g. Dec 2026"
-                    required
-                  />
-                </div>
+              <div className="form-group">
+                <label htmlFor="detail-duration">Duration *</label>
+                <input
+                  id="detail-duration"
+                  type="text"
+                  value={detailDuration}
+                  onChange={e => setDetailDuration(e.target.value)}
+                  placeholder="e.g. 3 Months"
+                  required
+                />
               </div>
 
               <div className="form-grid-two">
