@@ -38,6 +38,7 @@ export default function AnalyticsPanel() {
   const [refreshing, setRefreshing] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [error, setError] = useState('');
+  const [activeView, setActiveView] = useState<'stream' | 'map'>('stream');
   
   const mapInstanceRef = useRef<any>(null);
   const mapContainerId = 'analytics-leaflet-map';
@@ -76,7 +77,7 @@ export default function AnalyticsPanel() {
 
   // Initialize Leaflet Map
   useEffect(() => {
-    if (loading || visits.length === 0) return;
+    if (loading || visits.length === 0 || activeView !== 'map') return;
 
     // Load Leaflet resources dynamically
     const initMap = () => {
@@ -131,16 +132,14 @@ export default function AnalyticsPanel() {
         .bindPopup(customPopup)
         .addTo(map);
       });
-    };
 
-    // Check if Leaflet stylesheet is already loaded
-    if (!document.getElementById('leaflet-css-link')) {
-      const link = document.createElement('link');
-      link.id = 'leaflet-css-link';
-      link.rel = 'stylesheet';
-      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-      document.head.appendChild(link);
-    }
+      // Recalculate layout calculations once container is fully initialized in DOM
+      setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 300);
+    };
 
     // Check if Leaflet script is already loaded
     if (!(window as any).L) {
@@ -161,7 +160,7 @@ export default function AnalyticsPanel() {
         mapInstanceRef.current = null;
       }
     };
-  }, [loading, visits]);
+  }, [loading, visits, activeView]);
 
   const handleClearLogs = async () => {
     if (!window.confirm("Are you absolutely sure you want to clear all analytics visitor logs? This cannot be undone!")) return;
@@ -288,132 +287,156 @@ export default function AnalyticsPanel() {
             </div>
           </div>
 
-          {/* Interactive Leaflet Map Container Card */}
-          <div className="analytics-map-card">
-            <div className="card-header">
-              <Globe size={16} />
-              <h4>Real-Time Geographic Visitor Map (Leaflet)</h4>
-            </div>
-            <div className="map-wrapper-box">
-              <div id={mapContainerId} style={{ width: '100%', height: '100%', minHeight: '420px', borderRadius: '12px' }}></div>
-            </div>
+          {/* View Selection Toggle Header */}
+          <div className="analytics-view-toggle">
+            <button 
+              type="button"
+              className={`toggle-btn ${activeView === 'stream' ? 'active' : ''}`}
+              onClick={() => setActiveView('stream')}
+            >
+              <Activity size={15} />
+              Activity Stream
+            </button>
+            <button 
+              type="button"
+              className={`toggle-btn ${activeView === 'map' ? 'active' : ''}`}
+              onClick={() => setActiveView('map')}
+            >
+              <Globe size={15} />
+              Geographic Visitor Map
+            </button>
           </div>
 
-          {/* Details Tables Row */}
-          <div className="analytics-details-row">
-            {/* Top Visited Pages */}
-            <div className="details-card-col">
-              <div className="card-header">
-                <Activity size={16} />
-                <h4>Top Visited Pages</h4>
-              </div>
-              <div className="card-content-box">
-                {stats.topPaths.length === 0 ? (
-                  <div className="empty-state">No visits logged yet.</div>
-                ) : (
-                  <div className="paths-list">
-                    {stats.topPaths.map((p, idx) => {
-                      const maxCount = Math.max(...stats.topPaths.map(item => item.count));
-                      const percentage = maxCount > 0 ? (p.count / maxCount) * 100 : 0;
-                      return (
-                        <div key={idx} className="path-progress-item">
-                          <div className="path-text-info">
-                            <span className="path-url">{p.path}</span>
-                            <span className="path-count">{p.count} views</span>
-                          </div>
-                          <div className="progress-bar-container">
-                            <div className="progress-bar-fill" style={{ width: `${percentage}%` }}></div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Geographical Distribution */}
-            <div className="details-card-col">
+          {activeView === 'map' ? (
+            /* Interactive Leaflet Map Container Card */
+            <div className="analytics-map-card">
               <div className="card-header">
                 <Globe size={16} />
-                <h4>Top Visitor Geocodes</h4>
+                <h4>Real-Time Geographic Visitor Map</h4>
               </div>
-              <div className="card-content-box">
-                {stats.topCountries.length === 0 ? (
-                  <div className="empty-state">No geographical visitor data.</div>
-                ) : (
-                  <div className="countries-list">
-                    {stats.topCountries.map((c, idx) => (
-                      <div key={idx} className="country-row-item">
-                        <div className="country-geo-info">
-                          <span className="geo-icon">🌍</span>
-                          <span className="geo-name">{c.country}</span>
-                        </div>
-                        <span className="geo-badge">{c.count} users</span>
-                      </div>
-                    ))}
+              <div className="map-wrapper-box">
+                <div id={mapContainerId} style={{ width: '100%', height: '100%', minHeight: '420px', borderRadius: '12px' }}></div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Details Tables Row */}
+              <div className="analytics-details-row">
+                {/* Top Visited Pages */}
+                <div className="details-card-col">
+                  <div className="card-header">
+                    <Activity size={16} />
+                    <h4>Top Visited Pages</h4>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
+                  <div className="card-content-box">
+                    {stats.topPaths.length === 0 ? (
+                      <div className="empty-state">No visits logged yet.</div>
+                    ) : (
+                      <div className="paths-list">
+                        {stats.topPaths.map((p, idx) => {
+                          const maxCount = Math.max(...stats.topPaths.map(item => item.count));
+                          const percentage = maxCount > 0 ? (p.count / maxCount) * 100 : 0;
+                          return (
+                            <div key={idx} className="path-progress-item">
+                              <div className="path-text-info">
+                                <span className="path-url">{p.path}</span>
+                                <span className="path-count">{p.count} views</span>
+                              </div>
+                              <div className="progress-bar-container">
+                                <div className="progress-bar-fill" style={{ width: `${percentage}%` }}></div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-          {/* Live Visitor Session Stream Log */}
-          <div className="analytics-logs-card">
-            <div className="card-header">
-              <Clock size={16} />
-              <h4>Live Activity Stream logs ({visits.length})</h4>
-            </div>
-            <div className="table-responsive-box">
-              {visits.length === 0 ? (
-                <div className="empty-state" style={{ padding: '40px' }}>No visitor records found. Try opening the homepage!</div>
-              ) : (
-                <table className="analytics-logs-table">
-                  <thead>
-                    <tr>
-                      <th>Visitor ID</th>
-                      <th>Location</th>
-                      <th>IP Address</th>
-                      <th>Path Visited</th>
-                      <th>Activity Time</th>
-                      <th>Browser / OS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {visits.map((v) => (
-                      <tr key={v.id}>
-                        <td>
-                          <span className="visitor-badge-code" title={v.userId}>
-                            {v.userId.substring(0, 16)}...
-                          </span>
-                        </td>
-                        <td>
-                          <span className="visitor-geo-text">
-                            📍 {v.city !== 'Unknown' ? v.city : 'Local Area'}, {v.country}
-                          </span>
-                        </td>
-                        <td>
-                          <code className="visitor-ip">{v.ip}</code>
-                        </td>
-                        <td>
-                          <span className="path-badge-badge">{v.path}</span>
-                        </td>
-                        <td>
-                          <span className="time-elapsed-badge">{timeAgo(v.createdAt)}</span>
-                        </td>
-                        <td>
-                          <span className="user-agent-chip">
-                            <Laptop size={12} />
-                            {getBrowserDetails(v.userAgent)}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
+                {/* Geographical Distribution */}
+                <div className="details-card-col">
+                  <div className="card-header">
+                    <Globe size={16} />
+                    <h4>Top Visitor Geocodes</h4>
+                  </div>
+                  <div className="card-content-box">
+                    {stats.topCountries.length === 0 ? (
+                      <div className="empty-state">No geographical visitor data.</div>
+                    ) : (
+                      <div className="countries-list">
+                        {stats.topCountries.map((c, idx) => (
+                          <div key={idx} className="country-row-item">
+                            <div className="country-geo-info">
+                              <span className="geo-icon">🌍</span>
+                              <span className="geo-name">{c.country}</span>
+                            </div>
+                            <span className="geo-badge">{c.count} users</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Live Visitor Session Stream Log */}
+              <div className="analytics-logs-card">
+                <div className="card-header">
+                  <Clock size={16} />
+                  <h4>Live Activity Stream logs ({visits.length})</h4>
+                </div>
+                <div className="table-responsive-box">
+                  {visits.length === 0 ? (
+                    <div className="empty-state" style={{ padding: '40px' }}>No visitor records found. Try opening the homepage!</div>
+                  ) : (
+                    <table className="analytics-logs-table">
+                      <thead>
+                        <tr>
+                          <th>Visitor ID</th>
+                          <th>Location</th>
+                          <th>IP Address</th>
+                          <th>Path Visited</th>
+                          <th>Activity Time</th>
+                          <th>Browser / OS</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {visits.map((v) => (
+                          <tr key={v.id}>
+                            <td>
+                              <span className="visitor-badge-code" title={v.userId}>
+                                {v.userId.substring(0, 16)}...
+                              </span>
+                            </td>
+                            <td>
+                              <span className="visitor-geo-text">
+                                📍 {v.city !== 'Unknown' ? v.city : 'Local Area'}, {v.country}
+                              </span>
+                            </td>
+                            <td>
+                              <code className="visitor-ip">{v.ip}</code>
+                            </td>
+                            <td>
+                              <span className="path-badge-badge">{v.path}</span>
+                            </td>
+                            <td>
+                              <span className="time-elapsed-badge">{timeAgo(v.createdAt)}</span>
+                            </td>
+                            <td>
+                              <span className="user-agent-chip">
+                                <Laptop size={12} />
+                                {getBrowserDetails(v.userAgent)}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
