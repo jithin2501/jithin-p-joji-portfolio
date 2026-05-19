@@ -18,14 +18,17 @@ async def get_settings(service: SettingsService = Depends(get_settings_service))
             projects=settings.hero.projects,
             experience=settings.hero.experience,
             commits=settings.hero.commits,
-            satisfaction=settings.hero.satisfaction
+            satisfaction=settings.hero.satisfaction,
+            availability=settings.hero.availability
         ),
         socials=SocialLinksSchema(
             github=settings.socials.github,
             linkedin=settings.socials.linkedin,
             email=settings.socials.email,
             phone=settings.socials.phone,
-            location=settings.socials.location
+            location=settings.socials.location,
+            whatsapp=settings.socials.whatsapp,
+            instagram=settings.socials.instagram
         ),
         about_image=settings.about_image
     )
@@ -38,14 +41,17 @@ async def update_settings(settings_in: SettingsResponse, service: SettingsServic
             projects=settings.hero.projects,
             experience=settings.hero.experience,
             commits=settings.hero.commits,
-            satisfaction=settings.hero.satisfaction
+            satisfaction=settings.hero.satisfaction,
+            availability=settings.hero.availability
         ),
         socials=SocialLinksSchema(
             github=settings.socials.github,
             linkedin=settings.socials.linkedin,
             email=settings.socials.email,
             phone=settings.socials.phone,
-            location=settings.socials.location
+            location=settings.socials.location,
+            whatsapp=settings.socials.whatsapp,
+            instagram=settings.socials.instagram
         ),
         about_image=settings.about_image
     )

@@ -16,14 +16,17 @@ class SettingsService:
             projects=schema.hero.projects,
             experience=schema.hero.experience,
             commits=schema.hero.commits,
-            satisfaction=schema.hero.satisfaction
+            satisfaction=schema.hero.satisfaction,
+            availability=schema.hero.availability
         )
         socials = SocialLinks(
             github=schema.socials.github,
             linkedin=schema.socials.linkedin,
             email=schema.socials.email,
             phone=schema.socials.phone,
-            location=schema.socials.location
+            location=schema.socials.location,
+            whatsapp=schema.socials.whatsapp,
+            instagram=schema.socials.instagram
         )
         
         # Check if the incoming about_image is a base64 string and upload it to Cloudinary

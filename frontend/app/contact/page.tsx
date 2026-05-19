@@ -16,12 +16,15 @@ export default function ContactPage() {
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const [socials, setSocials] = useState({
-    github: 'https://github.com/jithin2501',
-    linkedin: 'https://www.linkedin.com/in/jithin05/',
-    email: 'jithinpjoji@gmail.com',
-    phone: '+91 9061058123',
-    location: 'Bengaluru, Kerala, India'
+  const [socials, setSocials] = useState<any>({
+    github: '',
+    linkedin: '',
+    email: '',
+    phone: '',
+    location: '',
+    whatsapp: '',
+    instagram: '',
+    availability: ''
   });
 
   useEffect(() => {
@@ -30,7 +33,10 @@ export default function ContactPage() {
         const response = await fetch('http://localhost:8080/api/settings');
         if (response.ok) {
           const data = await response.json();
-          setSocials(data.socials);
+          setSocials({
+            ...data.socials,
+            availability: data.hero.availability
+          });
         }
       } catch (err) {
         console.error('Failed to fetch contact page socials:', err);
@@ -121,7 +127,7 @@ export default function ContactPage() {
                   <div className="connect-icon-box availability" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}><Clock size={20} /></div>
                   <div className="connect-info">
                     <h4>Availability</h4>
-                    <p>Open to freelance & opportunities</p>
+                    <p>{socials.availability || 'Open to freelance & opportunities'}</p>
                   </div>
                 </div>
               </div>
@@ -130,10 +136,18 @@ export default function ContactPage() {
             <div className="contact-card-glass">
               <h3 className="card-title-small" style={{ textAlign: 'center' }}>Find me on</h3>
               <div className="social-row" style={{ justifyContent: 'center' }}>
-                <a href={socials.github} target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-github" /></a>
-                <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="social-btn-small"><i className="fab fa-linkedin-in" /></a>
-                <a href="https://www.instagram.com/jithin_p_joji/" target="_blank" rel="noopener noreferrer" className="social-btn-small" title="Instagram"><i className="fab fa-instagram" /></a>
-                <a href="https://wa.me/919061058123" target="_blank" rel="noopener noreferrer" className="social-btn-small" title="WhatsApp"><i className="fab fa-whatsapp" /></a>
+                {socials.github && (
+                  <a href={socials.github} target="_blank" rel="noopener noreferrer" className="social-btn-small" title="GitHub"><i className="fab fa-github" /></a>
+                )}
+                {socials.linkedin && (
+                  <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="social-btn-small" title="LinkedIn"><i className="fab fa-linkedin-in" /></a>
+                )}
+                {socials.instagram && (
+                  <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className="social-btn-small" title="Instagram"><i className="fab fa-instagram" /></a>
+                )}
+                {socials.whatsapp && (
+                  <a href={socials.whatsapp} target="_blank" rel="noopener noreferrer" className="social-btn-small" title="WhatsApp"><i className="fab fa-whatsapp" /></a>
+                )}
               </div>
             </div>
           </aside>

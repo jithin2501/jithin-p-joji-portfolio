@@ -14,7 +14,8 @@ export default function Hero() {
       projects: '',
       experience: '',
       commits: '',
-      satisfaction: ''
+      satisfaction: '',
+      availability: ''
     },
     socials: {
       github: '',

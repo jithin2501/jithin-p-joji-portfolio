@@ -285,10 +285,10 @@ export default function Experience() {
         return () => window.removeEventListener('resize', position);
     }, [active, activeEntries]);
 
-    // Extract dynamic counter statistics from active settings collection
-    const yearsExpTarget = parseNumber(settings?.hero?.experience, 1);
-    const projectsTarget = parseNumber(settings?.hero?.projects, 15);
-    const clientsTarget = parseNumber(settings?.hero?.satisfaction, 10);
+    // Static counter statistics for the experience page, independent of Hero page dynamic settings
+    const yearsExpTarget = 1;
+    const projectsTarget = 15;
+    const clientsTarget = 10;
 
     return (
         <section

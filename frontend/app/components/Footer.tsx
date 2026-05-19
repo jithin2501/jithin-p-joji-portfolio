@@ -8,13 +8,13 @@ const Footer = () => {
     const clickCount = useRef(0);
     const clickTimer = useRef<NodeJS.Timeout | null>(null);
     const [socials, setSocials] = useState({
-        github: 'https://github.com/jithin2501',
-        linkedin: 'https://www.linkedin.com/in/jithin05/',
-        whatsapp: 'https://wa.me/919061058123',
-        instagram: 'https://www.instagram.com/jith_in05/',
-        email: 'jithinpjoji@gmail.com',
-        phone: '+91 9061058123',
-        location: 'Bengaluru, Kerala, India'
+        github: '',
+        linkedin: '',
+        whatsapp: '',
+        instagram: '',
+        email: '',
+        phone: '',
+        location: ''
     });
 
     useEffect(() => {

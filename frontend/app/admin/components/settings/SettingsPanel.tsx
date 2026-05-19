@@ -8,6 +8,7 @@ interface SettingsData {
         experience: string;
         commits: string;
         satisfaction: string;
+        availability: string;
     };
     socials: {
         github: string;
@@ -15,6 +16,8 @@ interface SettingsData {
         email: string;
         phone: string;
         location: string;
+        whatsapp: string;
+        instagram: string;
     };
 }
 
@@ -24,7 +27,7 @@ export default function SettingsPanel() {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
+ 
     const fetchSettings = async () => {
         setLoading(true);
         try {
@@ -40,11 +43,11 @@ export default function SettingsPanel() {
             setLoading(false);
         }
     };
-
+ 
     useEffect(() => {
         fetchSettings();
     }, []);
-
+ 
     const handleChange = (section: 'hero' | 'socials', field: string, value: string) => {
         if (!settings) return;
         setSettings({
@@ -175,6 +178,18 @@ export default function SettingsPanel() {
                                 required
                             />
                         </div>
+
+                        <div className="form-group">
+                            <label htmlFor="stat-availability">Availability Status (e.g. Available for Freelance)</label>
+                            <input
+                                id="stat-availability"
+                                type="text"
+                                value={settings.hero.availability || ''}
+                                onChange={e => handleChange('hero', 'availability', e.target.value)}
+                                placeholder="Open to freelance & opportunities"
+                                required
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -256,6 +271,34 @@ export default function SettingsPanel() {
                                     onChange={e => handleChange('socials', 'location', e.target.value)}
                                     placeholder="Bengaluru, Kerala, India"
                                     required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="social-whatsapp">WhatsApp Profile / Link URL</label>
+                            <div className="input-with-icon">
+                                <LinkIcon size={14} className="input-field-icon" />
+                                <input
+                                    id="social-whatsapp"
+                                    type="url"
+                                    value={settings.socials.whatsapp || ''}
+                                    onChange={e => handleChange('socials', 'whatsapp', e.target.value)}
+                                    placeholder="https://wa.me/919061058123"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="social-instagram">Instagram Profile URL</label>
+                            <div className="input-with-icon">
+                                <LinkIcon size={14} className="input-field-icon" />
+                                <input
+                                    id="social-instagram"
+                                    type="url"
+                                    value={settings.socials.instagram || ''}
+                                    onChange={e => handleChange('socials', 'instagram', e.target.value)}
+                                    placeholder="https://instagram.com/..."
                                 />
                             </div>
                         </div>
