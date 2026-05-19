@@ -16,6 +16,9 @@ export default function AdminLogin() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'dialer' | 'settings'>('dialer');
   const [enteredPin, setEnteredPin] = useState<string[]>([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [mounted, setMounted] = useState(false);
   
   // Synthesizer controls
   const [soundTheme, setSoundTheme] = useState<'mechanical' | 'retro' | 'silent'>('mechanical');
@@ -72,6 +75,7 @@ export default function AdminLogin() {
 
   // 1. Clock timer loop
   useEffect(() => {
+    setMounted(true);
     const updateTime = () => {
       const now = new Date();
       setClockTime(now.toLocaleTimeString([], { hour12: false }));
@@ -80,6 +84,16 @@ export default function AdminLogin() {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Auto-focus manual keyboard input when dialer mounts or is active
+  useEffect(() => {
+    if (activeTab === 'dialer') {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab]);
 
   // 2. Initialize web audio context
   const getAudioContext = () => {
@@ -483,6 +497,16 @@ export default function AdminLogin() {
     };
   };
 
+  if (!mounted) {
+    return (
+      <div className="login-page-container dark" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#050510' }}>
+        <div style={{ color: '#6366f1', fontFamily: "'JetBrains Mono', monospace", fontSize: '14px', letterSpacing: '0.05em' }}>
+          INITIALIZING SECURITY SYSTEM...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`login-page-container ${themeMode === 'light' ? 'light' : ''}`}>
       {/* Decorative ambient blurred nodes */}
@@ -546,8 +570,48 @@ export default function AdminLogin() {
                 <h2 style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '-0.02em', margin: 0 }}>Enter Access Key</h2>
                 <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>Dial passcode clockwise to open admin dashboard</p>
                 
+                {/* Hidden input field for mobile/desktop manual keyboard entry */}
+                <input
+                  ref={inputRef}
+                  type="tel"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  value={enteredPin.join('')}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                    setEnteredPin(val.split(''));
+                    playTickSound();
+                  }}
+                  onFocus={() => setIsInputFocused(true)}
+                  onBlur={() => setIsInputFocused(false)}
+                  style={{
+                    position: 'absolute',
+                    opacity: 0,
+                    width: '1px',
+                    height: '1px',
+                    pointerEvents: 'none',
+                    zIndex: -1
+                  }}
+                />
+
                 {/* Dot PIN tracks indicators */}
-                <div className="pin-display-track" style={{ gap: '8px' }}>
+                <div 
+                  className={`pin-display-track ${isInputFocused ? 'focused-glowing' : ''}`}
+                  onClick={() => inputRef.current?.focus()}
+                  style={{ 
+                    gap: '8px', 
+                    cursor: 'text', 
+                    padding: '8px 12px', 
+                    borderRadius: '12px',
+                    border: isInputFocused ? '1.5px solid rgba(99, 102, 241, 0.45)' : '1.5px solid rgba(255, 255, 255, 0.04)',
+                    boxShadow: isInputFocused ? '0 0 25px rgba(99, 102, 241, 0.15), inset 0 0 10px rgba(99, 102, 241, 0.05)' : 'none',
+                    background: 'rgba(0, 0, 0, 0.25)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    display: 'inline-flex',
+                    margin: '0 auto',
+                    alignItems: 'center'
+                  }}
+                >
                   {[0, 1, 2, 3, 4, 5].map((idx) => {
                     const hasValue = idx < enteredPin.length;
                     return (
