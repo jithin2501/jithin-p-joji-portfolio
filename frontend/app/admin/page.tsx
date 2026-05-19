@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code, FolderOpen } from 'lucide-react';
+import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code, FolderOpen, Activity } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
 import ResumesPanel from './components/resumes/ResumesPanel';
@@ -9,6 +9,7 @@ import ExperiencePanel from './components/experience/ExperiencePanel';
 import AcademicPanel from './components/academic/AcademicPanel';
 import SkillsPanel from './components/skills/SkillsPanel';
 import ProjectsPanel from './components/projects/ProjectsPanel';
+import AnalyticsPanel from './components/analytics/AnalyticsPanel';
 import './Admin.css';
 import './components/messages/MessagesPanel.css';
 import './components/settings/SettingsPanel.css';
@@ -17,9 +18,10 @@ import './components/experience/ExperiencePanel.css';
 import './components/academic/AcademicPanel.css';
 import './components/skills/SkillsPanel.css';
 import './components/projects/ProjectsPanel.css';
+import './components/analytics/AnalyticsPanel.css';
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects'>('messages');
+    const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects' | 'analytics'>('messages');
 
     return (
         <div className="admin-layout">
@@ -35,6 +37,13 @@ export default function AdminPanel() {
                     >
                         <MessageSquare size={18} />
                         Messages
+                    </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('analytics')}
+                    >
+                        <Activity size={18} />
+                        Analytics
                     </button>
                     <button 
                         className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
@@ -97,6 +106,13 @@ export default function AdminPanel() {
             <main className="admin-content">
                 {activeTab === 'messages' ? (
                     <MessagesPanel />
+                ) : activeTab === 'analytics' ? (
+                    <>
+                        <div className="content-header" style={{ marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#fff', margin: 0 }}>Visitor Analytics & Map</h2>
+                        </div>
+                        <AnalyticsPanel />
+                    </>
                 ) : activeTab === 'settings' ? (
                     <SettingsPanel />
                 ) : activeTab === 'experience' ? (
