@@ -292,7 +292,7 @@ export default function UsersPanel() {
                                                 <td className="monospace-cell">{user.last_login}</td>
                                                 <td>
                                                     {isSuper ? (
-                                                        <span className="full-access-text">FULL ACCESS</span>
+                                                        <span className="full-access-text">Full Access</span>
                                                     ) : (
                                                         <button 
                                                             onClick={() => openAccessModal(user)}
@@ -324,7 +324,7 @@ export default function UsersPanel() {
                                                             </button>
                                                         </div>
                                                     ) : (
-                                                        <span style={{ color: '#4b5563', fontSize: '11px', fontStyle: 'italic' }}>Protected</span>
+                                                        <span className="protected-text">Protected</span>
                                                     )}
                                                 </td>
                                             </tr>

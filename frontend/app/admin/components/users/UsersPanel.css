@@ -69,22 +69,24 @@
 
 /* Role Badges matching the requested design */
 .role-badge {
-  display: inline-flex;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: capitalize;
 }
 
 .role-badge.superadmin {
-  background: #ecfdf5;
-  color: #059669;
+  color: #f97316;
 }
 
 .role-badge.admin {
-  background: #eff6ff;
-  color: #2563eb;
+  color: #3b82f6;
+}
+
+.protected-text {
+  color: #6b7280;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-style: normal;
 }
 
 /* Status texts */
@@ -111,10 +113,10 @@
 
 /* Page Access badges and buttons */
 .full-access-text {
-  font-size: 9.5px;
-  font-weight: 700;
-  color: #9ca3af;
-  letter-spacing: 0.08em;
+  color: #6b7280;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-style: normal;
 }
 
 .access-pill-btn {
@@ -138,10 +140,13 @@
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
 }
 
-/* Center headers for 2nd (ROLE), 4th (LAST LOGIN) and 6th (ACTION) columns */
+/* Center headers for 2nd (ROLE), 4th (LAST LOGIN), 5th (PAGE ACCESS) and 6th (ACTION) columns */
 .users-data-table th:nth-child(2),
 .users-data-table td:nth-child(2),
 .users-data-table th:nth-child(4),
+.users-data-table td:nth-child(4),
+.users-data-table th:nth-child(5),
+.users-data-table td:nth-child(5),
 .users-data-table th:nth-child(6),
 .users-data-table td:nth-child(6) {
   text-align: center;
