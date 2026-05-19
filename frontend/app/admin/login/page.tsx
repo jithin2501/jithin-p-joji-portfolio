@@ -549,13 +549,36 @@ export default function AdminLogin() {
                 <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>Dial passcode clockwise to open admin dashboard</p>
                 
                 {/* Dot PIN tracks indicators */}
-                <div className="pin-display-track">
-                  {[0, 1, 2, 3].map((idx) => (
-                    <div 
-                      key={idx} 
-                      className={`dot-pin ${idx < enteredPin.length ? 'filled' : ''}`}
-                    ></div>
-                  ))}
+                <div className="pin-display-track" style={{ gap: '12px' }}>
+                  {[0, 1, 2, 3].map((idx) => {
+                    const hasValue = idx < enteredPin.length;
+                    return (
+                      <div 
+                        key={idx} 
+                        className={`dot-pin ${hasValue ? 'filled' : ''}`}
+                        style={{
+                          width: '36px',
+                          height: '44px',
+                          borderRadius: '10px',
+                          border: '1.5px solid rgba(255, 255, 255, 0.08)',
+                          background: hasValue ? 'rgba(99, 102, 241, 0.15)' : 'rgba(0, 0, 0, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: '18px',
+                          fontWeight: '800',
+                          color: hasValue ? '#818cf8' : '#4b5563',
+                          boxShadow: hasValue ? '0 0 15px rgba(99, 102, 241, 0.25)' : 'none',
+                          borderColor: hasValue ? '#6366f1' : 'rgba(255, 255, 255, 0.08)',
+                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                          transform: hasValue ? 'scale(1.05)' : 'scale(1)'
+                        }}
+                      >
+                        {hasValue ? enteredPin[idx] : '•'}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
