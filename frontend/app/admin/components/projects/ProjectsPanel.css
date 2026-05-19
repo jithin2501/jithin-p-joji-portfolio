@@ -316,3 +316,11 @@
     color: #fff !important;
     transform: translateY(-2px);
 }
+
+.gallery-upload-dash-box:hover {
+    border-color: rgba(124, 92, 255, 0.8) !important;
+    background: rgba(124, 92, 255, 0.08) !important;
+    color: #fff !important;
+    box-shadow: 0 0 10px rgba(124, 92, 255, 0.25) !important;
+    transform: scale(1.05);
+}

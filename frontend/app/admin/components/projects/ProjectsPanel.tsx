@@ -80,7 +80,7 @@ export default function ProjectsPanel() {
   const [detailMethodology, setDetailMethodology] = useState('');
   const [detailLongDesc, setDetailLongDesc] = useState('');
   const [detailLearned, setDetailLearned] = useState('');
-  const [detailImagesStr, setDetailImagesStr] = useState('');
+  const [detailImages, setDetailImages] = useState<string[]>([]);
   const [detailFeatures, setDetailFeatures] = useState<FeatureItem[]>([]);
 
   const fetchProjects = async () => {
@@ -144,7 +144,7 @@ export default function ProjectsPanel() {
     setDetailMethodology(project.methodology || 'Agile');
     setDetailLongDesc(project.long_desc || project.longDesc || project.description || '');
     setDetailLearned(project.learned || '');
-    setDetailImagesStr((project.images && project.images.length > 0 ? project.images : [project.image || '']).join(', '));
+    setDetailImages(project.images && project.images.length > 0 ? project.images : [project.image || '']);
     setDetailFeatures(project.features || []);
     
     // Smooth scroll to details editor section
@@ -160,8 +160,6 @@ export default function ProjectsPanel() {
     setError(null);
     setSuccessMessage(null);
 
-    const imagesList = detailImagesStr.split(',').map(img => img.trim()).filter(img => img.length > 0);
-
     const payload = {
       ...detailsProject,
       subtitle: detailSubtitle.trim(),
@@ -172,7 +170,7 @@ export default function ProjectsPanel() {
       methodology: detailMethodology.trim(),
       long_desc: detailLongDesc.trim(),
       learned: detailLearned.trim(),
-      images: imagesList.length > 0 ? imagesList : [detailsProject.image],
+      images: detailImages.length > 0 ? detailImages : [detailsProject.image],
       features: detailFeatures
     };
 
@@ -697,13 +695,122 @@ export default function ProjectsPanel() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="detail-images">Details Image Gallery (comma separated URLs)</label>
-                <textarea
-                  id="detail-images"
-                  value={detailImagesStr}
-                  onChange={e => setDetailImagesStr(e.target.value)}
-                  placeholder="Paste thumbnail URL or multiple URLs separated by commas..."
-                  rows={2}
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}>Details Image Gallery *</label>
+                
+                {/* Images Preview Grid */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', 
+                  gap: '12px', 
+                  marginBottom: '16px',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  minHeight: '80px'
+                }}>
+                  {detailImages.map((imgUrl, index) => (
+                    <div 
+                      key={index} 
+                      style={{ 
+                        position: 'relative', 
+                        width: '80px', 
+                        height: '60px', 
+                        borderRadius: '6px', 
+                        overflow: 'hidden',
+                        border: '1px solid rgba(124, 92, 255, 0.3)',
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                      }}
+                    >
+                      <img 
+                        src={imgUrl} 
+                        alt={`Gallery Item ${index + 1}`} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = detailImages.filter((_, idx) => idx !== index);
+                          setDetailImages(updated);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: '2px',
+                          right: '2px',
+                          background: 'rgba(239, 68, 68, 0.85)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '18px',
+                          height: '18px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#fff',
+                          cursor: 'pointer',
+                          fontSize: '10px',
+                          padding: 0
+                        }}
+                        title="Remove Image"
+                      >
+                        <Trash2 size={10} />
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Dash Box to Upload */}
+                  <div 
+                    onClick={() => document.getElementById('details-multiple-file-input')?.click()}
+                    style={{ 
+                      width: '80px', 
+                      height: '60px', 
+                      borderRadius: '6px', 
+                      border: '1.5px dashed rgba(124, 92, 255, 0.4)', 
+                      background: 'rgba(124, 92, 255, 0.03)',
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      cursor: 'pointer',
+                      color: '#a78bfa',
+                      fontSize: '10px',
+                      gap: '4px',
+                      transition: 'all 0.25s ease'
+                    }}
+                    className="gallery-upload-dash-box"
+                    title="Upload Multiple Images"
+                  >
+                    <Upload size={14} style={{ color: '#7c5cff' }} />
+                    <span>Upload</span>
+                  </div>
+                </div>
+
+                {/* Multiple Hidden File Input */}
+                <input
+                  id="details-multiple-file-input"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={e => {
+                    const files = e.target.files;
+                    if (!files || files.length === 0) return;
+                    
+                    const promises = Array.from(files).map(file => {
+                      return new Promise<string>((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                          if (typeof reader.result === 'string') {
+                            resolve(reader.result);
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      });
+                    });
+
+                    Promise.all(promises).then(base64Images => {
+                      setDetailImages([...detailImages, ...base64Images]);
+                    });
+                  }}
                 />
               </div>
             </div>

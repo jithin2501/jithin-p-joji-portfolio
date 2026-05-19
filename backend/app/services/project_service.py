@@ -20,13 +20,27 @@ class ProjectService:
             except Exception as e:
                 print("Cloudinary upload failed for project thumbnail, falling back to original value:", e)
 
+        # Upload multiple gallery images if they are base64
+        uploaded_images = []
+        for img in (schema.images or []):
+            if img and img.startswith("data:"):
+                try:
+                    uploaded_img_url = self.cloudinary_service.upload_base64_image(img)
+                    if uploaded_img_url:
+                        uploaded_images.append(uploaded_img_url)
+                except Exception as e:
+                    print("Cloudinary upload failed for gallery item, falling back:", e)
+                    uploaded_images.append(img)
+            else:
+                uploaded_images.append(img)
+
         project = Project(
             title=schema.title,
             subtitle=schema.subtitle,
             description=schema.description,
             long_desc=schema.long_desc,
             image=image_url,
-            images=schema.images or [image_url] if image_url else [],
+            images=uploaded_images if uploaded_images else ([image_url] if image_url else []),
             category=schema.category,
             role=schema.role,
             duration=schema.duration,
@@ -71,6 +85,22 @@ class ProjectService:
                         update_data["images"] = [uploaded_url]
             except Exception as e:
                 print("Cloudinary upload failed for project thumbnail, falling back to original value:", e)
+
+        # Upload multiple gallery images if they are base64
+        if "images" in update_data and update_data["images"]:
+            uploaded_images = []
+            for img in update_data["images"]:
+                if img and img.startswith("data:"):
+                    try:
+                        uploaded_img_url = self.cloudinary_service.upload_base64_image(img)
+                        if uploaded_img_url:
+                            uploaded_images.append(uploaded_img_url)
+                    except Exception as e:
+                        print("Cloudinary upload failed for gallery item update, falling back:", e)
+                        uploaded_images.append(img)
+                else:
+                    uploaded_images.append(img)
+            update_data["images"] = uploaded_images
 
         # Handle naming conventions differences if any
         if "long_desc" in update_data:
