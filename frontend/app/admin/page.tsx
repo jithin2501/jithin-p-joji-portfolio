@@ -42,7 +42,8 @@ export default function AdminPanel() {
             }
             setIsCheckingAuth(false);
         }
-    }, [activeTab]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (isCheckingAuth) {
         return (
@@ -242,8 +243,12 @@ export default function AdminPanel() {
                         </div>
                         <UsersPanel />
                     </>
-                ) : (
+                ) : activeTab === 'aboutImage' ? (
                     <AboutImagePanel />
+                ) : (
+                    <div style={{ padding: '40px', color: '#7070a0', textAlign: 'center' }}>
+                        Loading permitted section...
+                    </div>
                 )}
             </main>
         </div>
