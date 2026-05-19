@@ -468,7 +468,7 @@ export default function AdminLogin() {
     const angleRad = (angle - 90) * (Math.PI / 180);
     const left = 50 + 34.5 * Math.cos(angleRad);
     const top = 50 + 34.5 * Math.sin(angleRad);
-    return { left: `${left}%`, top: `${top}%` };
+    return { left: `${left.toFixed(4)}%`, top: `${top.toFixed(4)}%` };
   };
 
   // Get Stopper coordinates based on angle
@@ -477,8 +477,8 @@ export default function AdminLogin() {
     const stopLeft = 50 + 41.5 * Math.cos(stopperRad);
     const stopTop = 50 + 41.5 * Math.sin(stopperRad);
     return {
-      left: `calc(${stopLeft}% - 10px)`,
-      top: `calc(${stopTop}% - 10px)`
+      left: `calc(${stopLeft.toFixed(4)}% - 10px)`,
+      top: `calc(${stopTop.toFixed(4)}% - 10px)`
     };
   };
 
