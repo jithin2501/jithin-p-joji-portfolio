@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   FolderOpen, Trash2, Edit2, Save, RefreshCw, 
   Search, Star, Globe, GitBranch,
-  Award, Layers, Upload, ExternalLink, Sliders, BookOpen, FileText, Info
+  Award, Layers, Upload, ExternalLink, Sliders, BookOpen, FileText, Info, Check
 } from 'lucide-react';
 import './ProjectsPanel.css';
 
@@ -328,6 +328,66 @@ export default function ProjectsPanel() {
     } catch (err) {
       console.error(err);
       setError('Could not delete project from the database.');
+    }
+  };
+
+  const handleToggleFeatured = async (p: ProjectData) => {
+    setError(null);
+    setSuccessMessage(null);
+
+    const isCurrentFeatured = p.featured === 'feature';
+    
+    if (!isCurrentFeatured) {
+      // Trying to tick (feature) the project. Check if there are already 3 featured projects.
+      const featuredCount = projects.filter(proj => proj.featured === 'feature').length;
+      if (featuredCount >= 3) {
+        setError('Only up to exactly 3 projects can be featured on the homepage. Please untick another project first!');
+        // Clear error after 5 seconds
+        setTimeout(() => setError(null), 5000);
+        return;
+      }
+    }
+
+    // Toggle the featured value: 'feature' <=> 'project'
+    const newFeatured = isCurrentFeatured ? 'project' : 'feature';
+    
+    // Prepare the payload (keep everything else exactly identical)
+    const payload = {
+      title: p.title,
+      subtitle: p.subtitle || 'PROJECT DETAILS',
+      description: p.description,
+      long_desc: p.long_desc || p.longDesc || p.description,
+      image: p.image,
+      images: p.images && p.images.length > 0 ? p.images : [p.image],
+      category: p.category,
+      role: p.role || 'Developer',
+      duration: p.duration || '4 Weeks',
+      completed: p.completed || 'N/A',
+      tools: p.tools || 'VS Code',
+      methodology: p.methodology || 'Agile',
+      features: p.features || [],
+      tech_stack: p.tech_stack || p.techStack || [],
+      details_tech: p.details_tech || p.detailsTech || [],
+      learned: p.learned || '',
+      featured: newFeatured,
+      live_url: p.live_url || p.liveUrl || '#',
+      github_url: p.github_url || p.githubUrl || '#'
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/projects/${p.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) throw new Error('Failed to toggle featured status');
+
+      setSuccessMessage(newFeatured === 'feature' ? 'Project successfully featured on homepage!' : 'Project removed from featured list.');
+      fetchProjects();
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to update project status.');
     }
   };
 
@@ -1231,6 +1291,30 @@ export default function ProjectsPanel() {
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button
                         type="button"
+                        className={`action-btn feature-toggle-btn ${p.featured === 'feature' ? 'featured-active' : ''}`}
+                        title={p.featured === 'feature' ? 'Remove from Homepage Featured List' : 'Feature on Homepage (Max 3)'}
+                        onClick={() => handleToggleFeatured(p)}
+                        style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          padding: 0, 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          borderRadius: '8px',
+                          background: p.featured === 'feature' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+                          border: p.featured === 'feature' ? '1px solid rgba(16, 185, 129, 0.5)' : '1px solid rgba(255, 255, 255, 0.1)',
+                          color: p.featured === 'feature' ? '#10b981' : '#a0a0c0',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          margin: 0,
+                          boxShadow: p.featured === 'feature' ? '0 0 10px rgba(16, 185, 129, 0.2)' : 'none'
+                        }}
+                      >
+                        <Check size={14} style={{ strokeWidth: p.featured === 'feature' ? 3 : 2 }} />
+                      </button>
+                      <button
+                        type="button"
                         className="action-btn edit-btn"
                         title="Edit Project"
                         onClick={() => handleEdit(p)}
@@ -1301,8 +1385,27 @@ export default function ProjectsPanel() {
                     {/* Public Links */}
                     <div style={{ display: 'flex', gap: '12px' }}>
                       {liveUrl && liveUrl !== '#' && (
-                        <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="view-details-btn">
-                          Preview
+                        <a 
+                          href={liveUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="view-details-btn" 
+                          title="Live Preview"
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            padding: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '8px',
+                            background: 'rgba(59, 130, 246, 0.1)',
+                            border: '1px solid rgba(59, 130, 246, 0.25)',
+                            color: '#60a5fa',
+                            transition: 'all 0.2s ease',
+                            margin: 0
+                          }}
+                        >
                           <ExternalLink size={14} />
                         </a>
                       )}
