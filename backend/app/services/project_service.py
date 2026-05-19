@@ -50,6 +50,7 @@ class ProjectService:
             features=schema.features,
             tech_stack=schema.tech_stack,
             learned=schema.learned,
+            details_tech=schema.details_tech or [],
             featured=schema.featured,
             live_url=schema.live_url,
             github_url=schema.github_url
@@ -67,7 +68,7 @@ class ProjectService:
         fields = [
             "title", "subtitle", "description", "long_desc", "image", "images",
             "category", "role", "duration", "completed", "tools", "methodology",
-            "features", "tech_stack", "learned", "featured", "live_url", "github_url"
+            "features", "tech_stack", "learned", "details_tech", "featured", "live_url", "github_url"
         ]
         for field in fields:
             val = getattr(schema, field, None)

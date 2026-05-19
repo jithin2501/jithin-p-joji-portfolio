@@ -203,6 +203,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
   const methodology = project.methodology || "N/A";
   const features = project.features || [];
   const techStack = project.tech_stack || project.techStack || [];
+  const detailsTech = project.details_tech || project.detailsTech || [];
   const learned = project.learned || "In this project, I strengthened my development and problem solving skills.";
   const liveUrl = project.live_url || project.liveUrl || "#";
   const githubUrl = project.github_url || project.githubUrl || "#";
@@ -321,20 +322,42 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
 
         {/* Bottom Row */}
         <div className="detail-bottom-row">
-          {techStack.length > 0 && (
+          {(techStack.length > 0 || detailsTech.length > 0) && (
             <div className="bottom-box">
               <h3 className="section-header">
                 <Code2 size={22} />
                 Tech Stack
               </h3>
-              <div className="tech-stack-grid">
-                {techStack.map((tech: any, i: number) => (
-                  <div key={i} className="tech-badge-detail">
-                    {tech.icon && <i className={tech.icon} />}
-                    {tech.name}
+              
+              {/* Core Stack */}
+              {techStack.length > 0 && (
+                <div style={{ marginBottom: detailsTech.length > 0 ? '20px' : '0' }}>
+                  {detailsTech.length > 0 && <h4 style={{ color: 'rgba(255,255,255,0.4)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>Core Stack</h4>}
+                  <div className="tech-stack-grid">
+                    {techStack.map((tech: any, i: number) => (
+                      <div key={i} className="tech-badge-detail">
+                        {tech.icon && <i className={tech.icon} />}
+                        {tech.name}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {/* Extra / Additional Stack */}
+              {detailsTech.length > 0 && (
+                <div>
+                  {techStack.length > 0 && <h4 style={{ color: '#a78bfa', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px', marginTop: '15px' }}>Additional Stack & Libs</h4>}
+                  <div className="tech-stack-grid">
+                    {detailsTech.map((tech: any, i: number) => (
+                      <div key={i} className="tech-badge-detail" style={{ background: 'rgba(124, 92, 255, 0.05)', borderColor: 'rgba(124, 92, 255, 0.25)', color: '#c4b5fd' }}>
+                        {tech.icon && <i className={tech.icon} />}
+                        {tech.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

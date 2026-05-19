@@ -36,6 +36,8 @@ interface ProjectData {
   features: FeatureItem[];
   tech_stack: TechStackItem[];
   techStack?: TechStackItem[];
+  details_tech?: TechStackItem[];
+  detailsTech?: TechStackItem[];
   learned: string;
   featured: string;
   live_url: string;
@@ -82,6 +84,7 @@ export default function ProjectsPanel() {
   const [detailLearned, setDetailLearned] = useState('');
   const [detailImages, setDetailImages] = useState<string[]>([]);
   const [detailFeatures, setDetailFeatures] = useState<FeatureItem[]>([]);
+  const [detailTechStr, setDetailTechStr] = useState('');
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -146,6 +149,7 @@ export default function ProjectsPanel() {
     setDetailLearned(project.learned || '');
     setDetailImages(project.images && project.images.length > 0 ? project.images : [project.image || '']);
     setDetailFeatures(project.features || []);
+    setDetailTechStr((project.details_tech || project.detailsTech || []).map((t: any) => t.name).join(', '));
     
     // Smooth scroll to details editor section
     setTimeout(() => {
@@ -160,6 +164,23 @@ export default function ProjectsPanel() {
     setError(null);
     setSuccessMessage(null);
 
+    const detailsTechArray = detailTechStr.split(',').map(tag => {
+      const name = tag.trim();
+      if (!name) return null;
+      let icon = "fas fa-code";
+      const lower = name.toLowerCase();
+      if (lower.includes("react")) icon = "fab fa-react";
+      else if (lower.includes("node")) icon = "fab fa-node-js";
+      else if (lower.includes("js") || lower.includes("javascript")) icon = "fab fa-js";
+      else if (lower.includes("css")) icon = "fab fa-css3-alt";
+      else if (lower.includes("html")) icon = "fab fa-html5";
+      else if (lower.includes("python")) icon = "fab fa-python";
+      else if (lower.includes("docker")) icon = "fab fa-docker";
+      else if (lower.includes("aws")) icon = "fab fa-aws";
+      else if (lower.includes("git")) icon = "fab fa-git-alt";
+      return { name, icon };
+    }).filter(t => t !== null);
+
     const payload = {
       ...detailsProject,
       subtitle: detailSubtitle.trim(),
@@ -171,7 +192,8 @@ export default function ProjectsPanel() {
       long_desc: detailLongDesc.trim(),
       learned: detailLearned.trim(),
       images: detailImages.length > 0 ? detailImages : [detailsProject.image],
-      features: detailFeatures
+      features: detailFeatures,
+      details_tech: detailsTechArray
     };
 
     try {
@@ -812,6 +834,20 @@ export default function ProjectsPanel() {
                     });
                   }}
                 />
+              </div>
+
+              <div className="form-group" style={{ marginTop: '20px' }}>
+                <label htmlFor="detail-tech-stack">Details Tech Stack (comma separated extra technologies)</label>
+                <input
+                  id="detail-tech-stack"
+                  type="text"
+                  value={detailTechStr}
+                  onChange={e => setDetailTechStr(e.target.value)}
+                  placeholder="e.g. Redux Toolkit, Socket.io, Framer Motion, Axios"
+                />
+                <small style={{ color: '#7070a0', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                  These extra technologies will be displayed exclusively on the project details page!
+                </small>
               </div>
             </div>
 

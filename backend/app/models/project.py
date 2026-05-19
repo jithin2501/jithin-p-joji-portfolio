@@ -20,6 +20,7 @@ class Project:
         features: List[Dict[str, str]],
         tech_stack: List[Dict[str, str]],
         learned: str,
+        details_tech: List[Dict[str, str]] = None,
         featured: str = "project",
         live_url: str = "#",
         github_url: str = "#",
@@ -42,6 +43,7 @@ class Project:
         self.features = features or []
         self.tech_stack = tech_stack or []
         self.learned = learned
+        self.details_tech = details_tech or []
         self.featured = featured or "project"
         self.live_url = live_url or "#"
         self.github_url = github_url or "#"
@@ -76,6 +78,7 @@ class Project:
             features=data.get("features") or [],
             tech_stack=data.get("tech_stack") or data.get("techStack") or [],
             learned=data.get("learned") or "",
+            details_tech=data.get("details_tech") or data.get("detailsTech") or [],
             featured=featured_val,
             live_url=data.get("live_url") or data.get("liveUrl") or "#",
             github_url=data.get("github_url") or data.get("githubUrl") or "#",
@@ -99,6 +102,7 @@ class Project:
             "features": self.features,
             "tech_stack": self.tech_stack,
             "learned": self.learned,
+            "details_tech": self.details_tech,
             "featured": self.featured,
             "live_url": self.live_url,
             "github_url": self.github_url,
