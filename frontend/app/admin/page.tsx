@@ -39,18 +39,25 @@ export default function AdminPanel() {
                         Messages
                     </button>
                     <button 
-                        className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('analytics')}
-                    >
-                        <Activity size={18} />
-                        Analytics
-                    </button>
-                    <button 
                         className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
                         onClick={() => setActiveTab('settings')}
                     >
                         <Sliders size={18} />
                         Settings
+                    </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('resumes')}
+                    >
+                        <FileText size={18} />
+                        Resumes
+                    </button>
+                    <button 
+                        className={`nav-item ${activeTab === 'skills' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('skills')}
+                    >
+                        <Code size={18} />
+                        Tech Stack
                     </button>
                     <button 
                         className={`nav-item ${activeTab === 'experience' ? 'active' : ''}`}
@@ -67,11 +74,11 @@ export default function AdminPanel() {
                         Academic
                     </button>
                     <button 
-                        className={`nav-item ${activeTab === 'skills' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('skills')}
+                        className={`nav-item ${activeTab === 'aboutImage' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('aboutImage')}
                     >
-                        <Code size={18} />
-                        Tech Stack
+                        <ImageIcon size={18} />
+                        About Image
                     </button>
                     <button 
                         className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
@@ -80,19 +87,13 @@ export default function AdminPanel() {
                         <FolderOpen size={18} />
                         Projects
                     </button>
+
                     <button 
-                        className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('resumes')}
+                        className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('analytics')}
                     >
-                        <FileText size={18} />
-                        Resumes
-                    </button>
-                    <button 
-                        className={`nav-item ${activeTab === 'aboutImage' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('aboutImage')}
-                    >
-                        <ImageIcon size={18} />
-                        About Image
+                        <Activity size={18} />
+                        Analytics
                     </button>
                 </nav>
                 <div className="sidebar-footer">

@@ -367,7 +367,6 @@ export default function AnalyticsPanel() {
                         {stats.topCountries.map((c, idx) => (
                           <div key={idx} className="country-row-item">
                             <div className="country-geo-info">
-                              <span className="geo-icon">🌍</span>
                               <span className="geo-name">{c.country}</span>
                             </div>
                             <span className="geo-badge">{c.count} users</span>
@@ -410,7 +409,7 @@ export default function AnalyticsPanel() {
                             </td>
                             <td>
                               <span className="visitor-geo-text">
-                                📍 {v.city !== 'Unknown' ? v.city : 'Local Area'}, {v.country}
+                                {v.city !== 'Unknown' ? v.city : 'Local Area'}, {v.country}
                               </span>
                             </td>
                             <td>
