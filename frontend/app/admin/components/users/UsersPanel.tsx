@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { 
     Users, User, Trash2, Shield, PlusCircle, RefreshCw, X, 
     MessageSquare, Sliders, FileText, Code, Briefcase, GraduationCap, 
-    Image as ImageIcon, FolderOpen, Activity, ToggleLeft, ToggleRight, CheckSquare, Square
+    Image as ImageIcon, FolderOpen, Activity, ToggleLeft, ToggleRight, CheckSquare, Square,
+    Eye, EyeOff
 } from 'lucide-react';
 import './UsersPanel.css';
 
@@ -32,6 +33,7 @@ export default function UsersPanel() {
     const [users, setUsers] = useState<AdminUser[]>([]);
     const [username, setUsername] = useState('');
     const [pincode, setPincode] = useState('');
+    const [showPasscode, setShowPasscode] = useState(false);
     
     // UI states
     const [loading, setLoading] = useState(true);
@@ -218,17 +220,41 @@ export default function UsersPanel() {
                     </div>
 
                     <div className="form-group" style={{ marginBottom: '20px' }}>
-                        <label htmlFor="user-pincode">Rotary Dialer Passcode (6 Digits)</label>
-                        <input
-                            id="user-pincode"
-                            type="password"
-                            maxLength={6}
-                            minLength={6}
-                            value={pincode}
-                            onChange={e => setPincode(e.target.value.replace(/\D/g, ''))}
-                            placeholder="exactly 6 numeric digits"
-                            required
-                        />
+                        <label htmlFor="user-pincode">passcode (6 Digits)</label>
+                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                            <input
+                                id="user-pincode"
+                                type={showPasscode ? 'text' : 'password'}
+                                maxLength={6}
+                                minLength={6}
+                                value={pincode}
+                                onChange={e => setPincode(e.target.value.replace(/\D/g, ''))}
+                                placeholder="exactly 6 numeric digits"
+                                required
+                                style={{ paddingRight: '40px', width: '100%' }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPasscode(!showPasscode)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '12px',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#8b8ba7',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '4px',
+                                    transition: 'color 0.2s'
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                                onMouseLeave={e => e.currentTarget.style.color = '#8b8ba7'}
+                            >
+                                {showPasscode ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
                     </div>
 
                     <button 
