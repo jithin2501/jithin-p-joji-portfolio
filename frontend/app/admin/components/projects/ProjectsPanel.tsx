@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   FolderOpen, Trash2, Edit2, Save, RefreshCw, 
   Search, Star, Globe, GitBranch,
-  Award, Layers, Upload
+  Award, Layers, Upload, ExternalLink
 } from 'lucide-react';
 import './ProjectsPanel.css';
 
@@ -595,68 +595,133 @@ export default function ProjectsPanel() {
           </div>
         ) : (
           <div className="admin-projects-list-grid">
-            {filteredProjects.map(p => (
-              <div key={p.id} className="admin-project-list-item" style={{ display: 'flex', gap: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.02)', borderRadius: '12px', padding: '16px', alignItems: 'center' }}>
-                <img
-                  src={p.image || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"}
-                  alt={p.title}
-                  style={{ width: '80px', height: '60px', borderRadius: '6px', objectFit: 'cover', flexShrink: 0 }}
-                />
-                
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</h4>
-                    
-                    <span style={{ fontSize: '9px', background: 'rgba(124, 92, 255, 0.08)', color: '#a78bfa', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
-                      {p.category}
-                    </span>
-                    
+            {filteredProjects.map(p => {
+              const techTags = p.tech_stack || p.techStack || [];
+              const liveUrl = p.live_url || p.liveUrl || "#";
+              const githubUrl = p.github_url || p.githubUrl || "#";
+              return (
+                <div key={p.id} className="project-card-new">
+                  <div className="project-img-box">
                     {p.featured === 'feature' && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(255, 215, 0, 0.08)', color: '#ffd700', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
-                        <Star size={8} fill="#ffd700" /> Featured
-                      </span>
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #ffd700, #ff8c00)', color: '#000', fontWeight: 'bold' }}>
+                        <Star size={12} fill="black" />
+                        Featured
+                      </div>
                     )}
                     {p.featured === 'new' && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(16, 185, 129, 0.08)', color: '#10b981', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', color: '#fff', fontWeight: 'bold' }}>
+                        <Star size={12} fill="white" />
                         New
-                      </span>
+                      </div>
                     )}
                     {p.featured === 'freelancing' && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(139, 92, 246, 0.08)', color: '#8b5cf6', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
-                        Freelancing
-                      </span>
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', color: '#fff', fontWeight: 'bold' }}>
+                        <Star size={12} fill="white" />
+                        Freelance
+                      </div>
                     )}
                     {p.featured === 'project' && (
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '9px', background: 'rgba(255, 255, 255, 0.03)', color: '#a0a0c0', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                      <div className="featured-badge" style={{ background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', color: '#fff', fontWeight: 'bold' }}>
+                        <Star size={12} fill="white" />
                         Project
+                      </div>
+                    )}
+                    <img 
+                      src={p.image || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"} 
+                      alt={p.title} 
+                      className="project-img-placeholder" 
+                    />
+                  </div>
+
+                  <div className="project-info-new">
+                    <div className="project-header-new">
+                      <h3 className="project-title-new">{p.title}</h3>
+                      <span style={{ fontSize: '9px', background: 'rgba(124, 92, 255, 0.08)', color: '#a78bfa', padding: '1px 6px', borderRadius: '10px', fontWeight: 600 }}>
+                        {p.category}
                       </span>
+                    </div>
+                    <p className="project-desc-new">{p.description}</p>
+                    
+                    {techTags.length > 0 && (
+                      <div className="project-tags-new">
+                        {techTags.map((tech: any, idx: number) => (
+                          <span key={idx} className="tag-new">
+                            <i className={tech.icon || "fas fa-code"} style={{ marginRight: '4px', fontSize: '10px', color: '#a78bfa' }}></i>
+                            {tech.name}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: '#7070a0', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: 1.4 }}>
-                    {p.description}
-                  </p>
-                </div>
 
-                <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                  <button
-                    className="action-btn edit-btn"
-                    title="Edit Project"
-                    onClick={() => handleEdit(p)}
-                    style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    <Edit2 size={13} />
-                  </button>
-                  <button
-                    className="action-btn delete-btn"
-                    title="Delete Project"
-                    onClick={() => handleDelete(p.id)}
-                    style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    <Trash2 size={13} />
-                  </button>
+                  <div className="project-footer-new">
+                    {/* Admin Actions */}
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        type="button"
+                        className="action-btn edit-btn"
+                        title="Edit Project"
+                        onClick={() => handleEdit(p)}
+                        style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          padding: 0, 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          borderRadius: '8px',
+                          background: 'rgba(124, 92, 255, 0.1)',
+                          border: '1px solid rgba(124, 92, 255, 0.2)',
+                          color: '#a78bfa',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Edit2 size={13} />
+                      </button>
+                      <button
+                        type="button"
+                        className="action-btn delete-btn"
+                        title="Delete Project"
+                        onClick={() => handleDelete(p.id)}
+                        style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          padding: 0, 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          borderRadius: '8px',
+                          background: 'rgba(239, 68, 68, 0.1)',
+                          border: '1px solid rgba(239, 68, 68, 0.25)',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+
+                    {/* Public Links */}
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      {liveUrl && liveUrl !== '#' && (
+                        <a href={liveUrl} target="_blank" rel="noopener noreferrer" className="view-details-btn">
+                          Preview
+                          <ExternalLink size={14} />
+                        </a>
+                      )}
+                      {githubUrl && githubUrl !== '#' && (
+                        <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="github-btn-new">
+                          GitHub
+                          <i className="fab fa-github" style={{ fontSize: '16px' }} />
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
