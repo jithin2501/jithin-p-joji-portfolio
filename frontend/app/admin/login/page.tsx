@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
-  Trash2, RefreshCw, Sun, Moon, Volume2, ArrowLeft
+  Trash2, RefreshCw, Sun, Moon, Volume2
 } from 'lucide-react';
 import './Login.css';
 
@@ -265,10 +265,11 @@ export default function AdminLogin() {
 
   const registerDigit = (digit: string) => {
     setEnteredPin(prev => {
-      if (prev.length >= 4) return prev;
+      if (prev.length >= 6) return prev;
       const nextArr = [...prev, digit];
       
-      if (nextArr.length === 4) {
+      // Auto-submit only when the maximum length of 6 digits is reached
+      if (nextArr.length === 6) {
         setTimeout(() => verifyPasscode(nextArr), 350);
       }
       return nextArr;
@@ -492,16 +493,7 @@ export default function AdminLogin() {
         </button>
       </div>
 
-      {/* Floating Back Link */}
-      <div className="absolute top-4 left-4 z-50">
-        <button 
-          onClick={() => window.location.href = '/'}
-          className="p-3 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 rounded-2xl flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105 transition-all text-xs font-bold text-slate-400 hover:text-white"
-        >
-          <ArrowLeft size={14} />
-          Portfolio Home
-        </button>
-      </div>
+
 
       {/* System Toast layer */}
       <div className={`custom-system-toast ${toastVisible ? 'visible' : ''} ${toastType}`}>
@@ -549,24 +541,24 @@ export default function AdminLogin() {
                 <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>Dial passcode clockwise to open admin dashboard</p>
                 
                 {/* Dot PIN tracks indicators */}
-                <div className="pin-display-track" style={{ gap: '12px' }}>
-                  {[0, 1, 2, 3].map((idx) => {
+                <div className="pin-display-track" style={{ gap: '8px' }}>
+                  {[0, 1, 2, 3, 4, 5].map((idx) => {
                     const hasValue = idx < enteredPin.length;
                     return (
                       <div 
                         key={idx} 
                         className={`dot-pin ${hasValue ? 'filled' : ''}`}
                         style={{
-                          width: '36px',
-                          height: '44px',
-                          borderRadius: '10px',
+                          width: '32px',
+                          height: '40px',
+                          borderRadius: '8px',
                           border: '1.5px solid rgba(255, 255, 255, 0.08)',
                           background: hasValue ? 'rgba(99, 102, 241, 0.15)' : 'rgba(0, 0, 0, 0.3)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: '18px',
+                          fontSize: '16px',
                           fontWeight: '800',
                           color: hasValue ? '#818cf8' : '#4b5563',
                           boxShadow: hasValue ? '0 0 15px rgba(99, 102, 241, 0.25)' : 'none',
@@ -626,20 +618,41 @@ export default function AdminLogin() {
               </div>
 
               {/* Delete / Clear Actions row */}
-              <div className="action-panel-footer" style={{ padding: '0px' }}>
-                <button 
-                  onClick={handleDelete}
-                  className="action-footer-btn"
-                >
-                  <Trash2 size={14} className="text-indigo-400" />
-                  Delete
-                </button>
+              <div className="action-panel-footer" style={{ padding: '0px', gap: '10px' }}>
                 <button 
                   onClick={handleClear}
                   className="action-footer-btn"
+                  style={{ flex: 1 }}
                 >
-                  <RefreshCw size={14} className="text-indigo-400" />
+                  <RefreshCw size={13} className="text-indigo-400" />
                   Clear
+                </button>
+                <button 
+                  onClick={handleDelete}
+                  className="action-footer-btn"
+                  style={{ flex: 1 }}
+                >
+                  <Trash2 size={13} className="text-indigo-400" />
+                  Delete
+                </button>
+                <button 
+                  onClick={() => {
+                    if (enteredPin.length >= 4) {
+                      verifyPasscode(enteredPin);
+                    }
+                  }}
+                  disabled={enteredPin.length < 4}
+                  className="action-footer-btn"
+                  style={{ 
+                    flex: 1.5,
+                    background: enteredPin.length >= 4 ? 'linear-gradient(135deg, #6366f1, #4f46e5)' : 'rgba(31, 41, 55, 0.2)',
+                    color: enteredPin.length >= 4 ? '#fff' : '#4b5563',
+                    borderColor: enteredPin.length >= 4 ? '#818cf8' : 'rgba(255, 255, 255, 0.04)',
+                    cursor: enteredPin.length >= 4 ? 'pointer' : 'not-allowed',
+                    boxShadow: enteredPin.length >= 4 ? '0 0 15px rgba(99, 102, 241, 0.4)' : 'none'
+                  }}
+                >
+                  Verify
                 </button>
               </div>
             </>
