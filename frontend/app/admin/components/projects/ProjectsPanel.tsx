@@ -674,39 +674,41 @@ export default function ProjectsPanel() {
                   These extra technologies will be displayed exclusively on the project details page!
                 </small>
               </div>
+
+              {/* Narratives & Insights (Moved below Tech Stack) */}
+              <div style={{ marginTop: '30px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '24px' }}>
+                <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px' }}><BookOpen size={14} /> Narratives & Insights</h4>
+
+                <div className="form-group">
+                  <label htmlFor="detail-longdesc">Long Detailed Description *</label>
+                  <textarea
+                    id="detail-longdesc"
+                    value={detailLongDesc}
+                    onChange={e => setDetailLongDesc(e.target.value)}
+                    placeholder="Provide an extensive walkthrough of the project, architecture choice, challenge solved..."
+                    rows={5}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="detail-learned">Key Takeaways & What was learned *</label>
+                  <textarea
+                    id="detail-learned"
+                    value={detailLearned}
+                    onChange={e => setDetailLearned(e.target.value)}
+                    placeholder="What libraries or architectural patterns did you master in this project?"
+                    rows={5}
+                    required
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Details Column 2: Detailed Text Narratives */}
+            {/* Details Column 2: Key Features List Only */}
             <div className="form-sub-section">
-              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><BookOpen size={14} /> Narratives & Insights</h4>
-
-              <div className="form-group">
-                <label htmlFor="detail-longdesc">Long Detailed Description *</label>
-                <textarea
-                  id="detail-longdesc"
-                  value={detailLongDesc}
-                  onChange={e => setDetailLongDesc(e.target.value)}
-                  placeholder="Provide an extensive walkthrough of the project, architecture choice, challenge solved..."
-                  rows={5}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="detail-learned">Key Takeaways & What was learned *</label>
-                <textarea
-                  id="detail-learned"
-                  value={detailLearned}
-                  onChange={e => setDetailLearned(e.target.value)}
-                  placeholder="What libraries or architectural patterns did you master in this project?"
-                  rows={5}
-                  required
-                />
-              </div>
-
-              {/* Key Features Array Editor Section */}
-              <div className="key-features-editor-sub" style={{ marginTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '20px' }}>
-                <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div className="key-features-editor-sub" style={{ marginTop: 0 }}>
+                <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Star size={14} style={{ color: '#60a5fa' }} /> Key Features List
                 </h4>
 
@@ -771,7 +773,7 @@ export default function ProjectsPanel() {
                           </div>
                         </div>
 
-                        {/* Line 2: Visual Icon (Left) & Delete Button (Right) */}
+                        {/* Line 2: Visual Icon & Delete Button */}
                         <div style={{
                           display: 'grid',
                           gridTemplateColumns: '1fr auto',
