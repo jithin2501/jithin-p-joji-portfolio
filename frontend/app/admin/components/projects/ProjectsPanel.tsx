@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   FolderOpen, Trash2, Edit2, Save, RefreshCw, 
   Search, Star, Globe, GitBranch,
-  Award, Layers, Upload, ExternalLink, Sliders, BookOpen, FileText, Info, Check
+  Award, Layers, Upload, ExternalLink, Sliders, BookOpen, FileText, Info, Check, ChevronLeft
 } from 'lucide-react';
 import './ProjectsPanel.css';
 
@@ -404,6 +404,518 @@ export default function ProjectsPanel() {
     return <div className="admin-loading">Loading projects...</div>;
   }
 
+  if (detailsProject) {
+    return (
+      <div className="projects-admin-layout">
+        {successMessage && <div className="admin-success-toast" style={{ marginBottom: '20px' }}>{successMessage}</div>}
+        {error && <div className="admin-error" style={{ marginBottom: '20px' }}>{error}</div>}
+
+        {/* Dedicated Back Navigation Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+          <button 
+            type="button" 
+            onClick={() => setDetailsProject(null)}
+            title="Back to Projects List"
+            style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '8px',
+              width: '40px',
+              height: '40px',
+              padding: 0,
+              color: '#fff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              margin: 0
+            }}
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: '#fff' }}>
+              Project Details Editor
+            </h2>
+            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#a0a0c0' }}>
+              Dynamically customize narrative insights, key features, and image galleries for <strong style={{ color: '#7c5cff' }}>{detailsProject.title}</strong>
+            </p>
+          </div>
+        </div>
+
+        {/* Stateful Project Details Editor Form Card */}
+        <form 
+          id="project-details-section" 
+          onSubmit={handleSaveDetails} 
+          className="settings-card project-admin-form"
+          style={{ marginTop: 0, border: '1px solid rgba(59, 130, 246, 0.25)', boxShadow: '0 0 25px rgba(59, 130, 246, 0.1)' }}
+        >
+          <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <FileText size={18} className="card-header-icon" style={{ color: '#3b82f6' }} />
+              <h3 style={{ margin: 0, fontSize: '16px' }}>
+                Editing Details: <span style={{ color: '#60a5fa' }}>{detailsProject.title}</span>
+              </h3>
+            </div>
+          </div>
+
+          <div className="form-sections-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+            
+            {/* Details Column 1: Core Technical Details */}
+            <div className="form-sub-section">
+              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><Sliders size={14} /> Core Metrics & Meta</h4>
+              
+              <div className="form-grid-two">
+                <div className="form-group">
+                  <label htmlFor="detail-subtitle">Details Page Subtitle *</label>
+                  <input
+                    id="detail-subtitle"
+                    type="text"
+                    value={detailSubtitle}
+                    onChange={e => setDetailSubtitle(e.target.value)}
+                    placeholder="e.g. FULL-STACK WEB DEVELOPMENT"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="detail-role">My Role *</label>
+                  <input
+                    id="detail-role"
+                    type="text"
+                    value={detailRole}
+                    onChange={e => setDetailRole(e.target.value)}
+                    placeholder="e.g. Lead Full Stack Developer"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-grid-two">
+                <div className="form-group">
+                  <label htmlFor="detail-duration">Duration *</label>
+                  <input
+                    id="detail-duration"
+                    type="text"
+                    value={detailDuration}
+                    onChange={e => setDetailDuration(e.target.value)}
+                    placeholder="e.g. 3 Months"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="detail-completed">Completed Date *</label>
+                  <input
+                    id="detail-completed"
+                    type="text"
+                    value={detailCompleted}
+                    onChange={e => setDetailCompleted(e.target.value)}
+                    placeholder="e.g. Dec 2026"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-grid-two">
+                <div className="form-group">
+                  <label htmlFor="detail-tools">Tools & Environment *</label>
+                  <input
+                    id="detail-tools"
+                    type="text"
+                    value={detailTools}
+                    onChange={e => setDetailTools(e.target.value)}
+                    placeholder="e.g. Git, Docker, MongoDB"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="detail-methodology">Methodology *</label>
+                  <input
+                    id="detail-methodology"
+                    type="text"
+                    value={detailMethodology}
+                    onChange={e => setDetailMethodology(e.target.value)}
+                    placeholder="e.g. Agile Scrum"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}>Details Image Gallery *</label>
+                
+                {/* Images Preview Grid */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', 
+                  gap: '12px', 
+                  marginBottom: '16px',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  minHeight: '80px'
+                }}>
+                  {detailImages.map((imgUrl, index) => (
+                    <div 
+                      key={index} 
+                      style={{ 
+                        position: 'relative', 
+                        width: '80px', 
+                        height: '60px', 
+                        borderRadius: '6px', 
+                        overflow: 'hidden',
+                        border: '1px solid rgba(124, 92, 255, 0.3)',
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+                      }}
+                    >
+                      <img 
+                        src={imgUrl} 
+                        alt={`Gallery Item ${index + 1}`} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = detailImages.filter((_, idx) => idx !== index);
+                          setDetailImages(updated);
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: '2px',
+                          right: '2px',
+                          background: 'rgba(239, 68, 68, 0.85)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '18px',
+                          height: '18px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#fff',
+                          cursor: 'pointer',
+                          fontSize: '10px',
+                          padding: 0
+                        }}
+                        title="Remove Image"
+                      >
+                        <Trash2 size={10} />
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Dash Box to Upload */}
+                  <div 
+                    onClick={() => document.getElementById('details-multiple-file-input')?.click()}
+                    style={{ 
+                      width: '80px', 
+                      height: '60px', 
+                      borderRadius: '6px', 
+                      border: '1.5px dashed rgba(124, 92, 255, 0.4)', 
+                      background: 'rgba(124, 92, 255, 0.03)',
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      cursor: 'pointer',
+                      color: '#a78bfa',
+                      fontSize: '10px',
+                      gap: '4px',
+                      transition: 'all 0.25s ease'
+                    }}
+                    className="gallery-upload-dash-box"
+                    title="Upload Multiple Images"
+                  >
+                    <Upload size={14} style={{ color: '#7c5cff' }} />
+                    <span>Upload</span>
+                  </div>
+                </div>
+
+                {/* Multiple Hidden File Input */}
+                <input
+                  id="details-multiple-file-input"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={e => {
+                    const files = e.target.files;
+                    if (!files || files.length === 0) return;
+                    
+                    const promises = Array.from(files).map(file => {
+                      return new Promise<string>((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                          if (typeof reader.result === 'string') {
+                            resolve(reader.result);
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      });
+                    });
+
+                    Promise.all(promises).then(base64Images => {
+                      setDetailImages([...detailImages, ...base64Images]);
+                    });
+                  }}
+                />
+              </div>
+
+              <div className="form-group" style={{ marginTop: '20px' }}>
+                <label htmlFor="detail-tech-stack">Details Tech Stack (comma separated extra technologies)</label>
+                <input
+                  id="detail-tech-stack"
+                  type="text"
+                  value={detailTechStr}
+                  onChange={e => setDetailTechStr(e.target.value)}
+                  placeholder="e.g. Redux Toolkit, Socket.io, Framer Motion, Axios"
+                />
+                <small style={{ color: '#7070a0', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                  These extra technologies will be displayed exclusively on the project details page!
+                </small>
+              </div>
+            </div>
+
+            {/* Details Column 2: Detailed Text Narratives */}
+            <div className="form-sub-section">
+              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><BookOpen size={14} /> Narratives & Insights</h4>
+
+              <div className="form-group">
+                <label htmlFor="detail-longdesc">Long Detailed Description *</label>
+                <textarea
+                  id="detail-longdesc"
+                  value={detailLongDesc}
+                  onChange={e => setDetailLongDesc(e.target.value)}
+                  placeholder="Provide an extensive walkthrough of the project, architecture choice, challenge solved..."
+                  rows={5}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="detail-learned">Key Takeaways & What was learned *</label>
+                <textarea
+                  id="detail-learned"
+                  value={detailLearned}
+                  onChange={e => setDetailLearned(e.target.value)}
+                  placeholder="What libraries or architectural patterns did you master in this project?"
+                  rows={5}
+                  required
+                />
+              </div>
+
+              {/* Key Features Array Editor Section */}
+              <div className="key-features-editor-sub" style={{ marginTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '20px' }}>
+                <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Star size={14} style={{ color: '#60a5fa' }} /> Key Features List
+                </h4>
+
+                {detailFeatures.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '30px', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '10px', color: '#7070a0', marginBottom: '20px' }}>
+                    No features added yet. Click "+ Add New Key Feature Item" below to build your dynamic features section!
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+                    {detailFeatures.map((feat, index) => (
+                      <div 
+                        key={index} 
+                        style={{ 
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '12px', 
+                          background: 'rgba(255, 255, 255, 0.02)', 
+                          border: '1px solid rgba(255, 255, 255, 0.05)', 
+                          padding: '16px', 
+                          borderRadius: '10px'
+                        }}
+                      >
+                        {/* Line 1: Title & Description */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 2fr',
+                          gap: '10px',
+                          alignItems: 'center'
+                        }}>
+                          {/* Feature Title */}
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Feature Title *</label>
+                            <input
+                              type="text"
+                              value={feat.title}
+                              onChange={e => {
+                                const updated = [...detailFeatures];
+                                updated[index] = { ...updated[index], title: e.target.value };
+                                setDetailFeatures(updated);
+                              }}
+                              placeholder="e.g. Real-time Chats"
+                              required
+                              style={{ padding: '8px 10px', fontSize: '13px' }}
+                            />
+                          </div>
+
+                          {/* Feature Description */}
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Description *</label>
+                            <input
+                              type="text"
+                              value={feat.desc}
+                              onChange={e => {
+                                const updated = [...detailFeatures];
+                                updated[index] = { ...updated[index], desc: e.target.value };
+                                setDetailFeatures(updated);
+                              }}
+                              placeholder="e.g. Instant communication powered by Socket.io"
+                              required
+                              style={{ padding: '8px 10px', fontSize: '13px' }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Line 2: Visual Icon (Left) & Delete Button (Right) */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr auto',
+                          gap: '12px',
+                          alignItems: 'flex-end',
+                          marginTop: '4px'
+                        }}>
+                          {/* Feature Icon Name Selection */}
+                          <div className="form-group" style={{ margin: 0 }}>
+                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Visual Icon *</label>
+                            <select
+                              value={feat.icon}
+                              onChange={e => {
+                                const updated = [...detailFeatures];
+                                updated[index] = { ...updated[index], icon: e.target.value };
+                                setDetailFeatures(updated);
+                              }}
+                              style={{
+                                width: '100%',
+                                background: '#0a0a1f',
+                                border: '1px solid rgba(124, 92, 255, 0.15)',
+                                borderRadius: '8px',
+                                padding: '8px 10px',
+                                color: '#fff',
+                                fontSize: '13px',
+                                outline: 'none',
+                                height: '37px'
+                              }}
+                            >
+                              <option value="Zap" style={{ background: '#0e0e28' }}>Zap (Speed)</option>
+                              <option value="Layout" style={{ background: '#0e0e28' }}>Layout (UI)</option>
+                              <option value="Users" style={{ background: '#0e0e28' }}>Users (Collaboration)</option>
+                              <option value="Rocket" style={{ background: '#0e0e28' }}>Rocket (Deploy)</option>
+                              <option value="Smartphone" style={{ background: '#0e0e28' }}>Smartphone (Mobile)</option>
+                              <option value="BarChart3" style={{ background: '#0e0e28' }}>BarChart (Analytics)</option>
+                              <option value="CheckCircle2" style={{ background: '#0e0e28' }}>CheckCircle (Tasks)</option>
+                              <option value="Sparkles" style={{ background: '#0e0e28' }}>Sparkles (Premium)</option>
+                              <option value="Settings" style={{ background: '#0e0e28' }}>Settings (Control)</option>
+                              <option value="BookOpen" style={{ background: '#0e0e28' }}>BookOpen (Docs)</option>
+                              <option value="Info" style={{ background: '#0e0e28' }}>Info (Details)</option>
+                              <option value="Code2" style={{ background: '#0e0e28' }}>Code (Stack)</option>
+                            </select>
+                          </div>
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = detailFeatures.filter((_, idx) => idx !== index);
+                              setDetailFeatures(updated);
+                            }}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '10px 16px',
+                              background: 'rgba(239, 68, 68, 0.08)',
+                              border: '1px solid rgba(239, 68, 68, 0.25)',
+                              borderRadius: '8px',
+                              color: '#f87171',
+                              cursor: 'pointer',
+                              fontSize: '13px',
+                              fontWeight: 500,
+                              height: '37px',
+                              transition: 'all 0.2s ease',
+                              width: 'auto',
+                              margin: 0
+                            }}
+                          >
+                            <Trash2 size={13} style={{ color: '#f87171' }} />
+                            Remove Feature
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Add Feature Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDetailFeatures([...detailFeatures, { title: '', desc: '', icon: 'Zap' }]);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 20px',
+                    background: 'rgba(124, 92, 255, 0.12)',
+                    border: '1px dashed rgba(124, 92, 255, 0.3)',
+                    borderRadius: '8px',
+                    color: '#a78bfa',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    width: 'auto',
+                    margin: 0
+                  }}
+                >
+                  + Add New Key Feature Item
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Form Actions */}
+          <div className="form-actions-row" style={{ marginTop: '30px', display: 'flex', gap: '12px' }}>
+            <button
+              type="button"
+              className="remove-action-btn"
+              onClick={() => setDetailsProject(null)}
+              style={{ padding: '12px 24px', width: 'auto', margin: 0 }}
+            >
+              Cancel Edit
+            </button>
+            <button
+              type="submit"
+              className="save-settings-btn"
+              disabled={saving}
+              style={{ flex: 1, justifyContent: 'center', padding: '12px 24px', background: '#3b82f6', borderColor: 'rgba(59, 130, 246, 0.4)', boxShadow: '0 0 15px rgba(59, 130, 246, 0.2)' }}
+            >
+              {saving ? (
+                <>
+                  <RefreshCw size={16} className="spin-icon" /> Saving Details...
+                </>
+              ) : (
+                <>
+                  <Save size={16} /> Save Project Details
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  if (loading && projects.length === 0) {
+    return <div className="admin-loading">Loading projects...</div>;
+  }
+
   return (
     <div className="projects-admin-layout">
       {successMessage && <div className="admin-success-toast" style={{ marginBottom: '20px' }}>{successMessage}</div>}
@@ -670,480 +1182,7 @@ export default function ProjectsPanel() {
         </div>
       </form>
 
-      {/* Stateful Project Details Editor Form Card */}
-      {detailsProject && (
-        <form 
-          id="project-details-section" 
-          onSubmit={handleSaveDetails} 
-          className="settings-card project-admin-form"
-          style={{ marginTop: '30px', border: '1px solid rgba(59, 130, 246, 0.25)', boxShadow: '0 0 25px rgba(59, 130, 246, 0.1)' }}
-        >
-          <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FileText size={18} className="card-header-icon" style={{ color: '#3b82f6' }} />
-              <h3 style={{ margin: 0, fontSize: '16px' }}>
-                Project Details Editor: <span style={{ color: '#60a5fa' }}>{detailsProject.title}</span>
-              </h3>
-            </div>
-            <button 
-              type="button" 
-              onClick={() => setDetailsProject(null)} 
-              className="remove-action-btn"
-              style={{ margin: 0, padding: '4px 12px', fontSize: '12px', width: 'auto' }}
-            >
-              Close
-            </button>
-          </div>
 
-          <div className="form-sections-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
-            
-            {/* Details Column 1: Core Technical Details */}
-            <div className="form-sub-section">
-              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><Sliders size={14} /> Core Metrics & Meta</h4>
-              
-              <div className="form-grid-two">
-                <div className="form-group">
-                  <label htmlFor="detail-subtitle">Details Page Subtitle *</label>
-                  <input
-                    id="detail-subtitle"
-                    type="text"
-                    value={detailSubtitle}
-                    onChange={e => setDetailSubtitle(e.target.value)}
-                    placeholder="e.g. FULL-STACK WEB DEVELOPMENT"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="detail-role">My Role *</label>
-                  <input
-                    id="detail-role"
-                    type="text"
-                    value={detailRole}
-                    onChange={e => setDetailRole(e.target.value)}
-                    placeholder="e.g. Lead Full Stack Developer"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-grid-two">
-                <div className="form-group">
-                  <label htmlFor="detail-duration">Duration *</label>
-                  <input
-                    id="detail-duration"
-                    type="text"
-                    value={detailDuration}
-                    onChange={e => setDetailDuration(e.target.value)}
-                    placeholder="e.g. 3 Months"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="detail-completed">Completed Date *</label>
-                  <input
-                    id="detail-completed"
-                    type="text"
-                    value={detailCompleted}
-                    onChange={e => setDetailCompleted(e.target.value)}
-                    placeholder="e.g. Dec 2026"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-grid-two">
-                <div className="form-group">
-                  <label htmlFor="detail-tools">Tools & Environment *</label>
-                  <input
-                    id="detail-tools"
-                    type="text"
-                    value={detailTools}
-                    onChange={e => setDetailTools(e.target.value)}
-                    placeholder="e.g. Git, Docker, MongoDB"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="detail-methodology">Methodology *</label>
-                  <input
-                    id="detail-methodology"
-                    type="text"
-                    value={detailMethodology}
-                    onChange={e => setDetailMethodology(e.target.value)}
-                    placeholder="e.g. Agile Scrum"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}>Details Image Gallery *</label>
-                
-                {/* Images Preview Grid */}
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', 
-                  gap: '12px', 
-                  marginBottom: '16px',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  minHeight: '80px'
-                }}>
-                  {detailImages.map((imgUrl, index) => (
-                    <div 
-                      key={index} 
-                      style={{ 
-                        position: 'relative', 
-                        width: '80px', 
-                        height: '60px', 
-                        borderRadius: '6px', 
-                        overflow: 'hidden',
-                        border: '1px solid rgba(124, 92, 255, 0.3)',
-                        boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
-                      }}
-                    >
-                      <img 
-                        src={imgUrl} 
-                        alt={`Gallery Item ${index + 1}`} 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = detailImages.filter((_, idx) => idx !== index);
-                          setDetailImages(updated);
-                        }}
-                        style={{
-                          position: 'absolute',
-                          top: '2px',
-                          right: '2px',
-                          background: 'rgba(239, 68, 68, 0.85)',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '18px',
-                          height: '18px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#fff',
-                          cursor: 'pointer',
-                          fontSize: '10px',
-                          padding: 0
-                        }}
-                        title="Remove Image"
-                      >
-                        <Trash2 size={10} />
-                      </button>
-                    </div>
-                  ))}
-
-                  {/* Dash Box to Upload */}
-                  <div 
-                    onClick={() => document.getElementById('details-multiple-file-input')?.click()}
-                    style={{ 
-                      width: '80px', 
-                      height: '60px', 
-                      borderRadius: '6px', 
-                      border: '1.5px dashed rgba(124, 92, 255, 0.4)', 
-                      background: 'rgba(124, 92, 255, 0.03)',
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      cursor: 'pointer',
-                      color: '#a78bfa',
-                      fontSize: '10px',
-                      gap: '4px',
-                      transition: 'all 0.25s ease'
-                    }}
-                    className="gallery-upload-dash-box"
-                    title="Upload Multiple Images"
-                  >
-                    <Upload size={14} style={{ color: '#7c5cff' }} />
-                    <span>Upload</span>
-                  </div>
-                </div>
-
-                {/* Multiple Hidden File Input */}
-                <input
-                  id="details-multiple-file-input"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  onChange={e => {
-                    const files = e.target.files;
-                    if (!files || files.length === 0) return;
-                    
-                    const promises = Array.from(files).map(file => {
-                      return new Promise<string>((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                          if (typeof reader.result === 'string') {
-                            resolve(reader.result);
-                          }
-                        };
-                        reader.readAsDataURL(file);
-                      });
-                    });
-
-                    Promise.all(promises).then(base64Images => {
-                      setDetailImages([...detailImages, ...base64Images]);
-                    });
-                  }}
-                />
-              </div>
-
-              <div className="form-group" style={{ marginTop: '20px' }}>
-                <label htmlFor="detail-tech-stack">Details Tech Stack (comma separated extra technologies)</label>
-                <input
-                  id="detail-tech-stack"
-                  type="text"
-                  value={detailTechStr}
-                  onChange={e => setDetailTechStr(e.target.value)}
-                  placeholder="e.g. Redux Toolkit, Socket.io, Framer Motion, Axios"
-                />
-                <small style={{ color: '#7070a0', fontSize: '11px', marginTop: '4px', display: 'block' }}>
-                  These extra technologies will be displayed exclusively on the project details page!
-                </small>
-              </div>
-            </div>
-
-            {/* Details Column 2: Detailed Text Narratives */}
-            <div className="form-sub-section">
-              <h4 className="section-subtitle" style={{ color: '#60a5fa', borderBottom: '1px solid rgba(59, 130, 246, 0.15)', paddingBottom: '8px', marginBottom: '20px' }}><BookOpen size={14} /> Narratives & Insights</h4>
-
-              <div className="form-group">
-                <label htmlFor="detail-longdesc">Long Detailed Description *</label>
-                <textarea
-                  id="detail-longdesc"
-                  value={detailLongDesc}
-                  onChange={e => setDetailLongDesc(e.target.value)}
-                  placeholder="Provide an extensive walkthrough of the project, architecture choice, challenge solved..."
-                  rows={5}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="detail-learned">Key Takeaways & What was learned *</label>
-                <textarea
-                  id="detail-learned"
-                  value={detailLearned}
-                  onChange={e => setDetailLearned(e.target.value)}
-                  placeholder="What libraries or architectural patterns did you master in this project?"
-                  rows={5}
-                  required
-                />
-              </div>
-
-              {/* Key Features Array Editor Section (Moved inside Column 2 below Key Takeaways) */}
-              <div className="key-features-editor-sub" style={{ marginTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '20px' }}>
-                <h4 className="section-subtitle" style={{ color: '#60a5fa', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Star size={14} style={{ color: '#60a5fa' }} /> Key Features List
-                </h4>
-
-                {detailFeatures.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '30px', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '10px', color: '#7070a0', marginBottom: '20px' }}>
-                    No features added yet. Click "+ Add New Key Feature Item" below to build your dynamic features section!
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
-                    {detailFeatures.map((feat, index) => (
-                      <div 
-                        key={index} 
-                        style={{ 
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '12px', 
-                          background: 'rgba(255, 255, 255, 0.02)', 
-                          border: '1px solid rgba(255, 255, 255, 0.05)', 
-                          padding: '16px', 
-                          borderRadius: '10px'
-                        }}
-                      >
-                        {/* Line 1: Title & Description */}
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 2fr',
-                          gap: '10px',
-                          alignItems: 'center'
-                        }}>
-                          {/* Feature Title */}
-                          <div className="form-group" style={{ margin: 0 }}>
-                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Feature Title *</label>
-                            <input
-                              type="text"
-                              value={feat.title}
-                              onChange={e => {
-                                const updated = [...detailFeatures];
-                                updated[index] = { ...updated[index], title: e.target.value };
-                                setDetailFeatures(updated);
-                              }}
-                              placeholder="e.g. Real-time Chats"
-                              required
-                              style={{ padding: '8px 10px', fontSize: '13px' }}
-                            />
-                          </div>
-
-                          {/* Feature Description */}
-                          <div className="form-group" style={{ margin: 0 }}>
-                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Description *</label>
-                            <input
-                              type="text"
-                              value={feat.desc}
-                              onChange={e => {
-                                const updated = [...detailFeatures];
-                                updated[index] = { ...updated[index], desc: e.target.value };
-                                setDetailFeatures(updated);
-                              }}
-                              placeholder="e.g. Instant communication powered by Socket.io"
-                              required
-                              style={{ padding: '8px 10px', fontSize: '13px' }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Line 2: Visual Icon (Left) & Delete Button (Right) */}
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr auto',
-                          gap: '12px',
-                          alignItems: 'flex-end',
-                          marginTop: '4px'
-                        }}>
-                          {/* Feature Icon Name Selection */}
-                          <div className="form-group" style={{ margin: 0 }}>
-                            <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Visual Icon *</label>
-                            <select
-                              value={feat.icon}
-                              onChange={e => {
-                                const updated = [...detailFeatures];
-                                updated[index] = { ...updated[index], icon: e.target.value };
-                                setDetailFeatures(updated);
-                              }}
-                              style={{
-                                width: '100%',
-                                background: '#0a0a1f',
-                                border: '1px solid rgba(124, 92, 255, 0.15)',
-                                borderRadius: '8px',
-                                padding: '8px 10px',
-                                color: '#fff',
-                                fontSize: '13px',
-                                outline: 'none',
-                                height: '37px'
-                              }}
-                            >
-                              <option value="Zap" style={{ background: '#0e0e28' }}>Zap (Speed)</option>
-                              <option value="Layout" style={{ background: '#0e0e28' }}>Layout (UI)</option>
-                              <option value="Users" style={{ background: '#0e0e28' }}>Users (Collaboration)</option>
-                              <option value="Rocket" style={{ background: '#0e0e28' }}>Rocket (Deploy)</option>
-                              <option value="Smartphone" style={{ background: '#0e0e28' }}>Smartphone (Mobile)</option>
-                              <option value="BarChart3" style={{ background: '#0e0e28' }}>BarChart (Analytics)</option>
-                              <option value="CheckCircle2" style={{ background: '#0e0e28' }}>CheckCircle (Tasks)</option>
-                              <option value="Sparkles" style={{ background: '#0e0e28' }}>Sparkles (Premium)</option>
-                              <option value="Settings" style={{ background: '#0e0e28' }}>Settings (Control)</option>
-                              <option value="BookOpen" style={{ background: '#0e0e28' }}>BookOpen (Docs)</option>
-                              <option value="Info" style={{ background: '#0e0e28' }}>Info (Details)</option>
-                              <option value="Code2" style={{ background: '#0e0e28' }}>Code (Stack)</option>
-                            </select>
-                          </div>
-
-                          {/* Delete Button */}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const updated = detailFeatures.filter((_, idx) => idx !== index);
-                              setDetailFeatures(updated);
-                            }}
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              padding: '10px 16px',
-                              background: 'rgba(239, 68, 68, 0.08)',
-                              border: '1px solid rgba(239, 68, 68, 0.25)',
-                              borderRadius: '8px',
-                              color: '#f87171',
-                              cursor: 'pointer',
-                              fontSize: '13px',
-                              fontWeight: 500,
-                              height: '37px',
-                              transition: 'all 0.2s ease',
-                              width: 'auto',
-                              margin: 0
-                            }}
-                          >
-                            <Trash2 size={13} style={{ color: '#f87171' }} />
-                            Remove Feature
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Add Feature Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDetailFeatures([...detailFeatures, { title: '', desc: '', icon: 'Zap' }]);
-                  }}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 20px',
-                    background: 'rgba(124, 92, 255, 0.12)',
-                    border: '1px dashed rgba(124, 92, 255, 0.3)',
-                    borderRadius: '8px',
-                    color: '#a78bfa',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    width: 'auto',
-                    margin: 0
-                  }}
-                >
-                  + Add New Key Feature Item
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Form Actions */}
-          <div className="form-actions-row" style={{ marginTop: '30px', display: 'flex', gap: '12px' }}>
-            <button
-              type="button"
-              className="remove-action-btn"
-              onClick={() => setDetailsProject(null)}
-              style={{ padding: '12px 24px', width: 'auto', margin: 0 }}
-            >
-              Cancel Edit
-            </button>
-            <button
-              type="submit"
-              className="save-settings-btn"
-              disabled={saving}
-              style={{ flex: 1, justifyContent: 'center', padding: '12px 24px', background: '#3b82f6', borderColor: 'rgba(59, 130, 246, 0.4)', boxShadow: '0 0 15px rgba(59, 130, 246, 0.2)' }}
-            >
-              {saving ? (
-                <>
-                  <RefreshCw size={16} className="spin-icon" /> Saving Details...
-                </>
-              ) : (
-                <>
-                  <Save size={16} /> Save Project Details
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      )}
 
       {/* Projects List Container */}
       <div className="settings-card stored-projects-card" style={{ marginTop: '30px' }}>
