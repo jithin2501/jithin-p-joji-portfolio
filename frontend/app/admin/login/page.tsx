@@ -26,6 +26,7 @@ export default function AdminLogin() {
   // Custom Toast layer
   const [toastMsg, setToastMsg] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
+  const [toastType, setToastType] = useState<'success' | 'error' | 'info'>('info');
 
   // Audio Context Ref
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -237,8 +238,9 @@ export default function AdminLogin() {
       
       if (res.ok) {
         const data = await res.json();
+        setToastType('success');
         playSuccessChime();
-        showToast("🔓 Access Granted!");
+        showToast("Access Granted!");
         
         // Store JWT token and authentication status in sessionStorage
         sessionStorage.setItem('isAdminAuthenticated', 'true');
@@ -248,14 +250,15 @@ export default function AdminLogin() {
           router.push('/admin');
         }, 1000);
       } else {
-        const errData = await res.json().catch(() => ({ detail: "Incorrect passcode" }));
+        setToastType('error');
         playErrorBuzzer();
-        showToast(`❌ ${errData.detail || "Incorrect PIN!"}`);
+        showToast("Incorrect PIN!");
         setEnteredPin([]);
       }
     } catch (err) {
+      setToastType('error');
       playErrorBuzzer();
-      showToast("❌ Backend Connection Failed!");
+      showToast("Connection Failed!");
       setEnteredPin([]);
     }
   };
@@ -501,7 +504,7 @@ export default function AdminLogin() {
       </div>
 
       {/* System Toast layer */}
-      <div className={`custom-system-toast ${toastVisible ? 'visible' : ''}`}>
+      <div className={`custom-system-toast ${toastVisible ? 'visible' : ''} ${toastType}`}>
         {toastMsg}
       </div>
 
