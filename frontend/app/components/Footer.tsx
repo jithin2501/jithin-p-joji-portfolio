@@ -89,7 +89,7 @@ const Footer = () => {
                                 clickCount.current += 1;
                                 
                                 if (clickCount.current === 3) {
-                                    window.location.href = '/admin';
+                                    window.location.href = '/admin/login';
                                     clickCount.current = 0;
                                 }
 
@@ -100,9 +100,9 @@ const Footer = () => {
                             }}
                             style={{ cursor: 'default', userSelect: 'none', fontWeight: 'inherit', color: 'inherit' }}
                         >
-                            Jithin
-                        </span>{' '}
-                        P Joji. All rights reserved.
+                            Jithin P Joji
+                        </span>
+                        . All rights reserved.
                     </div>
                 </div>
             </div>

@@ -1,0 +1,475 @@
+/* Neumorphic Rotary Dial Passcode Stylesheet */
+
+.login-page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  background: #030712;
+  color: #f3f4f6;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Ambient glow circles */
+.ambient-glow-1 {
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 60%;
+  height: 60%;
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+}
+
+.ambient-glow-2 {
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 60%;
+  height: 60%;
+  background: rgba(168, 85, 247, 0.08);
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+}
+
+/* Neumorphic dial buttons styling */
+.dial-button-light {
+  box-shadow: 3px 3px 6px #d1d5db, -3px -3px 6px #ffffff;
+}
+
+.dial-button-dark {
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.1), 3px 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Wheel rotation animation rules */
+.rotary-wheel-elem {
+  transition: transform 0.1s linear;
+  user-select: none;
+  touch-action: none;
+}
+
+.rotary-wheel-elem.returning {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Custom scrollbars inside terminal */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+/* Neumorphic glass card */
+.security-main-card {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(24px);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+  min-height: 620px;
+}
+
+/* Header elements */
+.security-card-header {
+  padding: 24px 24px 12px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.security-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.security-badge-pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulse-dot-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #6366f1;
+  box-shadow: 0 0 10px #6366f1;
+  animation: pulseGrad 1.8s infinite alternate;
+}
+
+.security-badge-text {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8888aa;
+}
+
+.security-clock-feed {
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #8888aa;
+}
+
+/* Switch tab row */
+.tab-selection-row {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+.tab-select-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: #8888aa;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-select-btn.active {
+  background: #1f2937;
+  color: #818cf8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Display PIN Dots */
+.pin-display-track {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.dot-pin {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dot-pin.filled {
+  background: #6366f1;
+  transform: scale(1.2);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.8);
+  border-color: #818cf8;
+}
+
+/* Rotating Wheel Housing */
+.rotary-wheel-housing {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 24px auto;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.6), 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.accent-ring-dash {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.rotary-wheel-body {
+  width: 245px;
+  height: 245px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  cursor: grab;
+  z-index: 20;
+}
+
+.rotary-wheel-body:active {
+  cursor: grabbing;
+}
+
+/* Center metal core */
+.metallic-center-core {
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  right: 80px;
+  bottom: 80px;
+  border-radius: 50%;
+  background: #030712;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 30;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.metallic-inner-pulse {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+}
+
+.inner-glow-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.7);
+  animation: pulseGrad 1.2s infinite alternate;
+}
+
+/* Metal Stopper */
+.metal-stopper-anchor {
+  position: absolute;
+  z-index: 40;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4b5563, #1f2937);
+  border: 1px solid #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+}
+
+.metal-stopper-anchor.highlighted {
+  transform: scale(1.15);
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border-color: #818cf8;
+}
+
+.stopper-fork-pointer {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  width: 18px;
+  height: 4px;
+  background: #374151;
+  border-radius: 2px;
+  transform-origin: right;
+  transform: rotate(15deg);
+}
+
+/* Dial Button Digit circles */
+.digit-circle-node {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f3f4f6;
+  cursor: pointer;
+  z-index: 30;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.digit-circle-node:hover {
+  background: #374151;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.digit-circle-node:active {
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+/* Action button row */
+.action-panel-footer {
+  display: flex;
+  gap: 16px;
+  padding: 0 24px 24px 24px;
+}
+
+.action-footer-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(31, 41, 55, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #9ca3af;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-footer-btn:hover {
+  background: rgba(31, 41, 55, 0.8);
+  color: #fff;
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.action-footer-btn:active {
+  transform: scale(0.95);
+}
+
+/* Custom Notification Toast */
+.custom-system-toast {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  background: rgba(17, 24, 39, 0.95);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #fff;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-10px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.custom-system-toast.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Diagnostic Feed Terminal styles */
+.diagnostic-terminal-box {
+  background: rgba(3, 7, 18, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 140px;
+}
+
+.terminal-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 6px;
+}
+
+.terminal-header-title {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #8888aa;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.diagnostic-pulse-green {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulseGrad 1s infinite alternate;
+}
+
+.terminal-clear-action {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #4b5563;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.terminal-clear-action:hover {
+  color: #d1d5db;
+}
+
+.terminal-logs-scroll {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 90px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.log-item-row {
+  display: flex;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.log-item-time {
+  color: #4b5563;
+  flex-shrink: 0;
+}
+
+/* Animations */
+@keyframes pulseGrad {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}

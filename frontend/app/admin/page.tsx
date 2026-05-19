@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, MessageSquare, Sliders, FileText, Image as ImageIcon, Briefcase, GraduationCap, Code, FolderOpen, Activity } from 'lucide-react';
 import MessagesPanel from './components/messages/MessagesPanel';
 import SettingsPanel from './components/settings/SettingsPanel';
@@ -22,6 +22,48 @@ import './components/analytics/AnalyticsPanel.css';
 
 export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects' | 'analytics'>('messages');
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+    useEffect(() => {
+        const isAuth = sessionStorage.getItem('isAdminAuthenticated');
+        if (isAuth !== 'true') {
+            window.location.href = '/admin/login';
+        } else {
+            setIsCheckingAuth(false);
+        }
+    }, []);
+
+    if (isCheckingAuth) {
+        return (
+            <div style={{
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#030712',
+                color: '#fff',
+                fontFamily: 'sans-serif',
+                gap: '16px'
+            }}>
+                <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    border: '3px solid rgba(255,255,255,0.05)',
+                    borderTopColor: '#6366f1',
+                    animation: 'spin 1s linear infinite'
+                }}></div>
+                <span style={{ fontSize: '13px', color: '#8888aa', fontWeight: 600 }}>Verifying Credentials...</span>
+                <style>{`
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+                `}</style>
+            </div>
+        );
+    }
 
     return (
         <div className="admin-layout">
@@ -96,8 +138,11 @@ export default function AdminPanel() {
                         Analytics
                     </button>
                 </nav>
-                <div className="sidebar-footer">
-                    <button className="logout-btn" onClick={() => window.location.href = '/'}>
+                 <div className="sidebar-footer">
+                    <button className="logout-btn" onClick={() => {
+                        sessionStorage.removeItem('isAdminAuthenticated');
+                        window.location.href = '/';
+                    }}>
                         <Shield size={18} />
                         Logout
                     </button>
