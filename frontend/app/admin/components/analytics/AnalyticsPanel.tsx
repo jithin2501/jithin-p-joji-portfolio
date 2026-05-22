@@ -18,7 +18,6 @@ interface VisitRecord {
   userAgent: string;
   createdAt: string;
 }
-
 interface GroupedVisit {
   id: string;
   userId: string;
@@ -31,6 +30,8 @@ interface GroupedVisit {
   createdAt: string;
   viewsCount: number;
   paths: { path: string; count: number; lastVisitedAt: string }[];
+  allVisits: VisitRecord[];
+  customId: string;
 }
 
 interface StatsSummary {
@@ -53,6 +54,7 @@ export default function AnalyticsPanel() {
   const [successMsg, setSuccessMsg] = useState('');
   const [error, setError] = useState('');
   const [activeView, setActiveView] = useState<'stream' | 'map'>('stream');
+  const [selectedVisitor, setSelectedVisitor] = useState<GroupedVisit | null>(null);
   
   const mapInstanceRef = useRef<any>(null);
   const mapContainerId = 'analytics-leaflet-map';
@@ -73,12 +75,15 @@ export default function AnalyticsPanel() {
           userAgent: v.userAgent,
           createdAt: v.createdAt,
           viewsCount: 0,
-          paths: []
+          paths: [],
+          allVisits: [],
+          customId: ''
         };
       }
       
       const group = ipGroups[v.ip];
       group.viewsCount += 1;
+      group.allVisits.push(v);
       
       const pathEntry = group.paths.find(p => p.path === v.path);
       if (pathEntry) {
@@ -88,7 +93,14 @@ export default function AnalyticsPanel() {
       }
     });
     
-    return Object.values(ipGroups);
+    const list = Object.values(ipGroups);
+    const N = list.length;
+    list.forEach((v, index) => {
+      const serialNumber = N - index;
+      v.customId = `US${String(serialNumber).padStart(3, '0')}`;
+    });
+    
+    return list;
   }, [visits]);
 
   const fetchData = async (showRefresh = false) => {
@@ -162,7 +174,7 @@ export default function AnalyticsPanel() {
         const customPopup = `
           <div class="map-popup-card">
             <h4>${v.city !== 'Unknown' ? v.city : 'Local Visitor'}, ${v.country}</h4>
-            <p><strong>User ID:</strong> <span class="badge-id">${v.userId.substring(0, 12)}...</span></p>
+            <p><strong>Visitor ID:</strong> <span class="badge-id">${v.customId}</span></p>
             <p><strong>IP Addr:</strong> ${v.ip}</p>
             <p><strong>Views Count:</strong> <span class="badge-views">${v.viewsCount} visits</span></p>
             <p style="margin-top: 8px;"><strong>Paths Visited:</strong></p>
@@ -448,14 +460,15 @@ export default function AnalyticsPanel() {
                           <th>Paths Visited</th>
                           <th>Latest Activity</th>
                           <th>Browser / OS</th>
+                          <th style={{ textAlign: 'center' }}>Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         {groupedVisits.map((v) => (
                           <tr key={v.id}>
                             <td>
-                              <span className="visitor-badge-code" title={v.userId}>
-                                {v.userId.substring(0, 16)}...
+                              <span className="visitor-badge-code" title={`User ID: ${v.userId}`}>
+                                {v.customId}
                               </span>
                             </td>
                             <td>
@@ -496,6 +509,16 @@ export default function AnalyticsPanel() {
                                 {getBrowserDetails(v.userAgent)}
                               </span>
                             </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <button 
+                                type="button" 
+                                className="view-details-action-btn"
+                                onClick={() => setSelectedVisitor(v)}
+                              >
+                                <Eye size={12} />
+                                View Details
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -506,6 +529,58 @@ export default function AnalyticsPanel() {
             </>
           )}
         </>
+      )}
+
+      {selectedVisitor && (
+        <div className="visitor-modal-overlay" onClick={() => setSelectedVisitor(null)}>
+          <div className="visitor-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h3>Visitor Details ({selectedVisitor.customId})</h3>
+                <code className="modal-ip-subtitle">{selectedVisitor.ip}</code>
+              </div>
+              <button className="close-modal-btn" onClick={() => setSelectedVisitor(null)}>×</button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="visitor-meta-summary">
+                <div className="meta-item">
+                  <span className="meta-label">Location</span>
+                  <span className="meta-value">{selectedVisitor.city !== 'Unknown' ? selectedVisitor.city : 'Local Area'}, {selectedVisitor.country}</span>
+                </div>
+                <div className="meta-item">
+                  <span className="meta-label">Visitor ID</span>
+                  <span className="meta-value monospace" title={`User ID: ${selectedVisitor.userId}`}>
+                    {selectedVisitor.customId}
+                  </span>
+                </div>
+                <div className="meta-item">
+                  <span className="meta-label">Total Visits</span>
+                  <span className="meta-value badge-views">{selectedVisitor.viewsCount} views</span>
+                </div>
+              </div>
+
+              <h4 className="timeline-title">Activity Timeline</h4>
+              <div className="activity-timeline">
+                {selectedVisitor.allVisits.map((visit) => (
+                  <div key={visit.id} className="timeline-item">
+                    <div className="timeline-badge"></div>
+                    <div className="timeline-content">
+                      <div className="timeline-header">
+                        <span className="path-badge-badge">{visit.path}</span>
+                        <span className="timeline-time">{new Date(visit.createdAt).toLocaleString()}</span>
+                      </div>
+                      <div className="timeline-ua-details">
+                        <Laptop size={12} />
+                        <span>{visit.userAgent}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
