@@ -20,7 +20,7 @@ export default function MessagesPanel() {
     const fetchContacts = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/contacts');
+            const response = await fetch('http://localhost:8080/api/contacts/');
             if (!response.ok) throw new Error('Failed to fetch contacts');
             const data = await response.json();
             setContacts(data);

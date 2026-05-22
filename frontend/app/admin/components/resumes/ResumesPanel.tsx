@@ -26,7 +26,7 @@ export default function ResumesPanel() {
 
     const fetchResumes = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/resumes');
+            const response = await fetch('http://localhost:8080/api/resumes/');
             if (!response.ok) throw new Error('Failed to fetch resumes');
             const data = await response.json();
             setResumes(data);
@@ -83,7 +83,7 @@ export default function ResumesPanel() {
         setSuccessMessage(null);
 
         try {
-            const response = await fetch('http://localhost:8080/api/resumes', {
+            const response = await fetch('http://localhost:8080/api/resumes/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name.trim(), base64_data: fileBase64 })

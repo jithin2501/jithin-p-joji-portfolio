@@ -30,7 +30,7 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchSocials = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/settings');
+        const response = await fetch('http://localhost:8080/api/settings/');
         if (response.ok) {
           const data = await response.json();
           setSocials({
@@ -53,7 +53,7 @@ export default function ContactPage() {
     e.preventDefault();
     setStatus('loading');
     try {
-      const response = await fetch('http://localhost:8080/api/contacts', {
+      const response = await fetch('http://localhost:8080/api/contacts/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

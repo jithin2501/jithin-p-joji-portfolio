@@ -20,7 +20,7 @@ const Footer = () => {
     useEffect(() => {
         const fetchSocials = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/settings');
+                const response = await fetch('http://localhost:8080/api/settings/');
                 if (response.ok) {
                     const data = await response.json();
                     setSocials(data.socials);
