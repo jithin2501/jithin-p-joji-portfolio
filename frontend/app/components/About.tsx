@@ -12,7 +12,7 @@ export default function About() {
   useEffect(() => {
     const fetchAboutImage = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/settings/', { cache: 'no-store' });
+        const response = await fetch('/api/settings/', { cache: 'no-store' });
         if (response.ok) {
           const data = await response.json();
           if (data.about_image) {

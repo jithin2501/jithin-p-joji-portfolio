@@ -49,7 +49,7 @@ export default function UsersPanel() {
 
     const fetchUsers = async () => {
         try {
-            const res = await fetch('http://localhost:8080/api/v1/auth/users');
+            const res = await fetch('/api/v1/auth/users');
             if (!res.ok) throw new Error('Failed to fetch users');
             const data = await res.json();
             setUsers(data);
@@ -80,7 +80,7 @@ export default function UsersPanel() {
         setSuccessMessage(null);
 
         try {
-            const res = await fetch('http://localhost:8080/api/v1/auth/users', {
+            const res = await fetch('/api/v1/auth/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -112,7 +112,7 @@ export default function UsersPanel() {
         if (!user.id || user.id === 'superadmin-id') return;
 
         try {
-            const res = await fetch(`http://localhost:8080/api/v1/auth/users/${user.id}/status`, {
+            const res = await fetch(`/api/v1/auth/users/${user.id}/status`, {
                 method: 'PUT'
             });
 
@@ -132,7 +132,7 @@ export default function UsersPanel() {
         if (!confirm(`Are you sure you want to revoke admin keys for "${name}"?`)) return;
 
         try {
-            const res = await fetch(`http://localhost:8080/api/v1/auth/users/${id}`, {
+            const res = await fetch(`/api/v1/auth/users/${id}`, {
                 method: 'DELETE'
             });
 
@@ -173,7 +173,7 @@ export default function UsersPanel() {
         setUpdatingAccess(true);
 
         try {
-            const res = await fetch(`http://localhost:8080/api/v1/auth/users/${selectedUser.id}/access`, {
+            const res = await fetch(`/api/v1/auth/users/${selectedUser.id}/access`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ page_access: selectedPages.join(',') })

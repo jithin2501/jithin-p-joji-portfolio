@@ -37,7 +37,7 @@ export default function ExperiencePanel() {
     const fetchExperiences = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/experiences/');
+            const response = await fetch('/api/experiences/');
             if (!response.ok) throw new Error('Failed to fetch experiences');
             const data = await response.json();
             setExperiences(data);
@@ -80,14 +80,14 @@ export default function ExperiencePanel() {
             let response;
             if (editingId) {
                 // Update existing experience
-                response = await fetch(`http://localhost:8080/api/experiences/${editingId}`, {
+                response = await fetch(`/api/experiences/${editingId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
             } else {
                 // Add new experience
-                response = await fetch('http://localhost:8080/api/experiences/', {
+                response = await fetch('/api/experiences/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -129,7 +129,7 @@ export default function ExperiencePanel() {
         setSuccessMessage(null);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/experiences/${id}`, {
+            const response = await fetch(`/api/experiences/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Failed to delete experience');

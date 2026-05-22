@@ -97,7 +97,7 @@ export default function SkillsPanel() {
     const fetchSkills = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/skills/');
+            const response = await fetch('/api/skills/');
             if (!response.ok) throw new Error('Failed to fetch skills');
             const data = await response.json();
             setSkills(data);
@@ -141,14 +141,14 @@ export default function SkillsPanel() {
             let response;
             if (editingId) {
                 // Update existing skill
-                response = await fetch(`http://localhost:8080/api/skills/${editingId}`, {
+                response = await fetch(`/api/skills/${editingId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
             } else {
                 // Add new skill
-                response = await fetch('http://localhost:8080/api/skills/', {
+                response = await fetch('/api/skills/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -187,7 +187,7 @@ export default function SkillsPanel() {
         setSuccessMessage(null);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/skills/${id}`, {
+            const response = await fetch(`/api/skills/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Failed to delete skill');

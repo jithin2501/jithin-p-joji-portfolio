@@ -81,7 +81,7 @@ export default function TechStack() {
   // Fetch skills from API
   const fetchSkills = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/skills/');
+      const res = await fetch('/api/skills/');
       if (!res.ok) throw new Error('Failed to fetch skills');
       const data = await res.json();
       setSkills(data);

@@ -26,7 +26,7 @@ export default function ResumesPanel() {
 
     const fetchResumes = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/resumes/');
+            const response = await fetch('/api/resumes/');
             if (!response.ok) throw new Error('Failed to fetch resumes');
             const data = await response.json();
             setResumes(data);
@@ -83,7 +83,7 @@ export default function ResumesPanel() {
         setSuccessMessage(null);
 
         try {
-            const response = await fetch('http://localhost:8080/api/resumes/', {
+            const response = await fetch('/api/resumes/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name.trim(), base64_data: fileBase64 })
@@ -113,7 +113,7 @@ export default function ResumesPanel() {
         setPreviewName(resumeName);
         setPreviewBase64(null);
         try {
-            const response = await fetch(`http://localhost:8080/api/resumes/${id}`);
+            const response = await fetch(`/api/resumes/${id}`);
             if (!response.ok) throw new Error('Failed to load preview');
             const data = await response.json();
             setPreviewBase64(data.base64_data);
@@ -127,7 +127,7 @@ export default function ResumesPanel() {
 
     const activateResume = async (id: string) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/resumes/${id}/activate`, {
+            const response = await fetch(`/api/resumes/${id}/activate`, {
                 method: 'POST'
             });
             if (!response.ok) throw new Error('Activation failed');
@@ -142,7 +142,7 @@ export default function ResumesPanel() {
     const deleteResume = async (id: string) => {
         if (!confirm('Are you sure you want to delete this resume?')) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/resumes/${id}`, {
+            const response = await fetch(`/api/resumes/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Deletion failed');

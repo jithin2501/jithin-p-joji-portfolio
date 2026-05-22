@@ -55,8 +55,8 @@ const Education = () => {
         const fetchAcademicData = async () => {
             try {
                 const [acadRes, settingsRes] = await Promise.all([
-                    fetch('http://localhost:8080/api/academics/'),
-                    fetch('http://localhost:8080/api/academics/settings')
+                    fetch('/api/academics/'),
+                    fetch('/api/academics/settings')
                 ]);
 
                 if (acadRes.ok) {

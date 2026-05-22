@@ -109,7 +109,7 @@ export default function Projects() {
         const fetchFeaturedProjects = async () => {
             try {
                 setLoading(true);
-                const res = await fetch('http://localhost:8080/api/projects/');
+                const res = await fetch('/api/projects/');
                 if (!res.ok) throw new Error('Failed to fetch projects');
                 const data = await res.json();
                 

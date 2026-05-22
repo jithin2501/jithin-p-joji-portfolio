@@ -110,14 +110,14 @@ export default function AnalyticsPanel() {
     setError('');
     try {
       // 1. Fetch visits logs
-      const logsRes = await fetch('http://localhost:8080/api/analytics/');
+      const logsRes = await fetch('/api/analytics/');
       if (logsRes.ok) {
         const logsData = await logsRes.json();
         setVisits(logsData);
       }
 
       // 2. Fetch stats
-      const statsRes = await fetch('http://localhost:8080/api/analytics/stats');
+      const statsRes = await fetch('/api/analytics/stats');
       if (statsRes.ok) {
         const statsData = await statsRes.json();
         setStats(statsData);
@@ -229,7 +229,7 @@ export default function AnalyticsPanel() {
     if (!window.confirm("Are you absolutely sure you want to clear all analytics visitor logs? This cannot be undone!")) return;
     
     try {
-      const res = await fetch('http://localhost:8080/api/analytics/clear', {
+      const res = await fetch('/api/analytics/clear', {
         method: 'DELETE'
       });
       if (res.ok) {

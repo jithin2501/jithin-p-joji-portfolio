@@ -242,7 +242,7 @@ export default function AdminLogin() {
   const verifyPasscode = async (pinArray: string[]) => {
     const combinedPin = pinArray.join('');
     try {
-      const res = await fetch('http://localhost:8080/api/v1/auth/login', {
+      const res = await fetch('/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

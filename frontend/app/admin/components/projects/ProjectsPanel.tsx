@@ -89,7 +89,7 @@ export default function ProjectsPanel() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/projects/');
+      const response = await fetch('/api/projects/');
       if (!response.ok) throw new Error('Failed to fetch projects');
       const data = await response.json();
       setProjects(data);
@@ -197,7 +197,7 @@ export default function ProjectsPanel() {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/projects/${detailsProject.id}`, {
+      const response = await fetch(`/api/projects/${detailsProject.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -282,14 +282,14 @@ export default function ProjectsPanel() {
       let response;
       if (editingId) {
         // Update existing project
-        response = await fetch(`http://localhost:8080/api/projects/${editingId}`, {
+        response = await fetch(`/api/projects/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // Create new project
-        response = await fetch('http://localhost:8080/api/projects/', {
+        response = await fetch('/api/projects/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -317,7 +317,7 @@ export default function ProjectsPanel() {
     setSuccessMessage(null);
 
     try {
-      const response = await fetch(`http://localhost:8080/api/projects/${id}`, {
+      const response = await fetch(`/api/projects/${id}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error('Failed to delete project');
@@ -375,7 +375,7 @@ export default function ProjectsPanel() {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/projects/${p.id}`, {
+      const response = await fetch(`/api/projects/${p.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

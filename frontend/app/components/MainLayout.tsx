@@ -48,7 +48,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         }
 
         // Send to backend analytics tracker
-        await fetch('http://localhost:8080/api/analytics/track', {
+        await fetch('/api/analytics/track', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

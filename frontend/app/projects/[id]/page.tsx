@@ -137,7 +137,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
     const fetchProject = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:8080/api/projects/${resolvedParams.id}`);
+        const res = await fetch(`/api/projects/${resolvedParams.id}`);
         if (!res.ok) throw new Error('Project not found or invalid ID');
         const data = await res.json();
         setProject(data);

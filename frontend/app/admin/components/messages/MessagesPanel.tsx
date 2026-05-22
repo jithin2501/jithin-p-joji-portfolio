@@ -20,7 +20,7 @@ export default function MessagesPanel() {
     const fetchContacts = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/contacts/');
+            const response = await fetch('/api/contacts/');
             if (!response.ok) throw new Error('Failed to fetch contacts');
             const data = await response.json();
             setContacts(data);
@@ -40,7 +40,7 @@ export default function MessagesPanel() {
     const deleteContact = async (id: string) => {
         if (!confirm('Delete this message?')) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/contacts/${id}`, { method: 'DELETE' });
+            const response = await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
             if (!response.ok) throw new Error('Delete failed');
             setContacts(contacts.filter(c => c.id !== id));
         } catch (err) {

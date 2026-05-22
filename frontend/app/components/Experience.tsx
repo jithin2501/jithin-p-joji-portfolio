@@ -240,13 +240,13 @@ export default function Experience() {
         // Fetch experience and settings data
         const fetchData = async () => {
             try {
-                const expResponse = await fetch('http://localhost:8080/api/experiences/');
+                const expResponse = await fetch('/api/experiences/');
                 if (expResponse.ok) {
                     const expData = await expResponse.json();
                     setEntries(expData);
                 }
 
-                const settingsResponse = await fetch('http://localhost:8080/api/settings/');
+                const settingsResponse = await fetch('/api/settings/');
                 if (settingsResponse.ok) {
                     const settingsData = await settingsResponse.json();
                     setSettings(settingsData);
@@ -399,4 +399,4 @@ export default function Experience() {
         </section>
     );
 }
-const SectionRefType = null as any;
+const SectionRefType = null as any;

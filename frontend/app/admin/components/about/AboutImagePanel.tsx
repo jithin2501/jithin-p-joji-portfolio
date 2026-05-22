@@ -31,7 +31,7 @@ export default function AboutImagePanel() {
     const fetchSettings = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/settings/');
+            const response = await fetch('/api/settings/');
             if (!response.ok) throw new Error('Failed to fetch settings');
             const data = await response.json();
             setSettings(data);
@@ -59,7 +59,7 @@ export default function AboutImagePanel() {
                 ...settings,
                 about_image: tempImage
             };
-            const response = await fetch('http://localhost:8080/api/settings/', {
+            const response = await fetch('/api/settings/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -92,7 +92,7 @@ export default function AboutImagePanel() {
                 ...settings,
                 about_image: ""
             };
-            const response = await fetch('http://localhost:8080/api/settings/', {
+            const response = await fetch('/api/settings/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -74,7 +74,7 @@ export default function AcademicPanel() {
     // Fetch Academic Timeline entries
     const fetchAcademics = async () => {
         try {
-            const res = await fetch('http://localhost:8080/api/academics/');
+            const res = await fetch('/api/academics/');
             if (!res.ok) throw new Error('Failed to fetch academics');
             const data = await res.json();
             setAcademics(data);
@@ -89,7 +89,7 @@ export default function AcademicPanel() {
     // Fetch Academic Settings
     const fetchSettings = async () => {
         try {
-            const res = await fetch('http://localhost:8080/api/academics/settings');
+            const res = await fetch('/api/academics/settings');
             if (!res.ok) throw new Error('Failed to fetch settings');
             const data: AcademicSettings = await res.json();
             setDescription(data.description);
@@ -137,13 +137,13 @@ export default function AcademicPanel() {
         try {
             let res;
             if (editingId) {
-                res = await fetch(`http://localhost:8080/api/academics/${editingId}`, {
+                res = await fetch(`/api/academics/${editingId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
             } else {
-                res = await fetch('http://localhost:8080/api/academics/', {
+                res = await fetch('/api/academics/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -184,7 +184,7 @@ export default function AcademicPanel() {
         setSuccessMessage(null);
 
         try {
-            const res = await fetch(`http://localhost:8080/api/academics/${id}`, {
+            const res = await fetch(`/api/academics/${id}`, {
                 method: 'DELETE'
             });
             if (!res.ok) throw new Error('Delete failed');
@@ -233,7 +233,7 @@ export default function AcademicPanel() {
         };
 
         try {
-            const res = await fetch('http://localhost:8080/api/academics/settings', {
+            const res = await fetch('/api/academics/settings', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -275,7 +275,7 @@ export default function AcademicPanel() {
         };
 
         try {
-            const res = await fetch('http://localhost:8080/api/academics/settings', {
+            const res = await fetch('/api/academics/settings', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

@@ -21,7 +21,7 @@ export default function DownloadButton() {
     // Fetch active resume from FastAPI/MongoDB
     const fetchActiveResume = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/resumes/active');
+        const response = await fetch('/api/resumes/active');
         if (response.ok) {
           const data = await response.json();
           activeResumeData = data;
