@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Activity, Users, MapPin, Eye, Clock, 
   Trash2, Globe, Laptop, RefreshCw, Compass
@@ -17,6 +17,20 @@ interface VisitRecord {
   longitude?: number;
   userAgent: string;
   createdAt: string;
+}
+
+interface GroupedVisit {
+  id: string;
+  userId: string;
+  ip: string;
+  city: string;
+  country: string;
+  latitude?: number;
+  longitude?: number;
+  userAgent: string;
+  createdAt: string;
+  viewsCount: number;
+  paths: { path: string; count: number; lastVisitedAt: string }[];
 }
 
 interface StatsSummary {
@@ -42,6 +56,40 @@ export default function AnalyticsPanel() {
   
   const mapInstanceRef = useRef<any>(null);
   const mapContainerId = 'analytics-leaflet-map';
+
+  const groupedVisits = useMemo<GroupedVisit[]>(() => {
+    const ipGroups: { [ip: string]: GroupedVisit } = {};
+    
+    visits.forEach(v => {
+      if (!ipGroups[v.ip]) {
+        ipGroups[v.ip] = {
+          id: v.id,
+          userId: v.userId,
+          ip: v.ip,
+          city: v.city,
+          country: v.country,
+          latitude: v.latitude,
+          longitude: v.longitude,
+          userAgent: v.userAgent,
+          createdAt: v.createdAt,
+          viewsCount: 0,
+          paths: []
+        };
+      }
+      
+      const group = ipGroups[v.ip];
+      group.viewsCount += 1;
+      
+      const pathEntry = group.paths.find(p => p.path === v.path);
+      if (pathEntry) {
+        pathEntry.count += 1;
+      } else {
+        group.paths.push({ path: v.path, count: 1, lastVisitedAt: v.createdAt });
+      }
+    });
+    
+    return Object.values(ipGroups);
+  }, [visits]);
 
   const fetchData = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
@@ -77,7 +125,7 @@ export default function AnalyticsPanel() {
 
   // Initialize Leaflet Map
   useEffect(() => {
-    if (loading || visits.length === 0 || activeView !== 'map') return;
+    if (loading || groupedVisits.length === 0 || activeView !== 'map') return;
 
     // Load Leaflet resources dynamically
     const initMap = () => {
@@ -90,8 +138,8 @@ export default function AnalyticsPanel() {
       const L = (window as any).L;
       if (!L) return;
 
-      // Filter visits with valid coordinates
-      const validMarkers = visits.filter(v => v.latitude !== undefined && v.longitude !== undefined && v.latitude !== 0 && v.longitude !== 0);
+      // Filter grouped visits with valid coordinates
+      const validMarkers = groupedVisits.filter(v => v.latitude !== undefined && v.longitude !== undefined && v.latitude !== 0 && v.longitude !== 0);
 
       // Default center is first visit coordinates or fallback to (0,0)
       const centerLat = validMarkers.length > 0 ? validMarkers[0].latitude! : 20.0;
@@ -110,13 +158,16 @@ export default function AnalyticsPanel() {
 
       // Custom icon or custom circle markers with premium glowing styles
       validMarkers.forEach(v => {
+        const pathsList = v.paths.map(p => `<span class="badge-path" style="margin: 2px; display: inline-block;">${p.path}${p.count > 1 ? ` (${p.count}x)` : ''}</span>`).join(' ');
         const customPopup = `
           <div class="map-popup-card">
             <h4>${v.city !== 'Unknown' ? v.city : 'Local Visitor'}, ${v.country}</h4>
             <p><strong>User ID:</strong> <span class="badge-id">${v.userId.substring(0, 12)}...</span></p>
             <p><strong>IP Addr:</strong> ${v.ip}</p>
-            <p><strong>Path Visited:</strong> <span class="badge-path">${v.path}</span></p>
-            <p><strong>Visited At:</strong> ${new Date(v.createdAt).toLocaleTimeString()}</p>
+            <p><strong>Views Count:</strong> <span class="badge-views">${v.viewsCount} visits</span></p>
+            <p style="margin-top: 8px;"><strong>Paths Visited:</strong></p>
+            <div class="popup-paths-container">${pathsList}</div>
+            <p style="margin-top: 8px;"><strong>Last Active:</strong> ${new Date(v.createdAt).toLocaleTimeString()}</p>
           </div>
         `;
 
@@ -160,7 +211,7 @@ export default function AnalyticsPanel() {
         mapInstanceRef.current = null;
       }
     };
-  }, [loading, visits, activeView]);
+  }, [loading, groupedVisits, activeView]);
 
   const handleClearLogs = async () => {
     if (!window.confirm("Are you absolutely sure you want to clear all analytics visitor logs? This cannot be undone!")) return;
@@ -382,10 +433,10 @@ export default function AnalyticsPanel() {
               <div className="analytics-logs-card">
                 <div className="card-header">
                   <Clock size={16} />
-                  <h4>Live Activity Stream logs ({visits.length})</h4>
+                  <h4>Live Activity Stream logs ({groupedVisits.length} visitors, {visits.length} views)</h4>
                 </div>
                 <div className="table-responsive-box">
-                  {visits.length === 0 ? (
+                  {groupedVisits.length === 0 ? (
                     <div className="empty-state" style={{ padding: '40px' }}>No visitor records found. Try opening the homepage!</div>
                   ) : (
                     <table className="analytics-logs-table">
@@ -394,13 +445,13 @@ export default function AnalyticsPanel() {
                           <th>Visitor ID</th>
                           <th>Location</th>
                           <th>IP Address</th>
-                          <th>Path Visited</th>
-                          <th>Activity Time</th>
+                          <th>Paths Visited</th>
+                          <th>Latest Activity</th>
                           <th>Browser / OS</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {visits.map((v) => (
+                        {groupedVisits.map((v) => (
                           <tr key={v.id}>
                             <td>
                               <span className="visitor-badge-code" title={v.userId}>
@@ -416,7 +467,25 @@ export default function AnalyticsPanel() {
                               <code className="visitor-ip">{v.ip}</code>
                             </td>
                             <td>
-                              <span className="path-badge-badge">{v.path}</span>
+                              <div className="paths-column-cell">
+                                <div className="main-path-row">
+                                  <span className="path-badge-badge">{v.paths[0].path}</span>
+                                  {v.viewsCount > 1 && (
+                                    <span className="views-count-badge" title={`${v.viewsCount} total page views`}>
+                                      {v.viewsCount} views
+                                    </span>
+                                  )}
+                                </div>
+                                {v.paths.length > 1 && (
+                                  <div className="sub-paths-row">
+                                    {v.paths.slice(1).map((p, idx) => (
+                                      <span key={idx} className="path-badge-badge-subtle" title={`${p.path} (${p.count}x)`}>
+                                        {p.path}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
                             </td>
                             <td>
                               <span className="time-elapsed-badge">{timeAgo(v.createdAt)}</span>
