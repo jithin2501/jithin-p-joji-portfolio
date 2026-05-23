@@ -237,3 +237,36 @@
     border: none;
     background: #fff;
 }
+
+@media (max-width: 576px) {
+    .resume-item {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        gap: 12px !important;
+    }
+    
+    .resume-info {
+        gap: 12px !important;
+    }
+    
+    .resume-actions {
+        justify-content: flex-end !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+        padding-top: 10px !important;
+        width: 100% !important;
+    }
+    
+    .preview-panel {
+        height: 480px !important;
+        padding: 16px !important;
+    }
+    
+    .upload-card {
+        padding: 16px !important;
+    }
+    
+    .upload-zone {
+        padding: 20px 10px !important;
+    }
+}

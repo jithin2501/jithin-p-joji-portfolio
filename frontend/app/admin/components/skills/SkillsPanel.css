@@ -101,9 +101,57 @@
     }
 }
 
+@media (max-width: 768px) {
+    .skills-top-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+}
+
 @media (max-width: 640px) {
     .stored-tech-grid-layout {
         grid-template-columns: 1fr;
     }
 }
 
+@media (max-width: 576px) {
+    .skills-form-container, .slugs-library-card, .stored-tech-card {
+        padding: 16px !important;
+    }
+
+    .stored-tech-grid-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Stored tech header layout stack on mobile */
+    .stored-tech-card .settings-card-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .page-filters-row {
+        min-width: unset !important;
+        justify-content: flex-start !important;
+        padding-bottom: 4px;
+    }
+
+    /* Stored tech cards adjustments */
+    .stored-tech-grid-layout .admin-exp-item {
+        padding: 12px !important;
+        gap: 12px !important;
+    }
+
+    .admin-exp-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    .admin-exp-actions {
+        justify-content: flex-start !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 8px;
+        width: 100%;
+    }
+}

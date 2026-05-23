@@ -1,1 +1,35 @@
 @import '../experience/ExperiencePanel.css';
+
+@media (max-width: 768px) {
+    .experience-manager-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .experience-form-card, .settings-card {
+        padding: 16px !important;
+    }
+
+    .admin-exp-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .admin-exp-actions {
+        justify-content: flex-start !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 8px;
+        width: 100%;
+    }
+
+    .theme-circles-container {
+        gap: 8px !important;
+    }
+
+    .icon-selector-container {
+        gap: 6px !important;
+    }
+}
