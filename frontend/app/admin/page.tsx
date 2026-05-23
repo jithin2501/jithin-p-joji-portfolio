@@ -26,6 +26,7 @@ export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState<'messages' | 'settings' | 'resumes' | 'aboutImage' | 'experience' | 'academic' | 'skills' | 'projects' | 'analytics' | 'users'>('messages');
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const [allowedTabs, setAllowedTabs] = useState<string[]>([]);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const isAuth = sessionStorage.getItem('isAdminAuthenticated');
@@ -44,6 +45,18 @@ export default function AdminPanel() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // Lock page scroll when mobile sidebar is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMobileMenuOpen]);
 
     if (isCheckingAuth) {
         return (
@@ -77,18 +90,51 @@ export default function AdminPanel() {
         );
     }
 
+    const handleTabClick = (tab: typeof activeTab) => {
+        setActiveTab(tab);
+        setIsMobileMenuOpen(false);
+    };
+
     return (
         <div className="admin-layout">
-            <aside className="admin-sidebar">
+            {/* Mobile Header Bar */}
+            <header className="admin-mobile-header">
+                <button 
+                    className="admin-hamburger" 
+                    onClick={() => setIsMobileMenuOpen(true)}
+                    aria-label="Open Sidebar"
+                >
+                    <span className="admin-bar"></span>
+                    <span className="admin-bar"></span>
+                    <span className="admin-bar"></span>
+                </button>
+            </header>
+
+            {/* Sidebar Backdrop Overlay */}
+            {isMobileMenuOpen && (
+                <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)} />
+            )}
+
+            <aside className={`admin-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+                {/* Mobile Close Button */}
+                <button 
+                    className="sidebar-close-btn" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    aria-label="Close Sidebar"
+                >
+                    ✕
+                </button>
+
                 <div className="sidebar-brand">
                     <Shield size={20} />
                     <span>Admin Panel</span>
                 </div>
+                
                 <nav className="sidebar-nav">
                     {allowedTabs.includes('messages') && (
                         <button 
                             className={`nav-item ${activeTab === 'messages' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('messages')}
+                            onClick={() => handleTabClick('messages')}
                         >
                             <MessageSquare size={18} />
                             Messages
@@ -97,7 +143,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('settings') && (
                         <button 
                             className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('settings')}
+                            onClick={() => handleTabClick('settings')}
                         >
                             <Sliders size={18} />
                             Settings
@@ -106,7 +152,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('resumes') && (
                         <button 
                             className={`nav-item ${activeTab === 'resumes' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('resumes')}
+                            onClick={() => handleTabClick('resumes')}
                         >
                             <FileText size={18} />
                             Resumes
@@ -115,7 +161,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('skills') && (
                         <button 
                             className={`nav-item ${activeTab === 'skills' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('skills')}
+                            onClick={() => handleTabClick('skills')}
                         >
                             <Code size={18} />
                             Tech Stack
@@ -124,7 +170,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('experience') && (
                         <button 
                             className={`nav-item ${activeTab === 'experience' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('experience')}
+                            onClick={() => handleTabClick('experience')}
                         >
                             <Briefcase size={18} />
                             Experience
@@ -133,7 +179,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('academic') && (
                         <button 
                             className={`nav-item ${activeTab === 'academic' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('academic')}
+                            onClick={() => handleTabClick('academic')}
                         >
                             <GraduationCap size={18} />
                             Academic
@@ -142,7 +188,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('aboutImage') && (
                         <button 
                             className={`nav-item ${activeTab === 'aboutImage' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('aboutImage')}
+                            onClick={() => handleTabClick('aboutImage')}
                         >
                             <ImageIcon size={18} />
                             About Image
@@ -151,7 +197,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('projects') && (
                         <button 
                             className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('projects')}
+                            onClick={() => handleTabClick('projects')}
                         >
                             <FolderOpen size={18} />
                             Projects
@@ -161,7 +207,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('analytics') && (
                         <button 
                             className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('analytics')}
+                            onClick={() => handleTabClick('analytics')}
                         >
                             <Activity size={18} />
                             Analytics
@@ -171,7 +217,7 @@ export default function AdminPanel() {
                     {allowedTabs.includes('users') && (
                         <button 
                             className={`nav-item ${activeTab === 'users' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('users')}
+                            onClick={() => handleTabClick('users')}
                         >
                             <Users size={18} />
                             Users
