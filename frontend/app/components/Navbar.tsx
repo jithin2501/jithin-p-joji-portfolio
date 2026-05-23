@@ -7,6 +7,7 @@ import '../style/Navbar.css';
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -46,6 +47,18 @@ export default function Navbar() {
     }
   }, [pathname]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const navItems = [
     { label: 'Home', href: '/#home', id: 'home' },
     { label: 'About', href: '/#about', id: 'about' },
@@ -56,37 +69,37 @@ export default function Navbar() {
     { label: 'Contact', href: '/contact', id: 'contact' }
   ];
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsOpen(false);
+    const isHomePageSection = href.startsWith('/#');
+    if (pathname === '/' && isHomePageSection) {
+      e.preventDefault();
+      const id = href.replace('/#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-inner">
-        <Link href="/" className="navbar-logo">
+        <Link href="/" className="navbar-logo" onClick={() => setIsOpen(false)}>
           <div className="logo-dot" />
           ./jithin.dev
         </Link>
 
+        {/* Desktop Navbar Menu */}
         <ul className="navbar-menu">
           {navItems.map((item) => {
-            const isHomePageSection = item.href.startsWith('/#');
             const isActive = (pathname === '/' && activeSection === item.id) || (pathname === item.href);
-            
             return (
               <li key={item.label}>
                 <Link 
                   href={item.href} 
                   className={`nav-link ${isActive ? 'active' : ''}`}
-                  onClick={(e) => {
-                    // Handle internal home page navigation with smooth scroll
-                    if (pathname === '/' && isHomePageSection) {
-                      e.preventDefault();
-                      const id = item.href.replace('/#', '');
-                      const el = document.getElementById(id);
-                      if (el) {
-                        el.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }
-                    // For cross-page navigation, default behavior will now be instant
-                    // because we removed global scroll-behavior: smooth
-                  }}
+                  onClick={(e) => handleLinkClick(e, item.href)}
                 >
                   {item.label}
                 </Link>
@@ -95,9 +108,50 @@ export default function Navbar() {
           })}
         </ul>
 
+        {/* Desktop Hire Me Button */}
         <Link href="/contact" className="hire-me-btn">
           Hire Me
         </Link>
+
+        {/* Mobile Hamburger Button */}
+        <button 
+          className={`hamburger ${isOpen ? 'active' : ''}`} 
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle Navigation Menu"
+        >
+          <span className="bar"></span>
+          <span className="bar"></span>
+          <span className="bar"></span>
+        </button>
+
+        {/* Mobile Navigation Drawer Overlay */}
+        <div className={`mobile-menu ${isOpen ? 'open' : ''}`}>
+          <ul className="mobile-menu-items">
+            {navItems.map((item) => {
+              const isActive = (pathname === '/' && activeSection === item.id) || (pathname === item.href);
+              return (
+                <li key={item.label}>
+                  <Link 
+                    href={item.href} 
+                    className={`mobile-nav-link ${isActive ? 'active' : ''}`}
+                    onClick={(e) => handleLinkClick(e, item.href)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+            <li>
+              <Link 
+                href="/contact" 
+                className="mobile-hire-me-btn"
+                onClick={() => setIsOpen(false)}
+              >
+                Hire Me
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );
