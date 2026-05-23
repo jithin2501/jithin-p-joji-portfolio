@@ -84,6 +84,7 @@
     align-items: center;
     justify-content: space-between;
     transition: all 0.3s ease;
+    min-width: 0;
 }
 
 .resume-item:hover {
@@ -100,6 +101,8 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    min-width: 0;
+    flex: 1;
 }
 
 .resume-icon-container {
@@ -119,11 +122,19 @@
     color: #00ff88;
 }
 
+.resume-details {
+    min-width: 0;
+    flex: 1;
+}
+
 .resume-details h4 {
     margin: 0;
     font-size: 15px;
     color: #fff;
     font-weight: 600;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .resume-details p {
@@ -133,6 +144,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-wrap: wrap;
 }
 
 .active-tag {
@@ -150,6 +162,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .action-btn {
@@ -238,7 +251,7 @@
     background: #fff;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .resume-item {
         flex-direction: column !important;
         align-items: stretch !important;
@@ -248,6 +261,7 @@
     
     .resume-info {
         gap: 12px !important;
+        width: 100% !important;
     }
     
     .resume-actions {
