@@ -299,15 +299,37 @@
 }
 
 @media (max-width: 768px) {
-    .projects-container { padding: 0 24px; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .projects-title { font-size: 2.5rem; }
+    .projects-container {
+        padding: 0 16px !important;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr !important;
+        justify-items: center !important;
+    }
+    .projects-title {
+        font-size: 2.5rem;
+    }
+    .project-card-wrapper {
+        width: 100% !important;
+        max-width: 420px !important;
+    }
 }
 
 @media (max-width: 576px) {
     .project-card-wrapper {
-        max-width: 380px !important;
+        max-width: 100% !important;
+        width: 100% !important;
         margin: 0 auto !important;
+    }
+
+    .project-card {
+        padding: 16px !important;
+    }
+
+    /* Override mockup fixed height of 220px on mobile to prevent overflow */
+    .mockup-container {
+        height: auto !important;
+        aspect-ratio: 16/10 !important;
         width: 100% !important;
     }
 }
