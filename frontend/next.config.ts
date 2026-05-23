@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
+    // Only rewrite to local backend during local development.
+    // In Vercel production, vercel.json handles routing of /api/ to the python backend directly.
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+      return [];
+    }
     return [
       {
         source: "/api/:path*",
