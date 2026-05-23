@@ -198,3 +198,41 @@
         padding: 60px 24px;
     }
 }
+
+@media (max-width: 576px) {
+    .about-content-left {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .about-title {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .about-description {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 15px;
+    }
+
+    .about-download-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    /* Hide the rotating badge wrapper completely on phone view */
+    .about-badge-wrapper {
+        display: none !important;
+    }
+
+    .about-image-container {
+        margin: 0 auto !important;
+        max-width: 320px; /* Make it slightly more compact on phones */
+    }
+}

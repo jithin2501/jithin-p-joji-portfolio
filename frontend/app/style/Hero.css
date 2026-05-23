@@ -363,7 +363,7 @@
     .hero-mobile-socials {
         display: flex !important;
         justify-content: center;
-        gap: 20px;
+        gap: 32px;
         margin-top: 32px;
         animation: fadeUp 0.8s 0.6s ease both;
     }
