@@ -187,3 +187,31 @@
     max-height: 300px;
     overflow-y: auto;
 }
+
+@media (max-width: 768px) {
+    .message-card {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 16px !important;
+        gap: 16px !important;
+    }
+
+    .sender-info {
+        min-width: unset !important;
+        width: 100% !important;
+    }
+
+    .card-body {
+        border-left: none !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+        padding: 12px 0 0 0 !important;
+    }
+
+    .card-actions {
+        margin-left: 0 !important;
+        justify-content: flex-end !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+        padding-top: 12px !important;
+        width: 100% !important;
+    }
+}
