@@ -207,6 +207,52 @@ export default function Hero() {
                 Hire Me
               </Link>
             </div>
+
+            {/* Mobile-only Stats & Social Icons Panel */}
+            <div className="hero-mobile-extras">
+              {/* Mobile Social Links */}
+              <div className="hero-mobile-socials">
+                {[
+                  { icon: 'fab fa-github', href: settings.socials.github, value: settings.socials.github },
+                  { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, value: settings.socials.linkedin },
+                  { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, value: settings.socials.email },
+                  { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, value: settings.socials.phone },
+                  { icon: 'fas fa-location-dot', href: '#', value: settings.socials.location },
+                ]
+                  .filter(s => s.value && s.value.trim() !== '')
+                  .map((s, i) => (
+                    <a
+                      key={i}
+                      href={s.href}
+                      target={s.href.startsWith('http') ? '_blank' : undefined}
+                      rel="noreferrer"
+                      className="mobile-social-link"
+                    >
+                      <i className={s.icon} />
+                    </a>
+                  ))}
+              </div>
+
+              {/* Mobile Stats Grid */}
+              <div className="hero-mobile-stats-grid">
+                {[
+                  { num: settings.hero.projects, label: 'Projects', color: 'var(--accent)' },
+                  { num: settings.hero.experience, label: 'Experience', color: 'var(--accent2)' },
+                  { num: settings.hero.commits, label: 'Commits', color: 'var(--accent3)' },
+                  { num: settings.hero.satisfaction, label: 'Satisfaction', color: 'var(--green)' },
+                  { num: settings.hero.availability, label: 'Availability', color: 'var(--accent2)' },
+                  { num: settings.hero.clients, label: 'Clients', color: 'var(--accent3)' },
+                ]
+                  .filter(s => s.num && s.num.trim() !== '')
+                  .map((s, i) => (
+                    <div key={s.label} className="hero-mobile-stat-card">
+                      <AnimatedStat value={s.num} color={s.color} />
+                      <div className="stat-label">{s.label}</div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
           </div>
         </section>
 
