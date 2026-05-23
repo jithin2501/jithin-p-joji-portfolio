@@ -173,6 +173,14 @@ export default function Hero() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
+  const socialItems = [
+    { icon: 'fab fa-github', href: settings.socials.github, label: '', value: settings.socials.github },
+    { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, label: '', value: settings.socials.linkedin },
+    { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, label: settings.socials.email, value: settings.socials.email },
+    { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, label: settings.socials.phone, value: settings.socials.phone },
+    { icon: 'fas fa-location-dot', href: '#', label: settings.socials.location, value: settings.socials.location },
+  ].filter(s => s.value && s.value.trim() !== '');
+
   return (
     <>
       <div className="noise-overlay" />
@@ -207,10 +215,25 @@ export default function Hero() {
                 Hire Me
               </Link>
             </div>
+
+            {/* Mobile Social Media Icons (Visible in Phone View Only) */}
+            <div className="hero-mobile-socials">
+              {socialItems.map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  target={s.href.startsWith('http') ? '_blank' : undefined}
+                  rel="noreferrer"
+                  className="mobile-social-link"
+                >
+                  <i className={s.icon} />
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Right Stats Panel (Desktop Only) */}
+        {/* Right Stats Panel */}
         <div className="hero-stats-panel">
           {[
             { num: settings.hero.projects, label: 'Projects', color: 'var(--accent)' },
@@ -229,77 +252,24 @@ export default function Hero() {
           ))}
         </div>
 
-        {/* Social Sidebar (Desktop Only) */}
+        {/* Desktop Social Sidebar */}
         <div className="hero-social-sidebar">
-          {[
-            { icon: 'fab fa-github', href: settings.socials.github, label: '', value: settings.socials.github },
-            { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, label: '', value: settings.socials.linkedin },
-            { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, label: settings.socials.email, value: settings.socials.email },
-            { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, label: settings.socials.phone, value: settings.socials.phone },
-            { icon: 'fas fa-location-dot', href: '#', label: settings.socials.location, value: settings.socials.location },
-          ]
-            .filter(s => s.value && s.value.trim() !== '')
-            .map((s, i) => (
-              <a
-                key={i}
-                href={s.href}
-                target={s.href.startsWith('http') ? '_blank' : undefined}
-                rel="noreferrer"
-                className="social-link"
-              >
-                <i className={s.icon} />
-                {s.label && (
-                  <span className="social-tooltip">
-                    {s.label}
-                  </span>
-                )}
-              </a>
-            ))}
-        </div>
-
-        {/* Mobile Socials & Stats Panel (Between Hero and About in Mobile Flow) */}
-        <div className="hero-mobile-details">
-          {/* Mobile Social Links */}
-          <div className="mobile-socials">
-            {[
-              { icon: 'fab fa-github', href: settings.socials.github, value: settings.socials.github },
-              { icon: 'fab fa-linkedin-in', href: settings.socials.linkedin, value: settings.socials.linkedin },
-              { icon: 'far fa-envelope', href: `mailto:${settings.socials.email}`, value: settings.socials.email },
-              { icon: 'fas fa-phone', href: `tel:${settings.socials.phone}`, value: settings.socials.phone },
-              { icon: 'fas fa-location-dot', href: '#', value: settings.socials.location },
-            ]
-              .filter(s => s.value && s.value.trim() !== '')
-              .map((s, i) => (
-                <a
-                  key={i}
-                  href={s.href}
-                  target={s.href.startsWith('http') ? '_blank' : undefined}
-                  rel="noreferrer"
-                  className="mobile-social-link"
-                >
-                  <i className={s.icon} />
-                </a>
-              ))}
-          </div>
-
-          {/* Mobile Stats Grid containing all 6 parameters */}
-          <div className="mobile-stats-grid">
-            {[
-              { num: settings.hero.projects, label: 'Projects', color: 'var(--accent)' },
-              { num: settings.hero.experience, label: 'Experience', color: 'var(--accent2)' },
-              { num: settings.hero.commits, label: 'GitHub Commits', color: 'var(--accent3)' },
-              { num: settings.hero.satisfaction, label: 'Client Satisfaction', color: 'var(--green)' },
-              { num: settings.hero.availability, label: 'Availability', color: 'var(--accent)' },
-              { num: settings.hero.clients, label: 'Clients', color: 'var(--accent2)' },
-            ]
-              .filter(s => s.num && s.num.trim() !== '')
-              .map((s, i) => (
-                <div key={s.label} className="mobile-stat-card">
-                  <AnimatedStat value={s.num || ''} color={s.color} />
-                  <div className="mobile-stat-label">{s.label}</div>
-                </div>
-              ))}
-          </div>
+          {socialItems.map((s, i) => (
+            <a
+              key={i}
+              href={s.href}
+              target={s.href.startsWith('http') ? '_blank' : undefined}
+              rel="noreferrer"
+              className="social-link"
+            >
+              <i className={s.icon} />
+              {s.label && (
+                <span className="social-tooltip">
+                  {s.label}
+                </span>
+              )}
+            </a>
+          ))}
         </div>
       </div>
     </>
