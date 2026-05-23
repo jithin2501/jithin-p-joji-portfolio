@@ -100,14 +100,15 @@ export default function AdminPanel() {
             {/* Mobile Header Bar */}
             <header className="admin-mobile-header">
                 <button 
-                    className="admin-hamburger" 
-                    onClick={() => setIsMobileMenuOpen(true)}
-                    aria-label="Open Sidebar"
+                    className={`admin-hamburger ${isMobileMenuOpen ? 'active' : ''}`}
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    aria-label="Toggle Sidebar"
                 >
                     <span className="admin-bar"></span>
                     <span className="admin-bar"></span>
                     <span className="admin-bar"></span>
                 </button>
+                <h1 className="admin-mobile-title">Admin Panel</h1>
             </header>
 
             {/* Sidebar Backdrop Overlay */}
@@ -116,15 +117,6 @@ export default function AdminPanel() {
             )}
 
             <aside className={`admin-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
-                {/* Mobile Close Button */}
-                <button 
-                    className="sidebar-close-btn" 
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    aria-label="Close Sidebar"
-                >
-                    ✕
-                </button>
-
                 <div className="sidebar-brand">
                     <Shield size={20} />
                     <span>Admin Panel</span>
