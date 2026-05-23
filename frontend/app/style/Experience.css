@@ -302,7 +302,7 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     text-align: center;
-    min-width: 90;
+    min-width: 90px;
 }
 
 .card-description {
@@ -351,5 +351,98 @@
     .entry-date-box {
         padding-top: 0;
         margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .experience-container {
+        padding: 0 16px !important;
+    }
+
+    .exp-grid {
+        grid-template-columns: 24px 1fr !important;
+        gap: 12px !important;
+    }
+
+    .timeline-col {
+        width: 24px !important;
+    }
+
+    .timeline-dot {
+        width: 16px !important;
+        height: 16px !important;
+        border-width: 3px !important;
+    }
+
+    /* Card adjustments */
+    .entry-card {
+        padding: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .card-inner {
+        gap: 12px !important;
+    }
+
+    .card-icon-box {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 8px !important;
+    }
+
+    .card-icon-box svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* Header stacking to prevent horizontal expansion/overflow */
+    .card-header-top {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        width: 100%;
+    }
+
+    .card-title-group {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+        width: 100%;
+    }
+
+    .card-separator {
+        display: none !important;
+    }
+
+    .card-title {
+        font-size: 15px !important;
+        line-height: 1.3 !important;
+    }
+
+    .card-company {
+        font-size: 13px !important;
+        margin-top: 2px;
+    }
+
+    .card-badge, .card-location {
+        align-self: flex-start !important;
+        margin-top: 4px !important;
+    }
+
+    .card-description {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .card-tags {
+        gap: 6px !important;
+    }
+
+    .card-tag {
+        font-size: 10px !important;
+        padding: 4px 8px !important;
     }
 }
