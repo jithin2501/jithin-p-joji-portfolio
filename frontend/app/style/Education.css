@@ -365,6 +365,91 @@
     .edu-score-badge { align-self: flex-start; margin-top: 10px; }
 }
 
+@media (max-width: 576px) {
+    /* Header centering (already centered but reinforcing) */
+    .edu-header {
+        padding: 0 16px;
+    }
+
+    /* Intro column centering */
+    .edu-intro-column {
+        text-align: center;
+        align-items: center;
+    }
+
+    .edu-description {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 15px;
+    }
+
+    .edu-highlights-container {
+        align-items: center;
+        width: 100%;
+    }
+
+    .edu-highlight-row {
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* Stats Grid Center */
+    .edu-stats-grid {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* 3 Other timeline box Centering */
+    .edu-timeline-column {
+        padding-left: 0 !important; /* Remove timeline left padding to allow full horizontal centering */
+    }
+
+    .edu-timeline-marker {
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+    }
+
+    .edu-marker-date {
+        text-align: center !important;
+        font-size: 13px !important;
+    }
+
+    .edu-card {
+        text-align: center !important;
+        max-width: 380px !important; /* Match projects card width */
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 100% !important;
+        padding: 24px !important;
+    }
+
+    .edu-card-header {
+        align-items: center !important;
+        text-align: center !important;
+        width: 100%;
+    }
+
+    .edu-card-title-group {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        width: 100%;
+    }
+
+    .edu-location-info {
+        justify-content: center !important;
+    }
+
+    .edu-score-badge {
+        align-self: center !important;
+        margin-top: 12px !important;
+    }
+}
+
 /* Helper Classes for Inline Styles */
 .text-white { color: #fff !important; }
 .bg-cyan-soft { background: rgba(0, 229, 255, 0.1) !important; color: #00e5ff !important; }

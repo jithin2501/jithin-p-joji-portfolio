@@ -303,3 +303,11 @@
     .projects-grid { grid-template-columns: 1fr; }
     .projects-title { font-size: 2.5rem; }
 }
+
+@media (max-width: 576px) {
+    .project-card-wrapper {
+        max-width: 380px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+    }
+}
