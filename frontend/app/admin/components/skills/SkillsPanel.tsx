@@ -283,7 +283,7 @@ export default function SkillsPanel() {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="skill-color">Hex Color Theme *</label>
-                                <div style={{ display: 'flex', gap: '8px' }}>
+                                <div className="color-picker-row">
                                     <input
                                         id="skill-color"
                                         type="text"
@@ -291,13 +291,13 @@ export default function SkillsPanel() {
                                         onChange={e => setColor(e.target.value)}
                                         placeholder="e.g. #61DAFB"
                                         required
-                                        style={{ flex: 1, minWidth: 0 }}
+                                        className="color-text-input"
                                     />
                                     <input
                                         type="color"
                                         value={color.startsWith('#') && color.length === 7 ? color : '#7c5cff'}
                                         onChange={e => setColor(e.target.value)}
-                                        style={{ width: '42px', height: '42px', padding: '2px', border: '1px solid rgba(124, 92, 255, 0.2)', borderRadius: '6px', cursor: 'pointer', background: 'transparent', flexShrink: 0 }}
+                                        className="color-input-button"
                                     />
                                 </div>
                             </div>
@@ -533,7 +533,7 @@ export default function SkillsPanel() {
                     </div>
 
                     {/* Centered Page Filter Tabs */}
-                    <div className="page-filters-row" style={{ display: 'flex', gap: '6px', overflowX: 'auto', justifyContent: 'center', flex: 1, minWidth: '280px' }}>
+                    <div className="page-filters-row">
                         {['All', '1', '2', '3', '4'].map(p => (
                             <button
                                 key={p}
