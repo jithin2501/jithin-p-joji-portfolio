@@ -151,13 +151,13 @@
     width: 100%;
 }
 
-.color-text-input {
+.color-picker-row .color-text-input {
     flex: 1 !important;
     min-width: 0 !important;
     width: auto !important;
 }
 
-.color-input-button {
+.color-picker-row .color-input-button {
     width: 42px !important;
     height: 42px !important;
     padding: 2px !important;
@@ -217,9 +217,9 @@
     }
 
     /* Force all form elements to shrink and not push layout width */
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
+    .form-group > input,
+    .form-group > select,
+    .form-group > textarea {
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
