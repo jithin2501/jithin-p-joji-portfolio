@@ -37,10 +37,26 @@
     .experience-manager-grid {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .experience-form-card, .settings-card {
-        padding: 16px !important;
+        padding: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Force all form elements to shrink and not push layout width */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .admin-exp-header {
@@ -72,5 +88,53 @@
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 6px !important;
+    }
+}
+
+/* Dedicated Phone View Styling (True Mobile Breakpoint) */
+@media (max-width: 480px) {
+    .experience-form-card, .settings-card {
+        padding: 14px !important;
+    }
+
+    /* Vertically stack form action buttons for edit modes */
+    .form-actions-row {
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .form-actions-row button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    /* Stack grid fields like performance score, dates, location on phone */
+    .form-grid-two, .form-grid-three {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    /* Let the stat card inputs stack vertically on narrow phone screens for better legibility */
+    .form-group div[style*="display: grid"] {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+    }
+
+    /* Vertically list milestones metadata (date, location, score) so they never overflow */
+    .admin-exp-meta {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .admin-exp-meta span {
+        width: 100% !important;
+    }
+
+    .admin-exp-meta .admin-exp-loc[style*="background"] {
+        align-self: flex-start !important;
+        margin-top: 2px !important;
     }
 }
