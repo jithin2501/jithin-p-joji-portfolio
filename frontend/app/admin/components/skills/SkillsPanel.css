@@ -111,6 +111,39 @@
     white-space: normal !important;
 }
 
+/* Skillicon Slugs Library Header & Tabs Styling */
+.slugs-library-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.slug-library-badge {
+    transition: all 0.2s ease;
+}
+
+.slug-categories-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.slug-categories-tabs::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+.slugs-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
 /* Responsive Overrides */
 @media (max-width: 1024px) {
     .skills-top-grid {
@@ -123,13 +156,34 @@
 }
 
 @media (max-width: 768px) {
+    .skills-main-layout {
+        max-width: 100%;
+        width: 100%;
+    }
+
     .skills-top-grid {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .skills-form-container, .slugs-library-card, .stored-tech-card {
-        padding: 16px !important;
+        padding: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Force all form elements to shrink and not push layout width */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .stored-tech-grid-layout {
@@ -169,6 +223,45 @@
         border-top: 1px solid rgba(255, 255, 255, 0.05);
         padding-top: 8px;
         width: 100%;
+    }
+}
+
+/* Dedicated Phone View Styling (True Mobile Breakpoint) */
+@media (max-width: 480px) {
+    .skills-form-container, .slugs-library-card, .stored-tech-card {
+        padding: 14px !important;
+    }
+
+    .slugs-library-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+
+    .slug-library-badge {
+        align-self: flex-start !important;
+    }
+
+    /* Set grid elements to smaller size to fit 2 columns beautifully on small screens */
+    .slugs-grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    /* Vertically stack form action buttons for edit modes */
+    .form-actions-row {
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .form-actions-row button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .skills-icon-preview {
+        padding: 8px !important;
     }
 }
 

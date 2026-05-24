@@ -291,13 +291,13 @@ export default function SkillsPanel() {
                                         onChange={e => setColor(e.target.value)}
                                         placeholder="e.g. #61DAFB"
                                         required
-                                        style={{ flex: 1 }}
+                                        style={{ flex: 1, minWidth: 0 }}
                                     />
                                     <input
                                         type="color"
                                         value={color.startsWith('#') && color.length === 7 ? color : '#7c5cff'}
                                         onChange={e => setColor(e.target.value)}
-                                        style={{ width: '42px', height: '42px', padding: '2px', border: '1px solid rgba(124, 92, 255, 0.2)', borderRadius: '6px', cursor: 'pointer', background: 'transparent' }}
+                                        style={{ width: '42px', height: '42px', padding: '2px', border: '1px solid rgba(124, 92, 255, 0.2)', borderRadius: '6px', cursor: 'pointer', background: 'transparent', flexShrink: 0 }}
                                     />
                                 </div>
                             </div>
@@ -398,12 +398,12 @@ export default function SkillsPanel() {
 
                 {/* 2. Right Section: Skillicon Slugs Grid Library */}
                 <div className="settings-card slugs-library-card">
-                    <div className="settings-card-header" style={{ marginBottom: '16px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="settings-card-header slugs-library-header" style={{ marginBottom: '16px', paddingBottom: '12px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <Sparkles size={18} className="card-header-icon" style={{ color: '#a78bfa' }} />
                             <h3 style={{ margin: 0, fontSize: '16px' }}>Skillicon Slugs Library</h3>
                         </div>
-                        <span style={{ fontSize: '11px', background: 'rgba(167, 139, 250, 0.1)', color: '#a78bfa', padding: '2px 8px', borderRadius: '12px', fontWeight: 500 }}>
+                        <span className="slug-library-badge" style={{ fontSize: '11px', background: 'rgba(167, 139, 250, 0.1)', color: '#a78bfa', padding: '2px 8px', borderRadius: '12px', fontWeight: 500 }}>
                             Click to fill form!
                         </span>
                     </div>
@@ -416,7 +416,7 @@ export default function SkillsPanel() {
                     </div>
 
                     {/* Tabs / Categories Filter */}
-                    <div className="slug-categories-tabs" style={{ display: 'flex', gap: '8px', marginBottom: '16px', overflowX: 'auto', paddingBottom: '4px' }}>
+                    <div className="slug-categories-tabs">
                         {['All', 'Frontend', 'Backend & DB', 'DevOps & Cloud'].map(cat => (
                             <button
                                 key={cat}
@@ -473,7 +473,7 @@ export default function SkillsPanel() {
                                 No matching slugs found.
                             </div>
                         ) : (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '10px' }}>
+                            <div className="slugs-grid-container">
                                 {filteredPopularSlugs.map(s => {
                                     const isSelected = slug === s.slug;
                                     return (
