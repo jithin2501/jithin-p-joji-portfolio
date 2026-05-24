@@ -324,3 +324,128 @@
     box-shadow: 0 0 10px rgba(124, 92, 255, 0.25) !important;
     transform: scale(1.05);
 }
+
+/* Base styles for feature builder and filters */
+.feature-item-inputs {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.feature-item-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: flex-end;
+  margin-top: 4px;
+}
+
+.projects-list-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.projects-filter-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* Tablet Overrides */
+@media (max-width: 1024px) {
+  .projects-filter-controls {
+    margin-left: unset !important;
+    width: 100% !important;
+  }
+}
+
+/* Phone View Overrides */
+@media (max-width: 768px) {
+  .project-admin-form, .stored-projects-card {
+    padding: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .form-sections-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .form-sub-section {
+    padding: 16px !important;
+  }
+
+  .admin-projects-list-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .project-card-new {
+    height: auto !important;
+    padding: 16px !important;
+    gap: 16px !important;
+  }
+  
+  .project-desc-new {
+    height: auto !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+  }
+
+  .form-actions-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .form-actions-row button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .feature-item-inputs {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .feature-item-actions {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+
+  .feature-item-actions button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .projects-list-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .projects-filter-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .projects-filter-controls select,
+  .projects-filter-controls div {
+    width: 100% !important;
+  }
+}

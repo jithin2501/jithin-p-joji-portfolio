@@ -460,7 +460,7 @@ export default function ProjectsPanel() {
             </div>
           </div>
 
-          <div className="form-sections-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+          <div className="form-sections-grid">
             
             {/* Details Column 1: Core Technical Details */}
             <div className="form-sub-section">
@@ -706,12 +706,7 @@ export default function ProjectsPanel() {
                         }}
                       >
                         {/* Line 1: Title & Description */}
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 2fr',
-                          gap: '10px',
-                          alignItems: 'center'
-                        }}>
+                        <div className="feature-item-inputs">
                           {/* Feature Title */}
                           <div className="form-group" style={{ margin: 0 }}>
                             <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Feature Title *</label>
@@ -748,13 +743,7 @@ export default function ProjectsPanel() {
                         </div>
 
                         {/* Line 2: Visual Icon & Delete Button */}
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr auto',
-                          gap: '12px',
-                          alignItems: 'flex-end',
-                          marginTop: '4px'
-                        }}>
+                        <div className="feature-item-actions">
                           {/* Feature Icon Name Selection */}
                           <div className="form-group" style={{ margin: 0 }}>
                             <label style={{ fontSize: '11px', color: '#7070a0', marginBottom: '4px' }}>Visual Icon *</label>
@@ -906,7 +895,7 @@ export default function ProjectsPanel() {
           </h3>
         </div>
 
-        <div className="form-sections-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+        <div className="form-sections-grid">
           
           {/* Column 1: Card Appearance */}
           <div className="form-sub-section">
@@ -1162,13 +1151,13 @@ export default function ProjectsPanel() {
 
       {/* Projects List Container */}
       <div className="settings-card stored-projects-card" style={{ marginTop: '30px' }}>
-        <div className="settings-card-header" style={{ marginBottom: '20px', paddingBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+        <div className="settings-card-header projects-list-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Layers size={18} className="card-header-icon" />
             <h3 style={{ margin: 0, fontSize: '16px' }}>Stored Projects ({projects.length})</h3>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginLeft: 'auto' }}>
+          <div className="projects-filter-controls">
             {/* Category Filter */}
             <select
               value={categoryFilter}
