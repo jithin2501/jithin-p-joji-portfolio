@@ -403,3 +403,46 @@
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* Phone View Overrides */
+@media (max-width: 768px) {
+  .users-manager-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 20px !important;
+  }
+
+  .users-manager-left, .users-manager-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .upload-card, .stored-users-card {
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 12px !important;
+  }
+
+  .users-table-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .users-data-table {
+    min-width: 600px !important;
+  }
+
+  .upload-card input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
