@@ -802,3 +802,9 @@
   flex-shrink: 0;
   color: #60a5fa;
 }
+
+@media (max-width: 768px) {
+  .analytics-subtitle-desc {
+    display: none !important;
+  }
+}

@@ -438,7 +438,7 @@ export default function ProjectsPanel() {
             <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: '#fff' }}>
               Project Details Editor
             </h2>
-            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#a0a0c0' }}>
+            <p className="project-details-desc" style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#a0a0c0' }}>
               Dynamically customize narrative insights, key features, and image galleries for <strong style={{ color: '#7c5cff' }}>{detailsProject.title}</strong>
             </p>
           </div>

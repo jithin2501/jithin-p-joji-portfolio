@@ -448,4 +448,8 @@
   .projects-filter-controls div {
     width: 100% !important;
   }
+
+  .project-details-desc {
+    display: none !important;
+  }
 }
